@@ -1,0 +1,6 @@
+.gradle/
+.idea/
+app/build/generated/source/buildConfig/androidTest/debug/org/carsten/test/BuildConfig.java
+app/build/
+build/
+local.properties
