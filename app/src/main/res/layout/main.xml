@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" android:layout_width="fill_parent"
+	android:layout_height="fill_parent">
+	<TableLayout android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:id="@+id/tableLayout1"
+		android:layout_weight="0">
+		<TableRow android:id="@+id/tableRow1" android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:layout_weight="1">
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:id="@+id/button01" android:text="Qu" android:layout_weight="1"
+				android:layout_height="wrap_content" android:layout_width="fill_parent"
+				android:onClick="letterClick"></Button>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:id="@+id/button02" android:text="Qu" android:layout_weight="1"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:onClick="letterClick"></Button>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button03"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button04"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+		</TableRow>
+		<TableRow android:id="@+id/tableRow2" android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:layout_weight="1">
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button11"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button12"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button13"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button14"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+		</TableRow>
+		<TableRow android:id="@+id/tableRow3" android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:layout_weight="1">
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button21"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button22"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button23"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button24"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+		</TableRow>
+		<TableRow android:id="@+id/tableRow4" android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:layout_weight="1">
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button31"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button32"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button33"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/button34"
+				android:text="Qu" android:layout_width="fill_parent"
+				android:layout_weight="1" android:onClick="letterClick"></Button>
+		</TableRow>
+	</TableLayout>
+
+	<LinearLayout android:orientation="horizontal"
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:layout_weight="1">
+
+		<ListView android:layout_height="fill_parent"
+			android:id="@+id/playerResultsList"
+			android:layout_width="fill_parent" android:layout_weight="1"></ListView>
+
+		<LinearLayout android:orientation="vertical"
+			android:layout_width="fill_parent" android:layout_height="fill_parent"
+			android:layout_weight="1">
+			<ListView android:layout_height="fill_parent" android:id="@+id/computerResultsList"
+				android:layout_width="fill_parent" android:layout_weight="1" android:visibility="invisible"></ListView>
+			<LinearLayout android:orientation="horizontal" android:id="@+id/showAllRow"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:layout_weight="0" >
+				<LinearLayout android:orientation="horizontal"
+					android:layout_width="fill_parent" android:layout_height="wrap_content"
+					android:layout_weight="1"></LinearLayout>
+				<Button android:layout_height="wrap_content" 
+					android:text="Show all" android:layout_width="wrap_content"
+					android:layout_weight="0" android:onClick="solveClick"></Button>
+			</LinearLayout>
+		</LinearLayout>
+	</LinearLayout>
+
+	<TableLayout android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:id="@+id/tableLayout2"
+		android:layout_weight="0">
+		<TableRow android:id="@+id/buttonRow" android:layout_height="wrap_content"
+			android:layout_width="fill_parent" android:layout_weight="0"
+			android:gravity="bottom">
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/okButton"
+				android:text="" android:layout_width="wrap_content"
+				android:layout_weight="0" android:onClick="okClick"></Button>
+			<TextView android:text=" " 
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:editable="false" android:layout_weight="1"></TextView>
+			<TextView android:text=" " android:id="@+id/scoreTextView"
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:editable="false" android:layout_weight="0"></TextView>
+			<TextView android:text="    " 
+				android:layout_width="wrap_content" android:layout_height="wrap_content"
+				android:editable="false" android:layout_weight="0"></TextView>
+			<TextView android:layout_height="wrap_content"
+				android:layout_weight="0" android:layout_width="wrap_content"
+				android:id="@+id/chronometer1" android:text="00:00"></TextView>
+			<Button android:textSize="18dip" android:textStyle="bold"
+				android:layout_height="wrap_content" android:id="@+id/shuffleButton"
+				android:text="Shuffle" android:layout_width="wrap_content"
+				android:layout_weight="0" android:onClick="shuffleClick"></Button>
+		</TableRow>
+	</TableLayout>
+
+
+</LinearLayout>

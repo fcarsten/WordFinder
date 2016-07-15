@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string-array name="databases_entries">
+		<item>2of12inf</item>
+		<item>2of4brinf</item>
+	</string-array>
+	<string-array name="databases_values">
+		<item>2of12inf</item>
+		<item>2of4brinf</item>
+	</string-array>
+	<string-array name="scoring_algs_entries">
+		<item>Word Count</item>
+		<item>Word Value</item>
+	</string-array>
+	<string-array name="scoring_algs_values">
+		<item>count</item>
+		<item>value</item>
+	</string-array>
+</resources>
