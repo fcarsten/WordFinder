@@ -4,3 +4,4 @@ app/build/generated/source/buildConfig/androidTest/debug/org/carsten/test/BuildC
 app/build/
 build/
 local.properties
+app/src/main/gen/

@@ -6,12 +6,7 @@
  */
 package org.carsten;
 
-import java.io.IOException;
-import java.util.HashMap;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -20,6 +15,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -34,7 +31,10 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class WordFinder extends Activity {
+import java.io.IOException;
+import java.util.HashMap;
+
+public class WordFinder extends AppCompatActivity  {
 
 	public final static String TAG = "CF_WF";
 
@@ -87,7 +87,9 @@ public class WordFinder extends Activity {
 			idToLetterButton.put(letterButtonIds[c], letterButtons[c]);
 		}
 
-		gameState = (GameState) getLastNonConfigurationInstance();
+		boolean reloaded = false;
+
+		gameState = (GameState) getLastCustomNonConfigurationInstance();
 		if (gameState == null) {
 			try {
 				gameState = new GameState(this, new Dictionary(this));
@@ -96,6 +98,7 @@ public class WordFinder extends Activity {
 			}
 		} else {
 			gameState.setOwner(this);
+			reloaded = true;
 		}
 
 		playerResultList = new ArrayAdapter<Result>(this, R.layout.list_item,
@@ -112,7 +115,8 @@ public class WordFinder extends Activity {
 		updateOkButton();
 
 		updateScore();
-		showAllRow.setVisibility(View.INVISIBLE);
+		if (!reloaded)
+    		showAllRow.setVisibility(View.INVISIBLE);
 	}
 
 	private void getPrefs() {
@@ -184,7 +188,7 @@ public class WordFinder extends Activity {
 	}
 
 	@Override
-	public Object onRetainNonConfigurationInstance() {
+	public Object onRetainCustomNonConfigurationInstance() {
 		gameState.setOwner(null);
 		return gameState;
 	}

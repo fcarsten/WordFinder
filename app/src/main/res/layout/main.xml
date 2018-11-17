@@ -87,15 +87,22 @@
 		android:layout_width="fill_parent" android:layout_height="fill_parent"
 		android:layout_weight="1">
 
-		<ListView android:layout_height="fill_parent"
+		<ListView
 			android:id="@+id/playerResultsList"
-			android:layout_width="fill_parent" android:layout_weight="1"></ListView>
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent"
+			android:layout_weight="1"></ListView>
 
 		<LinearLayout android:orientation="vertical"
 			android:layout_width="fill_parent" android:layout_height="fill_parent"
 			android:layout_weight="1">
-			<ListView android:layout_height="fill_parent" android:id="@+id/computerResultsList"
-				android:layout_width="fill_parent" android:layout_weight="1" android:visibility="invisible"></ListView>
+
+			<ListView
+				android:id="@+id/computerResultsList"
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent"
+				android:layout_weight="1"
+				android:visibility="invisible"></ListView>
 			<LinearLayout android:orientation="horizontal" android:id="@+id/showAllRow"
 				android:layout_width="fill_parent" android:layout_height="wrap_content"
 				android:layout_weight="0" >
