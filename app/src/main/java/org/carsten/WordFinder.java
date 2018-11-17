@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright Carsten Friedrich (Carsten.Friedrich@gmail.com)
  *
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
@@ -22,6 +22,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,7 +33,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class WordFinder extends AppCompatActivity  {
 
@@ -72,15 +72,15 @@ public class WordFinder extends AppCompatActivity  {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		this.okButton = (Button) findViewById(R.id.okButton);
+		this.okButton = findViewById(R.id.okButton);
 
 		this.showAllRow = findViewById(R.id.showAllRow);
 
-		ListView playerResultListView = (ListView) findViewById(R.id.playerResultsList);
-		this.computerResultListView = (ListView) findViewById(R.id.computerResultsList);
+		ListView playerResultListView = findViewById(R.id.playerResultsList);
+		this.computerResultListView = findViewById(R.id.computerResultsList);
 
-		this.countDownView = (TextView) findViewById(R.id.chronometer1);
-		scoreTextView = (TextView) findViewById(R.id.scoreTextView);
+		this.countDownView = findViewById(R.id.chronometer1);
+		scoreTextView = findViewById(R.id.scoreTextView);
 		for (int c = 0; c < 16; c++) {
 			letterButtons[c] = new LetterButton(letterButtonIds[c], c,
 					(Button) this.findViewById(letterButtonIds[c]));
@@ -101,11 +101,11 @@ public class WordFinder extends AppCompatActivity  {
 			reloaded = true;
 		}
 
-		playerResultList = new ArrayAdapter<Result>(this, R.layout.list_item,
+		playerResultList = new ArrayAdapter<>(this, R.layout.list_item,
 				gameState.getPlayerResultList());
 		playerResultListView.setAdapter(playerResultList);
 
-		computerResultList = new ArrayAdapter<Result>(this, R.layout.list_item,
+		computerResultList = new ArrayAdapter<>(this, R.layout.list_item,
 				gameState.getComputerResultList());
 		computerResultListView.setAdapter(computerResultList);
 
@@ -115,8 +115,11 @@ public class WordFinder extends AppCompatActivity  {
 		updateOkButton();
 
 		updateScore();
-		if (!reloaded)
-    		showAllRow.setVisibility(View.INVISIBLE);
+		if (!reloaded) {
+			showAllRow.setVisibility(View.INVISIBLE);
+		} else  {
+			showAllRow.setVisibility(View.VISIBLE);
+		}
 	}
 
 	private void getPrefs() {
@@ -129,6 +132,7 @@ public class WordFinder extends AppCompatActivity  {
 
 		if (prefs.getBoolean("countdown_pref", false)) {
 			String timeStr = prefs.getString("countdown_time_pref", "02:00");
+			assert timeStr != null;
 			long time = parseTime(timeStr);
 			gameState.setCountDownTime(time);
 
@@ -221,7 +225,7 @@ public class WordFinder extends AppCompatActivity  {
 
 	private LetterButton[] letterButtons = new LetterButton[16];
 
-	private HashMap<Integer, LetterButton> idToLetterButton = new HashMap<Integer, LetterButton>();
+	private SparseArray<LetterButton> idToLetterButton = new SparseArray<>();
 
 	final static int letterButtonIds[] = { R.id.button01, R.id.button02,
 			R.id.button03, R.id.button04, R.id.button11, R.id.button12,
@@ -231,7 +235,8 @@ public class WordFinder extends AppCompatActivity  {
 
 	public void letterClick(View view) {
 		LetterButton pressedButton = idToLetterButton.get(view.getId());
-		int move = pressedButton.getPos();
+        assert pressedButton != null;
+        int move = pressedButton.getPos();
 		gameState.play(move);
 
 		updateOkButton();
@@ -265,7 +270,8 @@ public class WordFinder extends AppCompatActivity  {
 		okButton.setEnabled(gameState.getCurrentGuess().length() >= minLength);
 	}
 
-	private void updateScore() {
+	@SuppressLint("SetTextI18n")
+    private void updateScore() {
 		if (scoreTextView != null)
 			scoreTextView.setText("" + gameState.getPlayerScore() + " / "
 					+ gameState.getComputerScore());
@@ -360,28 +366,26 @@ public class WordFinder extends AppCompatActivity  {
 			SpannableStringBuilder markupString = (SpannableStringBuilder) markup;
 			int start = -1;
 			int max = markupString.length();
-			while (true) {
-				int nextPos = markupString.nextSpanTransition(start, max,
-						URLSpan.class);
-				URLSpan[] span = markupString.getSpans(nextPos, nextPos,
-						URLSpan.class);
-				if (span != null && span.length > 0) {
-					for (URLSpan urlSpan : span) {
-						if (urlSpan.getURL().toUpperCase()
-								.startsWith("MAILTO:")) {
-							MailToSpan rep = new MailToSpan(urlSpan);
-							int s = markupString.getSpanStart(urlSpan);
-							int e = markupString.getSpanEnd(urlSpan);
-							int f = markupString.getSpanFlags(urlSpan);
-							markupString.removeSpan(urlSpan);
-							markupString.setSpan(rep, s, e, f);
-						}
-					}
-				}
-				start = nextPos;
-				if (start == max)
-					break;
-			}
+            do {
+                int nextPos = markupString.nextSpanTransition(start, max,
+                        URLSpan.class);
+                URLSpan[] span = markupString.getSpans(nextPos, nextPos,
+                        URLSpan.class);
+                if (span != null && span.length > 0) {
+                    for (URLSpan urlSpan : span) {
+                        if (urlSpan.getURL().toUpperCase()
+                                .startsWith("MAILTO:")) {
+                            MailToSpan rep = new MailToSpan(urlSpan);
+                            int s = markupString.getSpanStart(urlSpan);
+                            int e = markupString.getSpanEnd(urlSpan);
+                            int f = markupString.getSpanFlags(urlSpan);
+                            markupString.removeSpan(urlSpan);
+                            markupString.setSpan(rep, s, e, f);
+                        }
+                    }
+                }
+                start = nextPos;
+            } while (start != max);
 		} catch (ClassCastException e) {
 			// ignore
 		}
