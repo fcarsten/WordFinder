@@ -9,14 +9,17 @@
     <TableLayout
         android:id="@+id/tableLayout1"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_weight="3"
+        android:layout_height="0dp">
 
         <TableRow
             android:id="@+id/tableRow1"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            >
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button01"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
@@ -28,7 +31,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button02"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
@@ -39,7 +42,7 @@
                 app:autoSizeTextType="uniform"
                 android:textSize="18sp"
                 android:textStyle="bold" />
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button03"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
@@ -51,7 +54,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button04"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
@@ -67,13 +70,15 @@
         <TableRow
             android:id="@+id/tableRow2"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            >
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button11"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:onClick="letterClick"
                 android:text="@string/qu"
@@ -81,11 +86,11 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button12"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:onClick="letterClick"
                 android:text="@string/qu"
@@ -93,11 +98,11 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button13"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:onClick="letterClick"
                 android:text="@string/qu"
@@ -105,11 +110,11 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button14"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:onClick="letterClick"
                 android:text="@string/qu"
@@ -121,13 +126,15 @@
         <TableRow
             android:id="@+id/tableRow3"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            >
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button21"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:onClick="letterClick"
                 android:text="@string/qu"
@@ -135,11 +142,11 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button22"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:onClick="letterClick"
                 android:text="@string/qu"
@@ -147,11 +154,11 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button23"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:onClick="letterClick"
                 android:text="@string/qu"
@@ -159,11 +166,11 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button24"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:onClick="letterClick"
                 android:text="@string/qu"
@@ -175,13 +182,15 @@
         <TableRow
             android:id="@+id/tableRow4"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            >
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button31"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:onClick="letterClick"
                 android:text="@string/qu"
@@ -189,11 +198,11 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button32"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:onClick="letterClick"
                 android:text="@string/qu"
@@ -201,11 +210,11 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button33"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:layout_weight="1"
                 android:onClick="letterClick"
                 android:text="@string/qu"
@@ -213,7 +222,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <android.support.v7.widget.AppCompatButton
+            <Button
                 android:id="@+id/button34"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
@@ -230,7 +239,7 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="4"
         android:orientation="horizontal"
         android:baselineAligned="false">
 
