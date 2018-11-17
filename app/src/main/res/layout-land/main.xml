@@ -1,284 +1,342 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	xmlns:tools="http://schemas.android.com/tools"
-	android:orientation="vertical" android:layout_width="fill_parent"
-	android:layout_height="fill_parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
 
 
-	<LinearLayout android:orientation="horizontal"
-		android:layout_width="fill_parent"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="fill_parent"
         android:layout_height="0dp"
-		android:layout_weight="1"
-		android:baselineAligned="false">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/buttonRow"
+        app:layout_constraintTop_toTopOf="parent">
 
-		<ListView
-			android:layout_height="fill_parent"
-			android:id="@+id/playerResultsList"
-			android:layout_width="wrap_content"
-			android:layout_weight="2"
-            />
-
-		<TableLayout
+        <ListView
+            android:id="@+id/playerResultsList"
+            android:layout_width="120sp"
             android:layout_height="fill_parent"
-			android:layout_width="fill_parent"
-			android:layout_weight="1">
-			<TableRow
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TableLayout
+            android:id="@+id/tableLayout"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/linearLayout5"
+            app:layout_constraintStart_toEndOf="@+id/playerResultsList"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TableRow
                 android:id="@+id/tableRow1"
+                android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-				android:layout_width="fill_parent"
-                android:layout_weight="1"
-                style="?android:attr/buttonBarStyle" >
+                android:layout_weight="1">
 
-				<Button
-					style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:id="@+id/button01"
-					android:text="@string/qu"
-					android:layout_height="fill_parent"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button01"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
 
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:id="@+id/button02"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:layout_height="fill_parent"
-					android:onClick="letterClick" />
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button02"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
 
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button03"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button03"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
 
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button04"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
-			</TableRow>
-			<TableRow android:orientation="horizontal"
-                android:layout_weight="1"
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button04"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
+            </TableRow>
+
+            <TableRow
                 android:id="@+id/tableRow2"
+                android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-				android:layout_width="fill_parent"   >
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button11"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button12"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button13"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button14"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
-			</TableRow>
-			<TableRow android:orientation="horizontal"
                 android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button11"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button12"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button13"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button14"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
+            </TableRow>
+
+            <TableRow
                 android:id="@+id/tableRow3"
+                android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-				android:layout_width="fill_parent"
-                >
-
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button21"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
-
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button22"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
-
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button23"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
-
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button24"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
-			</TableRow>
-			<TableRow android:orientation="horizontal"
-                android:id="@+id/tableRow4"
-                android:layout_height="fill_parent"
-				android:layout_width="fill_parent"
                 android:layout_weight="1"
-                >
+                android:orientation="horizontal">
 
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button31"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button21"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
 
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button32"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button22"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
 
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button33"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button23"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
 
-				<Button
-                    style="?android:attr/buttonBarStyle"
-					android:textSize="18sp"
-					android:textStyle="bold"
-					android:layout_height="fill_parent"
-					android:id="@+id/button34"
-					android:text="@string/qu"
-					android:layout_width="fill_parent"
-					android:onClick="letterClick" />
-			</TableRow>
-		</TableLayout>
-		<LinearLayout android:orientation="vertical"
-			android:layout_width="fill_parent" android:layout_height="fill_parent"
-			android:layout_weight="2">
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button24"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
+            </TableRow>
 
-			<ListView
-				android:layout_height="0dp"
-				android:minHeight="6sp"
-				android:id="@+id/computerResultsList"
-				android:layout_width="fill_parent"
-				android:layout_weight="1"
-				android:visibility="invisible" />
-			<LinearLayout android:orientation="horizontal"
+            <TableRow
+                android:id="@+id/tableRow4"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button31"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button32"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button33"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/button34"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:onClick="letterClick"
+                    android:text="@string/qu"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:autoSizeTextType="uniform" />
+            </TableRow>
+        </TableLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout5"
+            android:layout_width="120dp"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ListView
+                android:id="@+id/computerResultsList"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:minHeight="6sp"
+                android:visibility="invisible" />
+
+            <LinearLayout
                 android:id="@+id/showAllRow"
-				android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
                 <Button
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:onClick="solveClick"
-                    android:text="@string/show_all"
-                    />
-			</LinearLayout>
-		</LinearLayout>
-	</LinearLayout>
+                    android:text="@string/show_all" />
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
-    <TableRow android:id="@+id/buttonRow"
-        android:layout_height="wrap_content"
+    <TableRow
+        android:id="@+id/buttonRow"
         android:layout_width="fill_parent"
-        android:gravity="bottom">
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_height="wrap_content"
             android:id="@+id/okButton"
-            android:text=""
             android:layout_width="wrap_content"
-            android:onClick="okClick" />
+            android:layout_height="wrap_content"
+            android:onClick="okClick"
+            android:text=""
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:text=" "
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text=" "
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:text=" "
             android:id="@+id/scoreTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text=" "
             tools:ignore="HardcodedText" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="    "
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:id="@+id/chronometer1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="@string/_00_00" />
 
         <Button
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_height="wrap_content"
             android:id="@+id/shuffleButton"
-            android:text="@string/shuffle"
             android:layout_width="wrap_content"
-            android:onClick="shuffleClick" />
+            android:layout_height="wrap_content"
+            android:onClick="shuffleClick"
+            android:text="@string/shuffle"
+            android:textSize="18sp"
+            android:textStyle="bold" />
     </TableRow>
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
