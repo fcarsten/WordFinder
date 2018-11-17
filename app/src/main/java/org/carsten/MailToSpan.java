@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright Carsten Friedrich (Carsten.Friedrich@gmail.com)
  *
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.MailTo;
 import android.os.Parcel;
+import android.support.annotation.NonNull;
 import android.text.ParcelableSpan;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
@@ -22,7 +23,7 @@ public class MailToSpan extends ClickableSpan implements ParcelableSpan {
 	private final String mURL;
 	private final int spanTypeId;
 
-	public MailToSpan(URLSpan urlSpan) {
+	MailToSpan(URLSpan urlSpan) {
 		mURL = urlSpan.getURL();
 		spanTypeId = urlSpan.getSpanTypeId();
 	}
@@ -39,12 +40,13 @@ public class MailToSpan extends ClickableSpan implements ParcelableSpan {
 		dest.writeString(mURL);
 	}
 
-	public String getURL() {
+	@org.jetbrains.annotations.Contract(pure = true)
+	private String getURL() {
 		return mURL;
 	}
 
 	@Override
-	public void onClick(View widget) {
+	public void onClick(@NonNull View widget) {
 		Context context = widget.getContext();
 		MailTo mt = MailTo.parse(getURL());
 		Intent i = new Intent(Intent.ACTION_SEND);

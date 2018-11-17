@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright Carsten Friedrich (Carsten.Friedrich@gmail.com)
  *
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
@@ -15,21 +15,17 @@ import java.util.List;
 
 import android.os.CountDownTimer;
 
-public class GameState {
-	private Dictionary dictionary;
+class GameState {
+	final private Dictionary dictionary;
 
-	public Dictionary getDictionary() {
+	Dictionary getDictionary() {
 		return dictionary;
 	}
 
-	private char board[] = new char[16];
+	final private char board[] = new char[16];
 	private WordFinder owner;
 
-	public WordFinder getOwner() {
-		return owner;
-	}
-
-	public void setOwner(WordFinder owner) {
+	void setOwner(WordFinder owner) {
 		this.owner = owner;
 	}
 
@@ -63,12 +59,12 @@ public class GameState {
 	// y 1.974%
 	// z 0.074%
 
-	final static double[] letterFreqProb = { 0.08167, 0.09659, 0.12441, 0.16694,
+	private final static double[] letterFreqProb = { 0.08167, 0.09659, 0.12441, 0.16694,
 			0.29396, 0.31624, 0.33639, 0.39733, 0.46699, 0.46852, 0.47624,
 			0.51649, 0.54055, 0.60804, 0.68311, 0.7024, 0.70335, 0.76322,
 			0.82649, 0.91705, 0.94463, 0.95441, 0.97801, 0.97951, 0.99925, 1 };
 	
-	public GameState(WordFinder owner, Dictionary dictionary) {
+	GameState(WordFinder owner, Dictionary dictionary) {
 		this.owner = owner;
 		this.dictionary = dictionary;
 
@@ -77,26 +73,26 @@ public class GameState {
 //		}
 	}
 
-	private ArrayList<Result> computerResultList = new ArrayList<Result>();
-	private ArrayList<Result> playerResultList = new ArrayList<Result>();
+	final private ArrayList<Result> computerResultList = new ArrayList<>();
+	final private ArrayList<Result> playerResultList = new ArrayList<>();
 
-	public ArrayList<Result> getComputerResultList() {
+	ArrayList<Result> getComputerResultList() {
 		return computerResultList;
 	}
 
-	public ArrayList<Result> getPlayerResultList() {
+	ArrayList<Result> getPlayerResultList() {
 		return playerResultList;
 	}
 
-	public char getBoard(int move) {
+	char getBoard(int move) {
 		return board[move];
 	}
 
-	private boolean[] playerTaken = new boolean[16];
+	final private boolean[] playerTaken = new boolean[16];
 
 	private SolveTask solver;
 
-	public void shuffle() {
+	void shuffle() {
 		clearGuess();
 		for (int i = 0; i < 16; i++) {
 			board[i] = pickRandomLetter();
@@ -148,7 +144,7 @@ public class GameState {
 		return false;
 	}
 
-	public void addComputerResult(Result result) {
+	void addComputerResult(Result result) {
 		computerResultList.add(result);
 		Collections.sort(computerResultList, new Comparator<Result>() {
 
@@ -168,23 +164,23 @@ public class GameState {
 
 	}
 
-	public void stopSolving() {
+	void stopSolving() {
 		if (solver != null) {
 			solver.cancel(true);
 			solver = null;
 		}
 	}
 
-	public void startSolving() {
+	void startSolving() {
 		solver = new SolveTask(this);
 		solver.execute("N/A");
 	}
 
-	public boolean isTaken(int i) {
-		return playerTaken[i];
+	boolean isAvailable(int i) {
+		return !playerTaken[i];
 	}
 
-	public void clearGuess() {
+	void clearGuess() {
 		currentGuess = "";
 		lastMove = -1;
 		Arrays.fill(playerTaken, false);
@@ -192,7 +188,7 @@ public class GameState {
 
 	private String currentGuess = "";
 
-	public String getCurrentGuess() {
+	String getCurrentGuess() {
 		return currentGuess;
 	}
 
@@ -201,25 +197,25 @@ public class GameState {
 	private SCORE_ALG scoreAlg = SCORE_ALG.COUNT;
 	private String dictionaryName;
 
-	public String getDictionaryName() {
+	String getDictionaryName() {
 		return dictionaryName;
 	}
 
-	public boolean isAllow3LetterWords() {
+	boolean isAllow3LetterWords() {
 		return allow3LetterWords;
 	}
 
-	public int getLastMove() {
+	int getLastMove() {
 		return lastMove;
 	}
 
-	public void play(int move) {
+	void play(int move) {
 		lastMove = move;
 		currentGuess = currentGuess + board[move];
 		playerTaken[move] = true;
 	}
 
-	public boolean validatePlayerGuess(String guess) {
+	boolean validatePlayerGuess(String guess) {
 		for (Result result : playerResultList) {
 			if (result.toString().equalsIgnoreCase(guess))
 				return false;
@@ -227,11 +223,11 @@ public class GameState {
 		return getDictionary().lookup(guess, dictionaryName) != null;
 	}
 
-	public void setDictionaryName(String string) {
+	void setDictionaryName(String string) {
 		this.dictionaryName = string;
 	}
 
-	public void setScoringAlgorithm(String string) {
+	void setScoringAlgorithm(String string) {
 		if ("count".equalsIgnoreCase(string)) {
 			this.scoreAlg = SCORE_ALG.COUNT;
 		} else {
@@ -239,7 +235,7 @@ public class GameState {
 		}
 	}
 
-	public void setAllow3LetterWords(boolean flag) {
+	void setAllow3LetterWords(boolean flag) {
 		this.allow3LetterWords = flag;
 		if (!isAllow3LetterWords()) {
 			for (Iterator<Result> iter = playerResultList.iterator(); iter
@@ -262,11 +258,11 @@ public class GameState {
 
 	private long countDownTime = -1;
 
-	public void setCountDownTime(long time) {
+	void setCountDownTime(long time) {
 		countDownTime = time;
 	}
 
-	public void startCountDown() {
+	void startCountDown() {
 		if (countDownTime < 0)
 			return;
 
@@ -291,7 +287,7 @@ public class GameState {
 
 	}
 
-	public int getScore(List<Result> list) {
+	private int getScore(List<Result> list) {
 
 		int res = 0;
 		switch (this.scoreAlg) {
@@ -323,7 +319,7 @@ public class GameState {
 		return res;
 	}
 
-	public int getPlayerScore() {
+	int getPlayerScore() {
 		return getScore(playerResultList);
 	}
 
@@ -331,7 +327,7 @@ public class GameState {
 		COUNT, VALUE
 	}
 
-	public int getComputerScore() {
+	int getComputerScore() {
 		return getScore(computerResultList);
 	}
 }

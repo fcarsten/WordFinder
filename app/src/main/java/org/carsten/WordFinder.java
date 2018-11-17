@@ -82,8 +82,7 @@ public class WordFinder extends AppCompatActivity  {
 		this.countDownView = findViewById(R.id.chronometer1);
 		scoreTextView = findViewById(R.id.scoreTextView);
 		for (int c = 0; c < 16; c++) {
-			letterButtons[c] = new LetterButton(letterButtonIds[c], c,
-					(Button) this.findViewById(letterButtonIds[c]));
+			letterButtons[c] = new LetterButton(c, (Button) this.findViewById(letterButtonIds[c]));
 			idToLetterButton.put(letterButtonIds[c], letterButtons[c]);
 		}
 
@@ -180,12 +179,12 @@ public class WordFinder extends AppCompatActivity  {
 			}
 
 			for (int bid : MOVES[move]) {
-				letterButtons[bid].setEnabled(!gameState.isTaken(bid));
+				letterButtons[bid].setEnabled(gameState.isAvailable(bid));
 			}
 		} else {
 			for (int c = 0; c < 16; c++) {
 				char l = gameState.getBoard(c);
-				letterButtons[c].setEnabled(l != '\0' && !gameState.isTaken(c));
+				letterButtons[c].setEnabled(l != '\0' && gameState.isAvailable(c));
 				// Can be taken if re-load due to orientation change
 			}
 		}
@@ -223,11 +222,11 @@ public class WordFinder extends AppCompatActivity  {
 		updateScore();
 	}
 
-	private LetterButton[] letterButtons = new LetterButton[16];
+    final private LetterButton[] letterButtons = new LetterButton[16];
 
-	private SparseArray<LetterButton> idToLetterButton = new SparseArray<>();
+    final private SparseArray<LetterButton> idToLetterButton = new SparseArray<>();
 
-	final static int letterButtonIds[] = { R.id.button01, R.id.button02,
+	private final static int letterButtonIds[] = { R.id.button01, R.id.button02,
 			R.id.button03, R.id.button04, R.id.button11, R.id.button12,
 			R.id.button13, R.id.button14, R.id.button21, R.id.button22,
 			R.id.button23, R.id.button24, R.id.button31, R.id.button32,
@@ -319,7 +318,7 @@ public class WordFinder extends AppCompatActivity  {
 		}
 	}
 
-	static final int DIALOG_INFO = 0;
+	private static final int DIALOG_INFO = 0;
 
 	@Override
 	protected Dialog onCreateDialog(int id) {

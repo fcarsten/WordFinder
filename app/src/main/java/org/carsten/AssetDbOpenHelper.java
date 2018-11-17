@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright Carsten Friedrich (Carsten.Friedrich@gmail.com)
  *
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
@@ -17,12 +17,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-public class AssetDbOpenHelper {
+class AssetDbOpenHelper {
 
-	private SQLiteOpenHelper dbHelperDelegate = null;
+	final private SQLiteOpenHelper dbHelperDelegate;
 
-	public AssetDbOpenHelper(final Context context, final String dbName,
-			final String dbFileName) {
+	AssetDbOpenHelper(final Context context, final String dbName,
+                      final String dbFileName) {
 
 		dbHelperDelegate = new SQLiteOpenHelper(context, dbName, null, 1) {
 			@Override
@@ -85,7 +85,7 @@ public class AssetDbOpenHelper {
 	/**
 	 * Copies your database from your local assets-folder to the just created
 	 * empty database in the system folder, from where it can be accessed and
-	 * handled. This is done by transfering bytestream.
+	 * handled. This is done by transferring byte stream.
 	 * */
 	private void copyDataBase(Context context, String dbName, String dbFileName) throws IOException {
 		Log.d(WordFinder.TAG, "Copying DB");
@@ -97,7 +97,7 @@ public class AssetDbOpenHelper {
 		OutputStream myOutput = new FileOutputStream(
 				context.getDatabasePath(dbName), false);
 
-		// transfer bytes from the inputfile to the outputfile
+		// transfer bytes from the input file to the output file
 		byte[] buffer = new byte[4 * 1024];
 		int length;
 		while ((length = myInput.read(buffer)) > 0) {
@@ -117,7 +117,7 @@ public class AssetDbOpenHelper {
 		}
 	}
 
-	public SQLiteDatabase getReadableDatabase() throws IOException {
+	SQLiteDatabase getReadableDatabase() {
 		synchronized (createDbLock) {
 			return dbHelperDelegate.getReadableDatabase();
 		}

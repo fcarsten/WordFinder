@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright Carsten Friedrich (Carsten.Friedrich@gmail.com)
  *
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
@@ -23,7 +23,7 @@ public class WordFinderPreferences extends PreferenceActivity {
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.preferences);
 		EditTextPreference timeEdit = (EditTextPreference) findPreference("countdown_time_pref");
-		List<InputFilter> filters = new ArrayList<InputFilter>(Arrays.asList(timeEdit.getEditText().getFilters()));
+		List<InputFilter> filters = new ArrayList<>(Arrays.asList(timeEdit.getEditText().getFilters()));
 		filters.add(new InputFilter() {
 			@Override
 			public CharSequence filter(CharSequence source, int start, int end,
@@ -35,6 +35,6 @@ public class WordFinderPreferences extends PreferenceActivity {
 				return "";
 			}
 		});
-		timeEdit.getEditText().setFilters(filters.toArray(new InputFilter[filters.size()]));
+		timeEdit.getEditText().setFilters(filters.toArray(new InputFilter[0]));
 	}
 }

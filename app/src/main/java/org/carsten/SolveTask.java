@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright Carsten Friedrich (Carsten.Friedrich@gmail.com)
  *
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
@@ -18,9 +18,9 @@ import android.util.Log;
  */
 class SolveTask extends AsyncTask<String, String, String> {
 	private HashSet<String> prefixes;
-	private GameState gameState;
+    final private GameState gameState;
 
-	public SolveTask(GameState gameState) {
+	SolveTask(GameState gameState) {
 		this.gameState = gameState;
 	}
 	
@@ -32,7 +32,7 @@ class SolveTask extends AsyncTask<String, String, String> {
 	}
 
 	private void solve2() {
-		prefixes = new HashSet<String>();
+		prefixes = new HashSet<>();
 		boolean taken[] = new boolean[16];
 		for (int i = 0; i < taken.length; i++) {
 			taken[i] = false;
