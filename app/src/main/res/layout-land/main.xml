@@ -17,7 +17,7 @@
 
         <ListView
             android:id="@+id/playerResultsList"
-            android:layout_width="120sp"
+            android:layout_width="120dp"
             android:layout_height="fill_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -270,7 +270,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:minHeight="6sp"
+                android:minHeight="6dp"
                 android:visibility="invisible" />
 
             <LinearLayout
