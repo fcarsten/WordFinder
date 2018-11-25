@@ -14,6 +14,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import org.jetbrains.annotations.NotNull;
 
 class GameState {
 	final private Dictionary dictionary;
@@ -76,11 +80,13 @@ class GameState {
 	final private ArrayList<Result> computerResultList = new ArrayList<>();
 	final private ArrayList<Result> playerResultList = new ArrayList<>();
 
-	ArrayList<Result> getComputerResultList() {
+	@NonNull
+    ArrayList<Result> getComputerResultList() {
 		return computerResultList;
 	}
 
-	ArrayList<Result> getPlayerResultList() {
+	@NonNull
+    ArrayList<Result> getPlayerResultList() {
 		return playerResultList;
 	}
 
@@ -90,7 +96,8 @@ class GameState {
 
 	final private boolean[] playerTaken = new boolean[16];
 
-	private SolveTask solver;
+	@Nullable
+    private SolveTask solver;
 
 	void shuffle() {
 		clearGuess();
@@ -123,7 +130,7 @@ class GameState {
 		return false;
 	}
 
-	private boolean findWord(char[] chars, int index, boolean[] taken, int move) {
+	private boolean findWord(@NonNull char[] chars, int index, boolean[] taken, int move) {
 		if (taken[move])
 			return false;
 		if (chars[index] != board[move])
@@ -149,7 +156,7 @@ class GameState {
 		Collections.sort(computerResultList, new Comparator<Result>() {
 
 			@Override
-			public int compare(Result object1, Result object2) {
+			public int compare(@NonNull Result object1, @NonNull Result object2) {
 				int s1 = object1.toString().length();
 				int s2 = object2.toString().length();
 				int res = -Double.compare(s1, s2);
@@ -186,15 +193,18 @@ class GameState {
 		Arrays.fill(playerTaken, false);
 	}
 
-	private String currentGuess = "";
+	@NonNull
+    private String currentGuess = "";
 
-	String getCurrentGuess() {
+	@NonNull
+    String getCurrentGuess() {
 		return currentGuess;
 	}
 
 	private int lastMove = -1;
 	private boolean allow3LetterWords = true;
-	private SCORE_ALG scoreAlg = SCORE_ALG.COUNT;
+	@NonNull
+    private SCORE_ALG scoreAlg = SCORE_ALG.COUNT;
 	private String dictionaryName;
 
 	String getDictionaryName() {
@@ -215,7 +225,7 @@ class GameState {
 		playerTaken[move] = true;
 	}
 
-	boolean validatePlayerGuess(String guess) {
+	boolean validatePlayerGuess(@NotNull String guess) {
 		for (Result result : playerResultList) {
 			if (result.toString().equalsIgnoreCase(guess))
 				return false;
@@ -254,7 +264,8 @@ class GameState {
 		}
 	}
 
-	private CountDownTimer countDownTimer = null;
+	@Nullable
+    private CountDownTimer countDownTimer = null;
 
 	private long countDownTime = -1;
 
@@ -287,7 +298,7 @@ class GameState {
 
 	}
 
-	private int getScore(List<Result> list) {
+	private int getScore(@NonNull List<Result> list) {
 
 		int res = 0;
 		switch (this.scoreAlg) {

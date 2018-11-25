@@ -13,6 +13,7 @@ import java.util.List;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.PreferenceActivity;
+import android.support.annotation.Nullable;
 import android.text.InputFilter;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -25,7 +26,8 @@ public class WordFinderPreferences extends PreferenceActivity {
 		EditTextPreference timeEdit = (EditTextPreference) findPreference("countdown_time_pref");
 		List<InputFilter> filters = new ArrayList<>(Arrays.asList(timeEdit.getEditText().getFilters()));
 		filters.add(new InputFilter() {
-			@Override
+			@Nullable
+            @Override
 			public CharSequence filter(CharSequence source, int start, int end,
 																 Spanned dest, int dstart, int dend) {
 				SpannableStringBuilder builder = new SpannableStringBuilder(dest);

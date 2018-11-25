@@ -13,6 +13,8 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -35,18 +37,17 @@ class Dictionary {
 		if(fileArray!=null) {
             for (String file : fileArray) {
                 String dbName = file.trim().toUpperCase().replace(".MP3", "");
-                mDatabaseOpenHelperMap.put(dbName, new AssetDbOpenHelper(wordFinder, dbName, DB_ASSET_PATH + "/" + file));
+                mDatabaseOpenHelperMap.put(dbName, new AssetDbOpenHelper(wordFinder, dbName,
+                        DB_ASSET_PATH + "/" + file));
             }
         }
 		builder = new SQLiteQueryBuilder();
 		builder.setTables("words");
 	}
 
-	String lookup(String s, String db) {
-		if (s == null || s.length() < 3)
-			return null;
-
-		s = s.toUpperCase();
+	@Nullable
+    String lookup(@NonNull String s, @NonNull String db) {
+		s = s.trim().toUpperCase();
 
         AssetDbOpenHelper helper = mDatabaseOpenHelperMap.get(db.trim().toUpperCase());
         if(helper==null) return null;
@@ -76,7 +77,8 @@ class Dictionary {
 	
 	final static private String[] TEXT_COLUMN= new String[] { "text" };
 
-	Cursor getAllWords(String prefix, String db) {
+	@Nullable
+    Cursor getAllWords(@NonNull String prefix, @NonNull String db) {
 
         AssetDbOpenHelper dbHelper = mDatabaseOpenHelperMap.get(db.trim().toUpperCase());
         if(dbHelper==null)

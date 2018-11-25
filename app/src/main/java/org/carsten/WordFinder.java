@@ -15,6 +15,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -58,6 +60,7 @@ public class WordFinder extends AppCompatActivity  {
 
 	private Button okButton;
 
+	@Nullable
 	private GameState gameState = null;
 
 	private View showAllRow;
@@ -190,6 +193,7 @@ public class WordFinder extends AppCompatActivity  {
 		}
 	}
 
+	@Nullable
 	@Override
 	public Object onRetainCustomNonConfigurationInstance() {
 		gameState.setOwner(null);
@@ -232,7 +236,7 @@ public class WordFinder extends AppCompatActivity  {
 			R.id.button23, R.id.button24, R.id.button31, R.id.button32,
 			R.id.button33, R.id.button34 };
 
-	public void letterClick(View view) {
+	public void letterClick(@NonNull View view) {
 		LetterButton pressedButton = idToLetterButton.get(view.getId());
         assert pressedButton != null;
         int move = pressedButton.getPos();
@@ -304,7 +308,7 @@ public class WordFinder extends AppCompatActivity  {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.menu_item_info:
@@ -320,6 +324,7 @@ public class WordFinder extends AppCompatActivity  {
 
 	private static final int DIALOG_INFO = 0;
 
+	@Nullable
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
@@ -337,7 +342,7 @@ public class WordFinder extends AppCompatActivity  {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Info");
 		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int id) {
+			public void onClick(@NonNull DialogInterface dialog, int id) {
 				dialog.cancel();
 			}
 		});

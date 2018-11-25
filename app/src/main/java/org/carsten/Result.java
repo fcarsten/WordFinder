@@ -15,6 +15,7 @@ import android.support.annotation.NonNull;
  */
 class Result {
 
+    @NonNull
     final private String result;
 
 	Result(	@NonNull String result) {

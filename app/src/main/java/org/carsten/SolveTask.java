@@ -10,6 +10,7 @@ import java.util.HashSet;
 
 import android.database.Cursor;
 import android.os.AsyncTask;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 /**
@@ -24,7 +25,8 @@ class SolveTask extends AsyncTask<String, String, String> {
 		this.gameState = gameState;
 	}
 	
-	@Override
+	@Nullable
+    @Override
 	protected String doInBackground(String... params) {
 		Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 		solve2();

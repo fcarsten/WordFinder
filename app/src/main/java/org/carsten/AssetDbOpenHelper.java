@@ -15,14 +15,16 @@ import java.io.OutputStream;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 class AssetDbOpenHelper {
 
-	final private SQLiteOpenHelper dbHelperDelegate;
+	@NonNull
+    final private SQLiteOpenHelper dbHelperDelegate;
 
-	AssetDbOpenHelper(final Context context, final String dbName,
-                      final String dbFileName) {
+	AssetDbOpenHelper(@NonNull final Context context, @NonNull final String dbName,
+                      @NonNull final String dbFileName) {
 
 		dbHelperDelegate = new SQLiteOpenHelper(context, dbName, null, 1) {
 			@Override
@@ -59,7 +61,8 @@ class AssetDbOpenHelper {
 	 * Creates a empty database on the system and rewrites it with your own
 	 * database.
 	 * */
-	private void createDataBase(Context context, String dbName, String dbFileName) throws IOException {
+	private void createDataBase(@NonNull Context context, @NonNull String dbName,
+                                @NonNull String dbFileName) throws IOException {
 		boolean dbExist = checkDataBaseExists(context, dbName);
 
 		if (!dbExist) {
@@ -77,7 +80,7 @@ class AssetDbOpenHelper {
 	 * 
 	 * @return true if it exists, false if it doesn't
 	 */
-	private boolean checkDataBaseExists(Context context, String dbName) {
+	private boolean checkDataBaseExists(@NonNull Context context, @NonNull String dbName) {
 		File path = context.getDatabasePath(dbName);
 		return path.exists();
 	}
@@ -87,7 +90,8 @@ class AssetDbOpenHelper {
 	 * empty database in the system folder, from where it can be accessed and
 	 * handled. This is done by transferring byte stream.
 	 * */
-	private void copyDataBase(Context context, String dbName, String dbFileName) throws IOException {
+	private void copyDataBase(@NonNull Context context, @NonNull String dbName,
+							  @NonNull String dbFileName) throws IOException {
 		Log.d(WordFinder.TAG, "Copying DB");
 
 		// Open your local db as the input stream
