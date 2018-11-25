@@ -226,6 +226,10 @@ class GameState {
 	}
 
 	boolean validatePlayerGuess(@NotNull String guess) {
+		int minLength = isAllow3LetterWords() ? 3 : 4;
+
+		if(guess.length() < minLength) return false;
+
 		for (Result result : playerResultList) {
 			if (result.toString().equalsIgnoreCase(guess))
 				return false;

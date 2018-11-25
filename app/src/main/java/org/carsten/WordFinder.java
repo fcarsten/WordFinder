@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.DrawableWrapper;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -127,6 +129,7 @@ public class WordFinder extends AppCompatActivity  {
 	private void getPrefs() {
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
+		//noinspection ConstantConditions
 		gameState.setDictionaryName(prefs.getString("dict_pref", "2of4brinf"));
 		gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count"));
 		gameState.setAllow3LetterWords(prefs
@@ -270,7 +273,12 @@ public class WordFinder extends AppCompatActivity  {
 	private void updateOkButton() {
 		okButton.setText(gameState.getCurrentGuess().replaceAll("Q", "Q(u)"));
 		int minLength = gameState.isAllow3LetterWords() ? 3 : 4;
-		okButton.setEnabled(gameState.getCurrentGuess().length() >= minLength);
+		boolean enabled = gameState.getCurrentGuess().length() >= minLength;
+		if(enabled) {
+            okButton.setTextColor(Color.parseColor("#A0FFA0"));
+        } else {
+            okButton.setTextColor(Color.parseColor("#FFA0A0"));
+        }
 	}
 
 	@SuppressLint("SetTextI18n")

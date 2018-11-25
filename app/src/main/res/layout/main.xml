@@ -236,7 +236,7 @@
         </TableRow>
     </TableLayout>
 
-    <LinearLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
@@ -247,53 +247,45 @@
             android:id="@+id/playerResultsList"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/computerResultsLayout"
             />
 
-        <LinearLayout
+    <android.support.constraint.ConstraintLayout
+            android:id="@+id/computerResultsLayout"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintStart_toEndOf="@+id/playerResultsList"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/showAllRow"
+                android:layout_width="fill_parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_height="match_parent">
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="solveClick"
+                    android:text="@string/show_all"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
             <ListView
                 android:id="@+id/computerResultsList"
                 android:layout_width="fill_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:visibility="invisible" />
 
-            <LinearLayout
-                android:id="@+id/showAllRow"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
-
-                <android.support.constraint.ConstraintLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="match_parent"
-                    >
-
-                    <Button
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:onClick="solveClick"
-                        android:text="@string/show_all"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </android.support.constraint.ConstraintLayout>
-
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
 
     <TableRow
         android:id="@+id/buttonRow"
