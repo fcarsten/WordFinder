@@ -30,8 +30,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -418,6 +420,8 @@ public class WordFinder extends AppCompatActivity  {
 			}
 		});
 
+        AlertDialog dialog = builder.create();
+
 		TextView textView = new TextView(this);
 		textView.setMovementMethod(LinkMovementMethod.getInstance());
 
@@ -431,9 +435,9 @@ public class WordFinder extends AppCompatActivity  {
 		fixMailtoLinks(markup);
 
 		textView.setText(markup);
-		builder.setView(textView);
+		dialog.setView(textView, getResources().getDimensionPixelSize(R.dimen.dialog_margin), 0, 0 , 0);
 
-		return builder.create();
+		return dialog;
 	}
 
 	private void fixMailtoLinks(Spanned markup) {
