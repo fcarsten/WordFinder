@@ -96,11 +96,22 @@ class GameState {
 
 	final private boolean[] playerTaken = new boolean[16];
 
+    public boolean isTimeUp() {
+        return timeUp;
+    }
+
+    public void setTimeUp(boolean timeUp) {
+        this.timeUp = timeUp;
+    }
+
+    private boolean timeUp = false;
+
 	@Nullable
     private SolveTask solver;
 
 	void shuffle() {
 		clearGuess();
+		setTimeUp(false);
 		for (int i = 0; i < 16; i++) {
 			board[i] = pickRandomLetter();
 		}
@@ -271,7 +282,11 @@ class GameState {
 	@Nullable
     private CountDownTimer countDownTimer = null;
 
-	private long countDownTime = -1;
+    public long getCountDownTime() {
+        return countDownTime;
+    }
+
+    private long countDownTime = -1;
 
 	void setCountDownTime(long time) {
 		countDownTime = time;
@@ -295,8 +310,9 @@ class GameState {
 			}
 
 			public void onFinish() {
+			    setTimeUp(true);
 				if (owner != null)
-					owner.updateTimeView(0);
+					owner.updateTimeView(-1);
 			}
 		}.start();
 
@@ -338,7 +354,11 @@ class GameState {
 		return getScore(playerResultList);
 	}
 
-	enum SCORE_ALG {
+    public boolean hasGameStarted() {
+	    return board[0] != 0;
+    }
+
+    enum SCORE_ALG {
 		COUNT, VALUE
 	}
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string-array name="databases_entries">
-		<item>2of12inf</item>
-		<item>2of4brinf</item>
+		<item>American English</item>
+		<item>British English</item>
 	</string-array>
 	<string-array name="databases_values">
 		<item>2of12inf</item>

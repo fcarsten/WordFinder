@@ -13,7 +13,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.drawable.DrawableWrapper;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
@@ -62,7 +61,6 @@ public class WordFinder extends AppCompatActivity  {
 
 	private Button okButton;
 
-	@Nullable
 	private GameState gameState = null;
 
 	private View showAllRow;
@@ -85,13 +83,14 @@ public class WordFinder extends AppCompatActivity  {
 		this.computerResultListView = findViewById(R.id.computerResultsList);
 
 		this.countDownView = findViewById(R.id.chronometer1);
-		scoreTextView = findViewById(R.id.scoreTextView);
+        this.countDownView.setVisibility(View.INVISIBLE);
+
+        scoreTextView = findViewById(R.id.scoreTextView);
 		for (int c = 0; c < 16; c++) {
 			letterButtons[c] = new LetterButton(c, (Button) this.findViewById(letterButtonIds[c]));
 			idToLetterButton.put(letterButtonIds[c], letterButtons[c]);
 		}
 
-		boolean reloaded = false;
 
 		gameState = (GameState) getLastCustomNonConfigurationInstance();
 		if (gameState == null) {
@@ -102,7 +101,6 @@ public class WordFinder extends AppCompatActivity  {
 			}
 		} else {
 			gameState.setOwner(this);
-			reloaded = true;
 		}
 
 		playerResultList = new ArrayAdapter<>(this, R.layout.list_item,
@@ -119,11 +117,6 @@ public class WordFinder extends AppCompatActivity  {
 		updateOkButton();
 
 		updateScore();
-		if (!reloaded) {
-			showAllRow.setVisibility(View.INVISIBLE);
-		} else  {
-			showAllRow.setVisibility(View.VISIBLE);
-		}
 	}
 
 	private void getPrefs() {
@@ -146,6 +139,59 @@ public class WordFinder extends AppCompatActivity  {
 		}
 	}
 
+	public void showTimeIsUpDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(WordFinder.this);
+        builder.setMessage(R.string.time_up_dialog_msg)
+                .setTitle(R.string.time_up_dialog_title)
+                .setPositiveButton(R.string.time_up_dialog_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        gameState.setTimeUp(false);
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+    }
+
+    public void showConfirmShuffleDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(WordFinder.this);
+        builder.setMessage(R.string.shuffle_confirm_msg)
+                .setTitle(R.string.shuffle_confirm_title)
+                .setPositiveButton(R.string.shuffle_ok_text, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        shuffle();
+                    }
+                })
+                .setNegativeButton(R.string.shuffle_cancle_text, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void showConfirmStartGameDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(WordFinder.this);
+        builder.setMessage(R.string.start_game_diag_msg)
+                .setTitle(R.string.start_game_diag_title)
+                .setPositiveButton(R.string.start_game_diag_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        shuffle();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+        dialog.show();
+    }
+
 	@SuppressLint("SetTextI18n")
 	void updateTimeView(long time) {
 		if (time >= 0) {
@@ -158,8 +204,8 @@ public class WordFinder extends AppCompatActivity  {
 				ms = "0" + ms;
 			countDownView.setText(h + ":" + ms);
 		} else {
+		    showTimeIsUpDialog();
 			this.countDownView.setVisibility(View.INVISIBLE);
-
 		}
 	}
 
@@ -176,7 +222,19 @@ public class WordFinder extends AppCompatActivity  {
 	protected void onStart() {
 		super.onStart();
 		getPrefs();
-	}
+        if (!gameState.hasGameStarted()) {
+            showAllRow.setVisibility(View.INVISIBLE);
+            if(gameState.getCountDownTime()>=0)
+                showConfirmStartGameDialog();
+            else
+                shuffle();
+        } else  {
+            if(gameState.isTimeUp()) {
+                showTimeIsUpDialog();
+            }
+            showAllRow.setVisibility(View.VISIBLE);
+        }
+    }
 
 	private void updateDiceState(int move) {
 		if (move >= 0) {
@@ -210,23 +268,28 @@ public class WordFinder extends AppCompatActivity  {
 		}
 	}
 
+	public void shuffle() {
+        showComputerResults(false);
+
+        gameState.stopSolving();
+
+        playerResultList.clear();
+        computerResultList.clear();
+
+        gameState.shuffle();
+
+        labelDices();
+
+        gameState.startSolving();
+
+        updateDiceState(gameState.getLastMove());
+        updateOkButton();
+        gameState.startCountDown();
+        updateScore();
+    }
+
 	public void shuffleClick(View view) {
-		showComputerResults(false);
-
-		gameState.stopSolving();
-
-		playerResultList.clear();
-		computerResultList.clear();
-
-		gameState.shuffle();
-
-		gameState.startSolving();
-
-		labelDices();
-		updateDiceState(gameState.getLastMove());
-		updateOkButton();
-		gameState.startCountDown();
-		updateScore();
+        showConfirmShuffleDialog();
 	}
 
     final private LetterButton[] letterButtons = new LetterButton[16];
@@ -359,7 +422,7 @@ public class WordFinder extends AppCompatActivity  {
 		textView.setMovementMethod(LinkMovementMethod.getInstance());
 
 		Spanned markup = Html
-				.fromHtml("<H1>Word Finder v1.0</H1>&copy;"
+				.fromHtml("<H1>Word Finder v2.0</H1>&copy;"
 						+ " <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a>"
 						+ " <br/><br/>License: <a href=\"http://www.gnu.org/licenses/gpl.html\">GPLv3</a><BR/>"
 						+ "Acknowledgements:<BR/>Alan Beale for the <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">12dicts</a> dictionaries used in this app."+

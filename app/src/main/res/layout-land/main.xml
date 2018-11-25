@@ -328,11 +328,10 @@
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/scoreTextView"
+            android:id="@+id/chronometer1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" "
-            tools:ignore="HardcodedText" />
+            android:text="@string/_00_00" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -341,10 +340,11 @@
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/chronometer1"
+            android:id="@+id/scoreTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/_00_00" />
+            android:text=" "
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/shuffleButton"
