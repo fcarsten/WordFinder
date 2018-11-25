@@ -265,6 +265,34 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/showAllRow"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="solveClick"
+                        android:text="@string/show_all" />
+                </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
+
             <ListView
                 android:id="@+id/computerResultsList"
                 android:layout_width="wrap_content"
@@ -273,18 +301,6 @@
                 android:minHeight="6dp"
                 android:visibility="invisible" />
 
-            <LinearLayout
-                android:id="@+id/showAllRow"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <Button
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:onClick="solveClick"
-                    android:text="@string/show_all" />
-            </LinearLayout>
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>
 
