@@ -6,7 +6,6 @@
         android:enabled="true"
         android:icon="@drawable/ic_menu_info_details"
         android:title="@string/info"
-        app:showAsAction="ifRoom"
         android:visible="true" />
     <item
         android:id="@+id/menu_item_prefs"
@@ -14,6 +13,5 @@
         android:enabled="true"
         android:icon="@drawable/ic_menu_preferences"
         android:title="@string/prefs"
-        app:showAsAction="ifRoom"
         android:visible="true" />
 </menu>

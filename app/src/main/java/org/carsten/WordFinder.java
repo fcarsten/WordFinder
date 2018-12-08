@@ -429,8 +429,10 @@ public class WordFinder extends AppCompatActivity  {
 				.fromHtml("<H1>Word Finder v2.0</H1>&copy;"
 						+ " <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a>"
 						+ " <br/><br/>License: <a href=\"http://www.gnu.org/licenses/gpl.html\">GPLv3</a><BR/>"
-						+ "Acknowledgements:<BR/>Alan Beale for the <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">12dicts</a> dictionaries used in this app."+
-				"<BR>Tobias Friedrich for the app icon design");
+						+ "Acknowledgements:" +
+						"<BR/>Alan Beale for the <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">English dictionaries</a> " +
+						"<BR/>Joerg Tinner for the <a href=\"https://sites.google.com/site/joergtinner/\">German dictionary</a>" +
+						"<BR/>Tobias Friedrich for the app icon design");
 
 		fixMailtoLinks(markup);
 
