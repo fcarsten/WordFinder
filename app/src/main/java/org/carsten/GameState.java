@@ -63,11 +63,39 @@ class GameState {
 	// y 1.974%
 	// z 0.074%
 
-	private final static double[] letterFreqProb = { 0.08167, 0.09659, 0.12441, 0.16694,
+	// Source: https://en.wikipedia.org/wiki/Letter_frequency
+	private final static double[] letterFreqProbEnglish = { 0.08167, 0.09659, 0.12441, 0.16694,
 			0.29396, 0.31624, 0.33639, 0.39733, 0.46699, 0.46852, 0.47624,
 			0.51649, 0.54055, 0.60804, 0.68311, 0.7024, 0.70335, 0.76322,
 			0.82649, 0.91705, 0.94463, 0.95441, 0.97801, 0.97951, 0.99925, 1 };
-	
+
+    private final static double[] letterFreqProbGerman = { 0.068050,
+            0.086910,
+            0.114230,
+            0.164990,
+            0.339010,
+            0.355570,
+            0.385660,
+            0.431430,
+            0.496930,
+            0.499610,
+            0.513780,
+            0.548150,
+            0.573490,
+            0.671250,
+            0.699405,
+            0.706105,
+            0.706285,
+            0.776315,
+            0.852085,
+            0.913625,
+            0.960260,
+            0.968720,
+            0.987930,
+            0.988270,
+            0.988660,
+            1.000000 };
+
 	GameState(WordFinder owner, Dictionary dictionary) {
 		this.owner = owner;
 		this.dictionary = dictionary;
@@ -120,6 +148,13 @@ class GameState {
 	private char pickRandomLetter() {
 		double r = Math.random();
 		int i=0;
+
+        double[] letterFreqProb = letterFreqProbEnglish;
+
+        if(dictionaryName.equalsIgnoreCase("german")) {
+            letterFreqProb = letterFreqProbGerman;
+        }
+
 		while(letterFreqProb[i]<r) i++;
 		
 		return (char) ('A'+i);
