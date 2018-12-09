@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -25,6 +26,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,7 +41,7 @@ import android.widget.TextView;
 
 import java.io.IOException;
 
-public class WordFinder extends AppCompatActivity  {
+public class WordFinder extends AppCompatActivity implements OnSharedPreferenceChangeListener {
 
 	public final static String TAG = "CF_WF";
 
@@ -121,9 +123,40 @@ public class WordFinder extends AppCompatActivity  {
 		updateScore();
 	}
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        if(preferencesChanged){
+            this.countDownView.setVisibility(View.INVISIBLE);
+            getPrefs();
+            shuffle();
+            preferencesChanged = false;
+        }
+    }
+
+    private SharedPreferences getSharedPreferences() {
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(getBaseContext());
+        return prefs;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    }
+
+    private boolean preferencesChanged = false;
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+	    Log.i(TAG, "Preferences changed for "+key);
+        preferencesChanged  = true;
+    }
+
 	private void getPrefs() {
-		SharedPreferences prefs = PreferenceManager
-				.getDefaultSharedPreferences(getBaseContext());
+        SharedPreferences prefs = getSharedPreferences();
 		//noinspection ConstantConditions
 		gameState.setDictionaryName(prefs.getString("dict_pref", "2of4brinf"));
 		gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count"));

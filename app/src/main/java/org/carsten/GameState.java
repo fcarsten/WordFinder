@@ -328,14 +328,14 @@ class GameState {
 	}
 
 	void startCountDown() {
+        if (countDownTimer != null)
+            countDownTimer.cancel();
+
 		if (countDownTime < 0)
 			return;
 
 		if (owner != null)
 			owner.updateTimeView(countDownTime);
-
-		if (countDownTimer != null)
-			countDownTimer.cancel();
 
 		countDownTimer = new CountDownTimer(countDownTime, 1000) {
 
