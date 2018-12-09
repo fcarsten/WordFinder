@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Word Finder</string>
+    <string name="info">Info</string>
+    <string name="prefs">Einstellungen</string>
+    <string name="set_preferences">Einstellungen</string>
+    <string name="shuffle">Würfeln</string>
+    <string name="show_all">Alle zeigen</string>
+    <string name="shuffle_confirm_msg">Neues Spiel starten?</string>
+    <string name="shuffle_confirm_title">Bitte Bestätigen</string>
+    <string name="shuffle_ok_text">Neues Spiel</string>
+    <string name="shuffle_cancle_text">Abbruch</string>
+    <string name="time_up_dialog_msg">Zeit ist abgelaufen!</string>
+    <string name="time_up_dialog_title">Achtung</string>
+    <string name="time_up_dialog_ok">OK</string>
+    <string name="start_game_diag_msg">Auf Los! drücken um die Uhr zu starten</string>
+    <string name="start_game_diag_title">Spiel starten</string>
+    <string name="start_game_diag_ok">Los!</string>
+    <string name="GamePreferences">Spieleinstellungen</string>
+    <string name="PrefDictionary">Wörterbuch</string>
+    <string name="PrefSelectDict">Wörterbuch  auswählen</string>
+    <string name="PrefScoring">Wertungsmethode</string>
+    <string name="PrefAllowThreeLetter">Wörter mit 3 Buchstaben erlauben</string>
+    <string name="PrefAllowThreeLetterSummary">Bitte ankreuzen um Wörter mit 3 Buchstaben zu erlauben</string>
+    <string name="PrefTimer">Zeitmesser aktivieren</string>
+    <string name="PrefTimerSummary">Bitte ankreuzen um den Zeitmesser zu aktivieren</string>
+    <string name="PrefTimeLimitSummary">Zeitlimit eingeben</string>
+    <string name="PrefScoringSummary">Wertungsmethode  auswählen</string>
+    <string name="PrefTimeLimit">Zeitlimit (mm:ss)</string>
+    <string name="OK">OK</string>
+    <string name="InfoText"><![CDATA[<H1>Word Finder v2.0</H1>&copy; <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a> <br/><br/>Lizenz: <a href=\"http://www.gnu.de/documents/gpl.de.html\">GPLv3</a><BR/> Danksagungen: <BR/>Alan Beale für die <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">Englischen Wörterbücher</a>  <BR/>Joerg Tinner für das <a href=\"https://sites.google.com/site/joergtinner/\">Deutsche Wörterbuch</a> <BR/>Tobias Friedrich für das App Icon Design]]></string>
+</resources>

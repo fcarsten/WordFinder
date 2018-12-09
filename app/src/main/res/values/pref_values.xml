@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string-array name="databases_entries">
-		<item>American English</item>
-		<item>British English</item>
-		<item>Deutsch</item>
+		<item>@string/AmericanEnglish</item>
+		<item>@string/BritishEnglish</item>
+		<item>@string/Deutsch</item>
 	</string-array>
 	<string-array name="databases_values">
 		<item>2of12inf</item>
@@ -11,11 +11,16 @@
 		<item>german</item>
 	</string-array>
 	<string-array name="scoring_algs_entries">
-		<item>Word Count</item>
-		<item>Word Value</item>
+		<item>@string/WordCount</item>
+		<item>@string/WordValue</item>
 	</string-array>
 	<string-array name="scoring_algs_values">
 		<item>count</item>
 		<item>value</item>
 	</string-array>
+	<string name="WordCount">Word count</string>
+	<string name="WordValue">Word value</string>
+	<string name="AmericanEnglish">American English</string>
+	<string name="BritishEnglish">British English</string>
+	<string name="Deutsch">German</string>
 </resources>

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<PreferenceCategory android:title="Game Preferences"
+	<PreferenceCategory android:title="@string/GamePreferences"
 		android:orderingFromXml="true">
-		<ListPreference android:title="Dictionary"
-			android:summary="Select which dictionary to use"
+		<ListPreference android:title="@string/PrefDictionary"
+			android:summary="@string/PrefSelectDict"
 			android:key="dict_pref" android:defaultValue="2of4brinf"
 			android:entries="@array/databases_entries" android:entryValues="@array/databases_values" />
-		<ListPreference android:title="Scoring"
-			android:summary="Select how the score is calculated" android:key="scoring_pref"
+		<ListPreference android:title="@string/PrefScoring"
+			android:summary="@string/PrefScoringSummary" android:key="scoring_pref"
 			android:defaultValue="count" android:entries="@array/scoring_algs_entries"
 			android:entryValues="@array/scoring_algs_values" />
-		<CheckBoxPreference android:title="Allow 3-letter words"
-			android:defaultValue="true" android:summary="Check to allow 3 letter words"
+		<CheckBoxPreference android:title="@string/PrefAllowThreeLetter"
+			android:defaultValue="true" android:summary="@string/PrefAllowThreeLetterSummary"
 			android:key="threeLetterPref" />
-		<CheckBoxPreference android:title="Timer enabled" android:id="@+id/countdown_enabled_box"
-			android:defaultValue="false" android:summary="Check to enable time limit"
+		<CheckBoxPreference android:title="@string/PrefTimer" android:id="@+id/countdown_enabled_box"
+			android:defaultValue="false" android:summary="@string/PrefTimerSummary"
 			android:key="countdown_pref" />
-		<EditTextPreference android:summary="Enter the time limit"
+		<EditTextPreference android:summary="@string/PrefTimeLimitSummary"
 			android:inputType="time" android:defaultValue="02:00" android:id="@+id/countdown_time_edit"
-			android:title="Countdown time (mm:ss)" android:key="countdown_time_pref" android:dependency="countdown_pref"/>
+			android:title="@string/PrefTimeLimit" android:key="countdown_time_pref" android:dependency="countdown_pref"/>
 	</PreferenceCategory>
 </PreferenceScreen>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="WordCount">Wortanzahl</string>
+    <string name="WordValue">Wortwerte</string>
+    <string name="AmericanEnglish">Amerikanisches Englisch</string>
+    <string name="BritishEnglish">Britisches Englisch</string>
+    <string name="Deutsch">Deutsch</string>
+</resources>

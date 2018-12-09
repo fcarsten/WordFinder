@@ -447,7 +447,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	private Dialog createInfoDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Info");
-		builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
 			public void onClick(@NonNull DialogInterface dialog, int id) {
 				dialog.cancel();
 			}
@@ -459,13 +459,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		textView.setMovementMethod(LinkMovementMethod.getInstance());
 
 		Spanned markup = Html
-				.fromHtml("<H1>Word Finder v2.0</H1>&copy;"
-						+ " <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a>"
-						+ " <br/><br/>License: <a href=\"http://www.gnu.org/licenses/gpl.html\">GPLv3</a><BR/>"
-						+ "Acknowledgements:" +
-						"<BR/>Alan Beale for the <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">English dictionaries</a> " +
-						"<BR/>Joerg Tinner for the <a href=\"https://sites.google.com/site/joergtinner/\">German dictionary</a>" +
-						"<BR/>Tobias Friedrich for the app icon design");
+				.fromHtml(getString(R.string.InfoText));
 
 		fixMailtoLinks(markup);
 
