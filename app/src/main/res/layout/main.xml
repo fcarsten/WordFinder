@@ -334,30 +334,31 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="fill_parent"
+        <Space
+            android:layout_width="113dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text=" "
-            tools:ignore="HardcodedText" />
+            tools:layout_width="wrap_content" />
 
         <TextView
             android:id="@+id/chronometer1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
             android:text="@string/_00_00" />
 
-        <TextView
+        <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="    "
-            tools:ignore="HardcodedText" />
+            android:minWidth="20dp" />
 
         <TextView
             android:id="@+id/scoreTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" "
+            android:text="0/0"
+            android:textSize="18sp"
+            android:paddingRight="10dp"
             tools:ignore="HardcodedText" />
 
         <Button

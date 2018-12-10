@@ -352,30 +352,31 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="0dp"
+        <Space
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text=" "
-            tools:ignore="HardcodedText" />
+            android:layout_weight="1" />
 
         <TextView
             android:id="@+id/chronometer1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:paddingRight="10dp"
             android:text="@string/_00_00" />
 
-        <TextView
+        <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="    "
-            tools:ignore="HardcodedText" />
+            android:minWidth="20dp" />
 
         <TextView
             android:id="@+id/scoreTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=" "
+            android:text="0/0"
+            android:textSize="18sp"
+            android:paddingRight="10dp"
             tools:ignore="HardcodedText" />
 
         <Button

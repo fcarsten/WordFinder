@@ -22,21 +22,16 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.style.URLSpan;
-import android.text.util.Linkify;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -456,49 +451,20 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
         AlertDialog dialog = builder.create();
 
+        String infotext = getString(R.string.InfoText);
+
         Spanned markup = Html
-                .fromHtml(getString(R.string.InfoText));
+                .fromHtml(infotext.replace("X.X", BuildConfig.VERSION_NAME));
 
 		TextView textView = new TextView(this);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
 
-//		 fixMailtoLinks(markup);
 		textView.setText(markup);
 		textView.setLinksClickable(true);
 
 		dialog.setView(textView, getResources().getDimensionPixelSize(R.dimen.dialog_margin), 0, 0 , 0);
 
 		return dialog;
-	}
-
-	private void fixMailtoLinks(Spanned markup) {
-		try {
-			SpannableStringBuilder markupString = (SpannableStringBuilder) markup;
-			int start = -1;
-			int max = markupString.length();
-            do {
-                int nextPos = markupString.nextSpanTransition(start, max,
-                        URLSpan.class);
-                URLSpan[] span = markupString.getSpans(nextPos, nextPos,
-                        URLSpan.class);
-                if (span != null && span.length > 0) {
-                    for (URLSpan urlSpan : span) {
-                        if (urlSpan.getURL().toUpperCase()
-                                .startsWith("MAILTO:")) {
-                            MailToSpan rep = new MailToSpan(urlSpan);
-                            int s = markupString.getSpanStart(urlSpan);
-                            int e = markupString.getSpanEnd(urlSpan);
-                            int f = markupString.getSpanFlags(urlSpan);
-                            markupString.removeSpan(urlSpan);
-                            markupString.setSpan(rep, s, e, f);
-                        }
-                    }
-                }
-                start = nextPos;
-            } while (start != max);
-		} catch (ClassCastException e) {
-			// ignore
-		}
 	}
 
 	private void showPreferences() {
