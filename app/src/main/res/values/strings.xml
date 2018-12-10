@@ -31,7 +31,7 @@
     <string name="PrefTimeLimit">Countdown time (mm:ss)</string>
     <string name="OK">OK</string>
     <string name="InfoText"><![CDATA[
-<H1>Word Finder v2.0</H1>&copy; <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a>
+<H1>Word Finder v2.3</H1>&copy; <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a>
 <br/><br/>License: <a href=\"http://www.gnu.org/licenses/gpl.html\">GPLv3</a><BR/>
 Acknowledgements:
 <BR/>Alan Beale for the <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">English dictionaries</a>

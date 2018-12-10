@@ -26,6 +26,7 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Menu;
@@ -455,15 +456,16 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
         AlertDialog dialog = builder.create();
 
+        Spanned markup = Html
+                .fromHtml(getString(R.string.InfoText));
+
 		TextView textView = new TextView(this);
-		textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
 
-		Spanned markup = Html
-				.fromHtml(getString(R.string.InfoText));
-
-		fixMailtoLinks(markup);
-
+//		 fixMailtoLinks(markup);
 		textView.setText(markup);
+		textView.setLinksClickable(true);
+
 		dialog.setView(textView, getResources().getDimensionPixelSize(R.dimen.dialog_margin), 0, 0 , 0);
 
 		return dialog;

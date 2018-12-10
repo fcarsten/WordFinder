@@ -11,8 +11,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.MailTo;
 import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.text.ParcelableSpan;
+import android.text.TextUtils;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.view.View;
@@ -32,6 +34,26 @@ public class MailToSpan extends ClickableSpan implements ParcelableSpan {
 		return spanTypeId;
 	}
 
+	/**
+	 * Internal implementation of {@link #getSpanTypeId()} that is not meant to
+	 * be overridden outside of the framework.
+	 *
+	 * @hide
+	 */
+	public int getSpanTypeIdInternal() {
+		return spanTypeId;
+	}
+
+	/**
+	 * Internal implementation of {@link Parcelable#writeToParcel(Parcel, int)}
+	 * that is not meant to be overridden outside of the framework.
+	 *
+	 * @hide
+	 */
+	public void writeToParcelInternal(Parcel dest, int flags) {
+        dest.writeString(mURL);
+	}
+
 	public int describeContents() {
 		return 0;
 	}
@@ -44,6 +66,7 @@ public class MailToSpan extends ClickableSpan implements ParcelableSpan {
 	private String getURL() {
 		return mURL;
 	}
+
 
 	@Override
 	public void onClick(@NonNull View widget) {
