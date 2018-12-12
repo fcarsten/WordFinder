@@ -187,6 +187,8 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	}
 
 	public void showTimeIsUpDialog() {
+        if(isFinishing()) return;
+
         AlertDialog.Builder builder = new AlertDialog.Builder(WordFinder.this);
         builder.setMessage(R.string.time_up_dialog_msg)
                 .setTitle(R.string.time_up_dialog_title)
@@ -241,6 +243,8 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	@SuppressLint("SetTextI18n")
 	void updateTimeView(long time) {
+        if(isFinishing()) return;
+
 		if (time >= 0) {
 			if (this.countDownView.getVisibility() != View.VISIBLE)
 				this.countDownView.setVisibility(View.VISIBLE);
