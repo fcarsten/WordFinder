@@ -271,16 +271,20 @@ class GameState {
 		playerTaken[move] = true;
 	}
 
-	boolean validatePlayerGuess(@NotNull String guess) {
+	String validatePlayerGuess(@NotNull String guess) {
 		int minLength = isAllow3LetterWords() ? 3 : 4;
 
-		if(guess.length() < minLength) return false;
+		if(guess.length() < minLength) return owner.getString(R.string.WordGuessTooShort);
 
 		for (Result result : playerResultList) {
 			if (result.toString().equalsIgnoreCase(guess))
-				return false;
+				return owner.getString(R.string.WordAlreadyFound);
 		}
-		return getDictionary().lookup(guess, dictionaryName) != null;
+		if(getDictionary().lookup(guess, dictionaryName) == null) {
+			return owner.getString(R.string.WordNotInDictionary);
+		}
+
+		return null;
 	}
 
 	void setDictionaryName(String string) {

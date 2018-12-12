@@ -6,37 +6,19 @@
  */
 package org.carsten;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.PreferenceActivity;
-import android.support.annotation.Nullable;
-import android.text.InputFilter;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
+import android.support.v7.app.AppCompatActivity;
+import android.widget.FrameLayout;
 
-public class WordFinderPreferences extends PreferenceActivity {
+public class WordFinderPreferences extends AppCompatActivity {
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.preferences);
-		EditTextPreference timeEdit = (EditTextPreference) findPreference("countdown_time_pref");
-		List<InputFilter> filters = new ArrayList<>(Arrays.asList(timeEdit.getEditText().getFilters()));
-		filters.add(new InputFilter() {
-			@Nullable
-            @Override
-			public CharSequence filter(CharSequence source, int start, int end,
-																 Spanned dest, int dstart, int dend) {
-				SpannableStringBuilder builder = new SpannableStringBuilder(dest);
-				builder.replace(dstart, dend, source, start, end);
-				if( builder.toString().matches("[0-9]+(:(|[0-5]|[0-5][0-9]))?")) //     :?( [ ?[0-5]?[0-9]?"))
-					return null;
-				return "";
-			}
-		});
-		timeEdit.getEditText().setFilters(filters.toArray(new InputFilter[0]));
+		FrameLayout frame = new FrameLayout(this);
+		frame.setId(R.id.content);
+		setContentView(frame);
+		this.getSupportFragmentManager().beginTransaction()
+				.replace(R.id.content, new WordFinderSettingsFragment(), null).commit();
 	}
 }
+

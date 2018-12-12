@@ -38,4 +38,7 @@ Acknowledgements:
 <BR/>Joerg Tinner for the <a href=\"https://sites.google.com/site/joergtinner/\">German dictionary</a>
 <BR/>Tobias Friedrich for the app icon design
 ]]></string>
+    <string name="WordGuessTooShort">is too short</string>
+    <string name="WordAlreadyFound">has already been found</string>
+    <string name="WordNotInDictionary">is not in the dictionary</string>
 </resources>

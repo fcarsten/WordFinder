@@ -13,6 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
@@ -34,6 +35,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 
@@ -68,8 +70,9 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	private TextView scoreTextView;
 
 	private TextView countDownView;
+    private int guessButtonEnabledTextColour;
 
-	/** Called when the activity is first created. */
+    /** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -110,6 +113,19 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		computerResultList = new ArrayAdapter<>(this, R.layout.list_item,
 				gameState.getComputerResultList());
 		computerResultListView.setAdapter(computerResultList);
+
+		TypedArray themeArray = getTheme().obtainStyledAttributes(new int[] {android.R.attr.editTextColor});
+		try {
+			int index = 0;
+			int defaultColourValue = 0;
+			guessButtonEnabledTextColour = themeArray.getColor(index, defaultColourValue);
+		}
+		finally
+		{
+			// Calling recycle() is important. Especially if you use alot of TypedArrays
+			// http://stackoverflow.com/a/13805641/8524
+			themeArray.recycle();
+		}
 
 		labelDices();
 
@@ -345,13 +361,20 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	public void okClick(View view) {
 		String guess = gameState.getCurrentGuess();
-		if (gameState.validatePlayerGuess(guess)) {
+		if (gameState.validatePlayerGuess(guess) == null) {
 			playerResultList.insert(new Result(guess), 0);
 		} else {
 			guess = guess.replaceAll("Q", "QU");
-			if (gameState.validatePlayerGuess(guess)) {
+            String validationResult = gameState.validatePlayerGuess(guess);
+			if (validationResult ==null) {
 				playerResultList.insert(new Result(guess), 0);
 			} else {
+
+                Context context = getApplicationContext();
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast = Toast.makeText(context, "\""+guess+"\" " + validationResult, duration);
+                toast.show();
+
 				Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 				vibrator.vibrate(100);
 			}
@@ -369,7 +392,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		int minLength = gameState.isAllow3LetterWords() ? 3 : 4;
 		boolean enabled = gameState.getCurrentGuess().length() >= minLength;
 		if(enabled) {
-            okButton.setTextColor(Color.parseColor("#A0FFA0"));
+            okButton.setTextColor(guessButtonEnabledTextColour);
         } else {
             okButton.setTextColor(Color.parseColor("#FFA0A0"));
         }
