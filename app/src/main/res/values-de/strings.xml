@@ -32,4 +32,5 @@
     <string name="WordGuessTooShort">" ist zu kurz"</string>
     <string name="WordAlreadyFound">" wurde schon gefunden"</string>
     <string name="WordNotInDictionary">" ist nicht im Wörterbuch"</string>
+    <string name="default_dict">german</string>
 </resources>

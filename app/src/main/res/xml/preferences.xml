@@ -4,7 +4,7 @@
 		android:orderingFromXml="true">
 		<ListPreference android:title="@string/PrefDictionary"
 			android:summary="@string/PrefSelectDict"
-			android:key="dict_pref" android:defaultValue="2of4brinf"
+			android:key="dict_pref" android:defaultValue="@string/default_dict"
 			android:entries="@array/databases_entries" android:entryValues="@array/databases_values" />
 		<ListPreference android:title="@string/PrefScoring"
 			android:summary="@string/PrefScoringSummary" android:key="scoring_pref"

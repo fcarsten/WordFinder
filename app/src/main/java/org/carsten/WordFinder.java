@@ -170,7 +170,8 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	private void getPrefs() {
         SharedPreferences prefs = getSharedPreferences();
 		//noinspection ConstantConditions
-		gameState.setDictionaryName(prefs.getString("dict_pref", "2of4brinf"));
+		String defaultDict = getString(R.string.default_dict);
+		gameState.setDictionaryName(prefs.getString("dict_pref", defaultDict));
 		gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count"));
 		gameState.setAllow3LetterWords(prefs
 				.getBoolean("threeLetterPref", true));
