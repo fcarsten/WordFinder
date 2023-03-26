@@ -7,7 +7,7 @@
 package org.carsten;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.FrameLayout;
 
 public class WordFinderPreferences extends AppCompatActivity {

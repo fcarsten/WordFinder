@@ -7,7 +7,7 @@
 package org.carsten;
 
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 /**
  * @author carsten.friedrich@gmail.com

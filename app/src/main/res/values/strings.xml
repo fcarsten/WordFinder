@@ -30,6 +30,10 @@
     <string name="PrefTimeLimitSummary">Enter the time limit</string>
     <string name="PrefTimeLimit">Countdown time (mm:ss)</string>
     <string name="OK">OK</string>
+    <string name="WordGuessTooShort">is too short</string>
+    <string name="WordAlreadyFound">has already been found</string>
+    <string name="WordNotInDictionary">is not in the dictionary</string>
+    <string name="default_dict">2of4brinf</string>
     <string name="InfoText"><![CDATA[
 <H1>Word Finder vX.X</H1>&copy; <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a>
 <br/><br/>License: <a href=\"http://www.gnu.org/licenses/gpl.html\">GPLv3</a><BR/>
@@ -38,8 +42,4 @@ Acknowledgements:
 <BR/>Joerg Tinner for the <a href=\"https://sites.google.com/site/joergtinner/\">German dictionary</a>
 <BR/>Tobias Friedrich for the app icon design
 ]]></string>
-    <string name="WordGuessTooShort">is too short</string>
-    <string name="WordAlreadyFound">has already been found</string>
-    <string name="WordNotInDictionary">is not in the dictionary</string>
-    <string name="default_dict">2of4brinf</string>
 </resources>

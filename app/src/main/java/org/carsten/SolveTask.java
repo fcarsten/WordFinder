@@ -10,7 +10,7 @@ import java.util.HashSet;
 
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 /**
@@ -35,7 +35,7 @@ class SolveTask extends AsyncTask<String, String, String> {
 
 	private void solve2() {
 		prefixes = new HashSet<>();
-		boolean taken[] = new boolean[16];
+		boolean[] taken = new boolean[16];
 		for (int i = 0; i < taken.length; i++) {
 			taken[i] = false;
 		}

@@ -13,8 +13,8 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +22,7 @@ class Dictionary {
 
 	private final HashMap<String, AssetDbOpenHelper> mDatabaseOpenHelperMap = new HashMap<>();
 
-	private SQLiteQueryBuilder builder;
+	private final SQLiteQueryBuilder builder;
 
 	private final static String DB_ASSET_PATH = "dicts";
 	/**
@@ -33,7 +33,7 @@ class Dictionary {
 	 */
     Dictionary(@NotNull WordFinder wordFinder) throws IOException {
 		AssetManager am = wordFinder.getAssets();
-		String fileArray[] = am.list(DB_ASSET_PATH);
+		String[] fileArray = am.list(DB_ASSET_PATH);
 		if(fileArray!=null) {
             for (String file : fileArray) {
                 String dbName = file.trim().toUpperCase().replace(".MP3", "");

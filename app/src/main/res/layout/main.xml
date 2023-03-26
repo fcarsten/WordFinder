@@ -270,7 +270,7 @@
         </TableRow>
     </TableLayout>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
@@ -287,7 +287,7 @@
             app:layout_constraintEnd_toStartOf="@+id/computerResultsLayout"
             />
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/computerResultsLayout"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
@@ -296,7 +296,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             >
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/showAllRow"
                 android:layout_width="fill_parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -310,7 +310,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ListView
                 android:id="@+id/computerResultsList"
@@ -318,8 +318,8 @@
                 android:layout_height="match_parent"
                 android:visibility="invisible" />
 
-    </android.support.constraint.ConstraintLayout>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TableRow
         android:id="@+id/buttonRow"
