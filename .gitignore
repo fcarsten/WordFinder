@@ -6,3 +6,4 @@ build/
 local.properties
 app/src/main/gen/
 /app/release/
+/app/debug/
