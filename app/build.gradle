@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "org.carsten"
         minSdkVersion 14
-        targetSdkVersion 33
+        targetSdkVersion 34
     }
 
     buildTypes {
