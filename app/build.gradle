@@ -16,10 +16,14 @@ android {
         }
     }
     namespace 'org.carsten'
+    buildFeatures {
+        buildConfig true
+    }
 }
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.takisoft.fix:preference-v7:28.0.0.0'
+    implementation 'androidx.preference:preference:1.2.1'
+    implementation 'com.takisoft.preferencex:preferencex:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 }
