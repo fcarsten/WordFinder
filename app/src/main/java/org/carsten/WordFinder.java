@@ -9,7 +9,6 @@ package org.carsten;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -18,10 +17,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.Html;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -37,13 +32,18 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.io.IOException;
 
 public class WordFinder extends AppCompatActivity implements OnSharedPreferenceChangeListener {
 
 	public final static String TAG = "CF_WF";
 
-	final static int MOVES[][] = { { 1, 4, 5 }, { 0, 2, 4, 5, 6 },
+	final static int[][] MOVES = { { 1, 4, 5 }, { 0, 2, 4, 5, 6 },
 			{ 1, 3, 5, 6, 7 }, { 2, 6, 7 }, {
 
 			0, 1, 5, 8, 9 }, { 0, 1, 2, 4, 6, 8, 9, 10 },
@@ -90,7 +90,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
         scoreTextView = findViewById(R.id.scoreTextView);
 		for (int c = 0; c < 16; c++) {
-			letterButtons[c] = new LetterButton(c, (Button) this.findViewById(letterButtonIds[c]));
+			letterButtons[c] = new LetterButton(c, this.findViewById(letterButtonIds[c]));
 			idToLetterButton.put(letterButtonIds[c], letterButtons[c]);
 		}
 
@@ -122,7 +122,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		}
 		finally
 		{
-			// Calling recycle() is important. Especially if you use alot of TypedArrays
+			// Calling recycle() is important. Especially if you use a lot of TypedArrays
 			// http://stackoverflow.com/a/13805641/8524
 			themeArray.recycle();
 		}
@@ -148,9 +148,8 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
     }
 
     private SharedPreferences getSharedPreferences() {
-        SharedPreferences prefs = PreferenceManager
-                .getDefaultSharedPreferences(getBaseContext());
-        return prefs;
+		return PreferenceManager
+				.getDefaultSharedPreferences(getBaseContext());
     }
 
     @Override
@@ -178,7 +177,6 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 		if (prefs.getBoolean("countdown_pref", false)) {
 			String timeStr = prefs.getString("countdown_time_pref", "02:00");
-			assert timeStr != null;
 			long time = parseTime(timeStr);
 			gameState.setCountDownTime(time);
 
@@ -193,12 +191,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
         AlertDialog.Builder builder = new AlertDialog.Builder(WordFinder.this);
         builder.setMessage(R.string.time_up_dialog_msg)
                 .setTitle(R.string.time_up_dialog_title)
-                .setPositiveButton(R.string.time_up_dialog_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        gameState.setTimeUp(false);
-                    }
-                });
+                .setPositiveButton(R.string.time_up_dialog_ok, (dialog, which) -> gameState.setTimeUp(false));
 
         AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
@@ -209,17 +202,9 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
         AlertDialog.Builder builder = new AlertDialog.Builder(WordFinder.this);
         builder.setMessage(R.string.shuffle_confirm_msg)
                 .setTitle(R.string.shuffle_confirm_title)
-                .setPositiveButton(R.string.shuffle_ok_text, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        shuffle();
-                    }
-                })
-                .setNegativeButton(R.string.shuffle_cancle_text, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+                .setPositiveButton(R.string.shuffle_ok_text, (dialog, which) -> shuffle())
+                .setNegativeButton(R.string.shuffle_cancle_text, (dialog, which) -> {
+				});
 
         AlertDialog dialog = builder.create();
         dialog.show();
@@ -229,12 +214,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
         AlertDialog.Builder builder = new AlertDialog.Builder(WordFinder.this);
         builder.setMessage(R.string.start_game_diag_msg)
                 .setTitle(R.string.start_game_diag_title)
-                .setPositiveButton(R.string.start_game_diag_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        shuffle();
-                    }
-                });
+                .setPositiveButton(R.string.start_game_diag_ok, (dialog, which) -> shuffle());
 
         AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
@@ -251,7 +231,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 				this.countDownView.setVisibility(View.VISIBLE);
 			long h = time / 60;
 			long m = time % 60;
-			String ms = "" + m;
+			String ms = String.valueOf(m);
 			if (ms.length() == 1)
 				ms = "0" + ms;
 			countDownView.setText(h + ":" + ms);
@@ -264,9 +244,9 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	private long parseTime(String timeStr) {
 		if (timeStr.contains(":")) {
 			String[] c = timeStr.split(":");
-			return 1000 * (Integer.parseInt(c[0]) * 60 + Integer.parseInt(c[1]));
+			return 1000 * (Integer.parseInt(c[0]) * 60L + Integer.parseInt(c[1]));
 		} else {
-			return Integer.parseInt(timeStr) * 1000;
+			return Integer.parseInt(timeStr) * 1000L;
 		}
 	}
 
@@ -316,7 +296,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	private void labelDices() {
 		for (int c = 0; c < 16; c++) {
 			char l = gameState.getBoard(c);
-			letterButtons[c].setText("" + (l == 'Q' ? "Qu" : l));
+			letterButtons[c].setText(String.valueOf(l == 'Q' ? "Qu" : l));
 		}
 	}
 
@@ -348,7 +328,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
     final private SparseArray<LetterButton> idToLetterButton = new SparseArray<>();
 
-	private final static int letterButtonIds[] = { R.id.button01, R.id.button02,
+	private final static int[] letterButtonIds = { R.id.button01, R.id.button02,
 			R.id.button03, R.id.button04, R.id.button11, R.id.button12,
 			R.id.button13, R.id.button14, R.id.button21, R.id.button22,
 			R.id.button23, R.id.button24, R.id.button31, R.id.button32,
@@ -406,7 +386,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	@SuppressLint("SetTextI18n")
     private void updateScore() {
 		if (scoreTextView != null)
-			scoreTextView.setText("" + gameState.getPlayerScore() + " / "
+			scoreTextView.setText(gameState.getPlayerScore() + " / "
 					+ gameState.getComputerScore());
 	}
 
@@ -439,15 +419,13 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-		// Handle item selection
-		switch (item.getItemId()) {
-		case R.id.menu_item_info:
+		if (item.getItemId() == R.id.menu_item_info) {
 			showInfo();
 			return true;
-		case R.id.menu_item_prefs:
+		} else if (item.getItemId() == R.id.menu_item_prefs) {
 			showPreferences();
 			return true;
-		default:
+		} else {
 			return super.onOptionsItemSelected(item);
 		}
 	}
@@ -457,32 +435,23 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	@Nullable
 	@Override
 	protected Dialog onCreateDialog(int id) {
-		Dialog dialog;
-		switch (id) {
-		case DIALOG_INFO:
-			dialog = createInfoDialog();
-			break;
-		default:
-			dialog = null;
+		if (id == DIALOG_INFO) {
+			return createInfoDialog();
 		}
-		return dialog;
+		return null;
 	}
 
 	private Dialog createInfoDialog() {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Info");
-		builder.setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
-			public void onClick(@NonNull DialogInterface dialog, int id) {
-				dialog.cancel();
-			}
-		});
+		builder.setPositiveButton(R.string.OK, (dialog, id) -> dialog.cancel());
 
         AlertDialog dialog = builder.create();
 
-        String infotext = getString(R.string.InfoText);
+        String infoText = getString(R.string.InfoText);
 
         Spanned markup = Html
-                .fromHtml(infotext.replace("X.X", BuildConfig.VERSION_NAME));
+                .fromHtml(infoText.replace("X.X", BuildConfig.VERSION_NAME));
 
 		TextView textView = new TextView(this);
         textView.setMovementMethod(LinkMovementMethod.getInstance());

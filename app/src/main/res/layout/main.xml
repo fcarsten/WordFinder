@@ -281,26 +281,24 @@
             android:id="@+id/playerResultsList"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/computerResultsLayout"
-            />
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/computerResultsLayout"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:orientation="vertical"
-            app:layout_constraintStart_toEndOf="@+id/playerResultsList"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            >
+            app:layout_constraintStart_toEndOf="@+id/playerResultsList">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/showAllRow"
                 android:layout_width="fill_parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
                 <Button
                     android:layout_width="wrap_content"
@@ -316,9 +314,10 @@
                 android:id="@+id/computerResultsList"
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TableRow
@@ -358,11 +357,12 @@
             android:id="@+id/scoreTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingEnd="10dp"
+            android:paddingRight="10dp"
             android:text="0/0"
             android:textSize="18sp"
-            android:paddingRight="10dp"
-            tools:ignore="HardcodedText"
-            android:paddingEnd="10dp" />
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/shuffleButton"
