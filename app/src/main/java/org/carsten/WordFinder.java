@@ -7,6 +7,7 @@
 package org.carsten;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +28,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -36,6 +38,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import okhttp3.*;
 
 import java.io.IOException;
 
@@ -73,6 +77,11 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
     private int guessButtonEnabledTextColour;
 
     /** Called when the activity is first created. */
+
+	public Activity getActivity() {
+		return this;
+	}
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -110,9 +119,39 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 				gameState.getPlayerResultList());
 		playerResultListView.setAdapter(playerResultList);
 
+		playerResultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Result selectedItem = (Result) parent.getItemAtPosition(position);
+
+				if(selectedItem!=null) {
+					if(Util.isNetworkAvailable(getApplicationContext())) {
+						Util.lookupWordDefinition( getActivity(), getApplicationContext(), selectedItem);
+					} else {
+						Toast.makeText(getApplicationContext(), "No internet connection available", Toast.LENGTH_SHORT).show();
+					}
+				}
+			}
+		});
+
 		computerResultList = new ArrayAdapter<>(this, R.layout.list_item,
 				gameState.getComputerResultList());
 		computerResultListView.setAdapter(computerResultList);
+
+		computerResultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Result selectedItem = (Result) parent.getItemAtPosition(position);
+
+				if(selectedItem!=null) {
+					if(Util.isNetworkAvailable(getApplicationContext())) {
+						Util.lookupWordDefinition( getActivity(), getApplicationContext(), selectedItem);
+					} else {
+						Toast.makeText(getApplicationContext(), "No internet connection available", Toast.LENGTH_SHORT).show();
+					}
+				}
+			}
+		});
 
 		TypedArray themeArray = getTheme().obtainStyledAttributes(new int[] {android.R.attr.editTextColor});
 		try {
@@ -135,7 +174,8 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		updateScore();
 	}
 
-    @Override
+
+	@Override
     public void onResume() {
         super.onResume();
         getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);

@@ -20,7 +20,7 @@ public class WordFinderSettingsFragment extends PreferenceFragmentCompat {
 	@Override
 	public void onCreatePreferencesFix(Bundle savedInstanceState, String rootKey) {
 		setPreferencesFromResource(R.xml.preferences, rootKey);
-		EditTextPreference timeEdit = (EditTextPreference) findPreference("countdown_time_pref");
+		EditTextPreference timeEdit = findPreference("countdown_time_pref");
 
 		if(timeEdit!=null)
 			timeEdit.setOnBindEditTextListener( (@NonNull EditText editText) -> {
