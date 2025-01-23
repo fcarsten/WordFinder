@@ -28,7 +28,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -38,8 +37,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
-import okhttp3.*;
 
 import java.io.IOException;
 
@@ -119,39 +116,33 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 				gameState.getPlayerResultList());
 		playerResultListView.setAdapter(playerResultList);
 
-		playerResultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Result selectedItem = (Result) parent.getItemAtPosition(position);
+		playerResultListView.setOnItemClickListener((parent, view, position, id) -> {
+            Result selectedItem = (Result) parent.getItemAtPosition(position);
 
-				if(selectedItem!=null) {
-					if(Util.isNetworkAvailable(getApplicationContext())) {
-						Util.lookupWordDefinition( getActivity(), getApplicationContext(), selectedItem);
-					} else {
-						Toast.makeText(getApplicationContext(), "No internet connection available", Toast.LENGTH_SHORT).show();
-					}
-				}
-			}
-		});
+            if(selectedItem!=null) {
+                if(Util.isNetworkAvailable(getApplicationContext())) {
+                    Util.lookupWordDefinition( getActivity(), getApplicationContext(), selectedItem.toString());
+                } else {
+                    Toast.makeText(getApplicationContext(), "No internet connection available", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
 		computerResultList = new ArrayAdapter<>(this, R.layout.list_item,
 				gameState.getComputerResultList());
 		computerResultListView.setAdapter(computerResultList);
 
-		computerResultListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Result selectedItem = (Result) parent.getItemAtPosition(position);
+		computerResultListView.setOnItemClickListener((parent, view, position, id) -> {
+            Result selectedItem = (Result) parent.getItemAtPosition(position);
 
-				if(selectedItem!=null) {
-					if(Util.isNetworkAvailable(getApplicationContext())) {
-						Util.lookupWordDefinition( getActivity(), getApplicationContext(), selectedItem);
-					} else {
-						Toast.makeText(getApplicationContext(), "No internet connection available", Toast.LENGTH_SHORT).show();
-					}
-				}
-			}
-		});
+            if(selectedItem!=null) {
+                if(Util.isNetworkAvailable(getApplicationContext())) {
+                    Util.lookupWordDefinition( getActivity(), getApplicationContext(), selectedItem.toString());
+                } else {
+                    Toast.makeText(getApplicationContext(), "No internet connection available", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
 		TypedArray themeArray = getTheme().obtainStyledAttributes(new int[] {android.R.attr.editTextColor});
 		try {

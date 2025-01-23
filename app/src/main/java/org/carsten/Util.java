@@ -1,12 +1,13 @@
 package org.carsten;
 
 import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import java.io.IOException;
 
@@ -15,9 +16,9 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 public class Util {
     static public boolean isNetworkAvailable(Context context) {
@@ -33,16 +34,16 @@ public class Util {
         return false;
     }
 
-    static public void lookupWordDefinition(Activity app, Context context, Result result) {
+    static public void lookupWordDefinition(Activity app, Context context, String word) {
         OkHttpClient client = new OkHttpClient();
 
         Request request = new Request.Builder()
-                .url("https://api.dictionaryapi.dev/api/v2/entries/en/"+result)
+                .url("https://api.dictionaryapi.dev/api/v2/entries/en/"+word)
                 .build();
 
             client.newCall(request).enqueue(new Callback() {
             @Override
-            public void onFailure(Call call, IOException e) {
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 app.runOnUiThread(() -> {
                     Toast.makeText(context, "Error looking up word: " +e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
@@ -50,15 +51,24 @@ public class Util {
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if (response.isSuccessful()) {
-                    String responseBody = response.body().string();
-                    Log.d("API Response", responseBody);
+                    ResponseBody responseBody = response.body();
+                    if (responseBody == null) {
+                        app.runOnUiThread(() -> {
+                            Toast.makeText(context, "Definition lookup failed with empty response.", Toast.LENGTH_SHORT).show();
+                        });
+                        return;
+                    }
+
+                    String responseBodyStr = responseBody.string();
+
+                    Log.d("API Response", responseBodyStr);
 
                     try {
                         String definitionStr = "Definition not found";
 
-                        JSONObject jsonObject = new JSONArray(responseBody).getJSONObject(0);
+                        JSONObject jsonObject = new JSONArray(responseBodyStr).getJSONObject(0);
                         JSONArray meaningArray = jsonObject.getJSONArray("meanings");
                         JSONObject meaning = meaningArray.getJSONObject(0);
 
@@ -72,13 +82,9 @@ public class Util {
                         definitionStr = partOfSpeech+ ": " + definition;
 
                         String finalDefinitionStr = definitionStr;
-                        app.runOnUiThread(() -> {
-                            Toast.makeText(context, finalDefinitionStr, Toast.LENGTH_SHORT).show();
-                        });
+                        app.runOnUiThread(() -> Toast.makeText(context, finalDefinitionStr, Toast.LENGTH_SHORT).show());
                     } catch (Exception e) {
-                        app.runOnUiThread(() -> {
-                            Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                        });
+                        app.runOnUiThread(() -> Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show());
                     }
                 }
             }
