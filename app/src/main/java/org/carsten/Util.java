@@ -44,9 +44,7 @@ public class Util {
             client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
-                app.runOnUiThread(() -> {
-                    Toast.makeText(context, "Error looking up word: " +e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                app.runOnUiThread(() -> Toast.makeText(context, "Error looking up word: " +e.getMessage(), Toast.LENGTH_SHORT).show());
                 Log.e("API Response", e.getMessage(), e);
             }
 
@@ -55,9 +53,7 @@ public class Util {
                 if (response.isSuccessful()) {
                     ResponseBody responseBody = response.body();
                     if (responseBody == null) {
-                        app.runOnUiThread(() -> {
-                            Toast.makeText(context, "Definition lookup failed with empty response.", Toast.LENGTH_SHORT).show();
-                        });
+                        app.runOnUiThread(() -> Toast.makeText(context, "Definition lookup failed with empty response.", Toast.LENGTH_SHORT).show());
                         return;
                     }
 

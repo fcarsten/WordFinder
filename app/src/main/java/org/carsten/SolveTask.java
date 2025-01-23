@@ -36,9 +36,6 @@ class SolveTask extends AsyncTask<String, String, String> {
 	private void solve2() {
 		prefixes = new HashSet<>();
 		boolean[] taken = new boolean[16];
-		for (int i = 0; i < taken.length; i++) {
-			taken[i] = false;
-		}
 		for (int i = 0; i < 16; i++) {
 			findAnyWord(i, taken, 2, "");
 		}
@@ -73,20 +70,18 @@ class SolveTask extends AsyncTask<String, String, String> {
 
 	private void solve1(String prefix) {
 		Cursor cursor = gameState.getDictionary().getAllWords(prefix, gameState.getDictionaryName());
-		if (cursor == null)
-			return;
-		try {
-			cursor.moveToFirst();
-			do {
-				String word = cursor.getString(0);
-				int minLength = gameState.isAllow3LetterWords()? 3:4;
-				if (word.length() >= minLength && gameState.findWord(word)) {
-					Log.d(WordFinder.TAG, "Found: " + word);
-					publishProgress(word);
-				}
-			} while (cursor.moveToNext());
-		} finally {
-			cursor.close();
-		}
+        try (cursor) {
+            if (cursor == null)
+                return;
+            cursor.moveToFirst();
+            do {
+                String word = cursor.getString(0);
+                int minLength = gameState.isAllow3LetterWords() ? 3 : 4;
+                if (word.length() >= minLength && gameState.findWord(word)) {
+                    Log.d(WordFinder.TAG, "Found: " + word);
+                    publishProgress(word);
+                }
+            } while (cursor.moveToNext());
+        }
 	}
 }

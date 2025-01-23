@@ -9,7 +9,6 @@ package org.carsten;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,7 +25,7 @@ class GameState {
 		return dictionary;
 	}
 
-	final private char board[] = new char[16];
+	final private char[] board = new char[16];
 	private WordFinder owner;
 
 	void setOwner(WordFinder owner) {
@@ -99,10 +98,6 @@ class GameState {
 	GameState(WordFinder owner, Dictionary dictionary) {
 		this.owner = owner;
 		this.dictionary = dictionary;
-
-//		for (int i = 0; i < diceArray.length; i++) {
-//			diceList.add(diceArray[i]);
-//		}
 	}
 
 	final private ArrayList<Result> computerResultList = new ArrayList<>();
@@ -151,7 +146,7 @@ class GameState {
 
         double[] letterFreqProb = letterFreqProbEnglish;
 
-        if(dictionaryName.equalsIgnoreCase("german")) {
+		if(dictionaryName.equalsIgnoreCase("german")) {
             letterFreqProb = letterFreqProbGerman;
         }
 
@@ -162,12 +157,9 @@ class GameState {
 
 	boolean findWord(String word) {
 		word = word.toUpperCase().replaceAll("QU", "Q");
-		boolean taken[] = new boolean[16];
-		for (int i = 0; i < taken.length; i++) {
-			taken[i] = false;
-		}
+		boolean[] taken = new boolean[16];
 
-		char[] chars = word.toCharArray();
+        char[] chars = word.toCharArray();
 		int index = 0;
 
 		for (int i = 0; i < 16; i++)
@@ -199,18 +191,14 @@ class GameState {
 
 	void addComputerResult(Result result) {
 		computerResultList.add(result);
-		Collections.sort(computerResultList, new Comparator<Result>() {
-
-			@Override
-			public int compare(@NonNull Result object1, @NonNull Result object2) {
-				int s1 = object1.toString().length();
-				int s2 = object2.toString().length();
-				int res = -Double.compare(s1, s2);
-				if (res == 0)
-					res = object1.toString().compareTo(object2.toString());
-				return res;
-			}
-		});
+		Collections.sort(computerResultList, (object1, object2) -> {
+            int s1 = object1.toString().length();
+            int s2 = object2.toString().length();
+            int res = -Double.compare(s1, s2);
+            if (res == 0)
+                res = object1.toString().compareTo(object2.toString());
+            return res;
+        });
 
 		if (owner != null)
 			owner.updateComputerResultView();

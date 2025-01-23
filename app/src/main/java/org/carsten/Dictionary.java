@@ -56,22 +56,16 @@ class Dictionary {
         if(sqlite==null)
             return null;
 
-        Cursor cursor=null;
-
-        try {
-            cursor = builder.query(
-                    sqlite,
-                    TEXT_COLUMN, "text = ?",
-                    new String[]{s}, null, null, null);
+        try (Cursor cursor = builder.query(
+                sqlite,
+                TEXT_COLUMN, "text = ?",
+                new String[]{s}, null, null, null)) {
             if (cursor == null) {
                 return null;
             } else if (!cursor.moveToFirst()) {
                 return null;
             }
             return cursor.getString(0);
-        } finally {
-            if(cursor!=null)
-                cursor.close();
         }
 	}
 	

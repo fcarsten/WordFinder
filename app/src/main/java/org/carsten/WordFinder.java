@@ -199,7 +199,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	private void getPrefs() {
         SharedPreferences prefs = getSharedPreferences();
-		//noinspection ConstantConditions
+
 		String defaultDict = getString(R.string.default_dict);
 		gameState.setDictionaryName(prefs.getString("dict_pref", defaultDict));
 		gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count"));
@@ -255,7 +255,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	@SuppressLint("SetTextI18n")
 	void updateTimeView(long time) {
-        if(isFinishing()) return;
+		if(isFinishing()) return;
 
 		if (time >= 0) {
 			if (this.countDownView.getVisibility() != View.VISIBLE)
