@@ -33,4 +33,6 @@
     <string name="WordAlreadyFound">" wurde schon gefunden"</string>
     <string name="WordNotInDictionary">" ist nicht im Wörterbuch"</string>
     <string name="default_dict">german</string>
+    <string name="no_internet_connection_available">Keine Internetverbindung verfügbar</string>
+    <string name="word_definition_lookup_not_supported_for_this_dictionary">Wortbedeutungen sind für dieses Wörterbuch nicht verfügbar</string>
 </resources>

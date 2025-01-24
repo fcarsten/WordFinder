@@ -5,9 +5,12 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 
@@ -53,17 +56,14 @@ public class Util {
                 if (response.isSuccessful()) {
                     ResponseBody responseBody = response.body();
                     if (responseBody == null) {
-                        app.runOnUiThread(() -> Toast.makeText(context, "Definition lookup failed with empty response.", Toast.LENGTH_SHORT).show());
+                        app.runOnUiThread(() -> Toast.makeText(context, "Definition lookup for " +word+" failed with empty response.", Toast.LENGTH_SHORT).show());
                         return;
                     }
 
                     String responseBodyStr = responseBody.string();
-
                     Log.d("API Response", responseBodyStr);
 
                     try {
-                        String definitionStr = "Definition not found";
-
                         JSONObject jsonObject = new JSONArray(responseBodyStr).getJSONObject(0);
                         JSONArray meaningArray = jsonObject.getJSONArray("meanings");
                         JSONObject meaning = meaningArray.getJSONObject(0);
@@ -75,13 +75,17 @@ public class Util {
 
                         String definition = definitionObj.getString("definition");
 
-                        definitionStr = partOfSpeech+ ": " + definition;
-
-                        String finalDefinitionStr = definitionStr;
-                        app.runOnUiThread(() -> Toast.makeText(context, finalDefinitionStr, Toast.LENGTH_SHORT).show());
+                        String definitionStr = word +" ("+partOfSpeech + "): " + definition;
+                        app.runOnUiThread(() -> {
+                            View view = app.findViewById(android.R.id.content);
+                            Snackbar.make(view, definitionStr, Snackbar.LENGTH_LONG).show();
+                        });
                     } catch (Exception e) {
-                        app.runOnUiThread(() -> Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show());
+                        app.runOnUiThread(() -> Toast.makeText(context, "Error looking up "+word+": " + e.getMessage(), Toast.LENGTH_SHORT).show());
                     }
+                }
+                else {
+                    app.runOnUiThread(() -> Toast.makeText(context, "Definition not found for: "+ word, Toast.LENGTH_SHORT).show());
                 }
             }
         });

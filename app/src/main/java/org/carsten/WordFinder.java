@@ -92,9 +92,9 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		this.computerResultListView = findViewById(R.id.computerResultsList);
 
 		this.countDownView = findViewById(R.id.chronometer1);
-        this.countDownView.setVisibility(View.INVISIBLE);
+		this.countDownView.setVisibility(View.INVISIBLE);
 
-        scoreTextView = findViewById(R.id.scoreTextView);
+		scoreTextView = findViewById(R.id.scoreTextView);
 		for (int c = 0; c < 16; c++) {
 			letterButtons[c] = new LetterButton(c, this.findViewById(letterButtonIds[c]));
 			idToLetterButton.put(letterButtonIds[c], letterButtons[c]);
@@ -119,12 +119,16 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		playerResultListView.setOnItemClickListener((parent, view, position, id) -> {
             Result selectedItem = (Result) parent.getItemAtPosition(position);
 
-            if(selectedItem!=null) {
-                if(Util.isNetworkAvailable(getApplicationContext())) {
-                    Util.lookupWordDefinition( getActivity(), getApplicationContext(), selectedItem.toString());
-                } else {
-                    Toast.makeText(getApplicationContext(), "No internet connection available", Toast.LENGTH_SHORT).show();
-                }
+            if(selectedItem!=null ) {
+				if(! definitionSupported(gameState.getDictionaryName())) {
+					Toast.makeText(this, R.string.word_definition_lookup_not_supported_for_this_dictionary, Toast.LENGTH_SHORT).show();
+				} else {
+					if (Util.isNetworkAvailable(getApplicationContext())) {
+						Util.lookupWordDefinition(getActivity(), getApplicationContext(), selectedItem.toString());
+					} else {
+						Toast.makeText(this, R.string.no_internet_connection_available, Toast.LENGTH_SHORT).show();
+					}
+				}
             }
         });
 
@@ -136,11 +140,15 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
             Result selectedItem = (Result) parent.getItemAtPosition(position);
 
             if(selectedItem!=null) {
-                if(Util.isNetworkAvailable(getApplicationContext())) {
-                    Util.lookupWordDefinition( getActivity(), getApplicationContext(), selectedItem.toString());
-                } else {
-                    Toast.makeText(getApplicationContext(), "No internet connection available", Toast.LENGTH_SHORT).show();
-                }
+				if(! definitionSupported(gameState.getDictionaryName())) {
+					Toast.makeText(this, R.string.word_definition_lookup_not_supported_for_this_dictionary, Toast.LENGTH_SHORT).show();
+				} else {
+					if (Util.isNetworkAvailable(getApplicationContext())) {
+						Util.lookupWordDefinition(getActivity(), getApplicationContext(), selectedItem.toString());
+					} else {
+						Toast.makeText(this, R.string.no_internet_connection_available, Toast.LENGTH_SHORT).show();
+					}
+				}
             }
         });
 
@@ -165,6 +173,10 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		updateScore();
 	}
 
+	private boolean definitionSupported(String dictionaryName) {
+		return dictionaryName.equalsIgnoreCase("2of4brinf") ||
+				dictionaryName.equalsIgnoreCase("2of12inf");
+	}
 
 	@Override
     public void onResume() {
@@ -267,7 +279,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 				ms = "0" + ms;
 			countDownView.setText(h + ":" + ms);
 		} else {
-		    showTimeIsUpDialog();
+			showTimeIsUpDialog();
 			this.countDownView.setVisibility(View.INVISIBLE);
 		}
 	}
@@ -485,7 +497,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
                 .fromHtml(infoText.replace("X.X", BuildConfig.VERSION_NAME));
 
 		TextView textView = new TextView(this);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+		textView.setMovementMethod(LinkMovementMethod.getInstance());
 
 		textView.setText(markup);
 		textView.setLinksClickable(true);
