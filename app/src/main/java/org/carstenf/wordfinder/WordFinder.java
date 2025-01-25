@@ -23,12 +23,15 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +40,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 
@@ -120,11 +125,13 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
             Result selectedItem = (Result) parent.getItemAtPosition(position);
 
             if(selectedItem!=null ) {
-				if(! definitionSupported(gameState.getDictionaryName())) {
+				WordDefinitionLookupService lookupService = getWordDefinitionLookupService(gameState.getDictionaryName());
+				if(lookupService == null) {
 					Toast.makeText(this, R.string.word_definition_lookup_not_supported_for_this_dictionary, Toast.LENGTH_SHORT).show();
 				} else {
 					if (Util.isNetworkAvailable(getApplicationContext())) {
-						Util.lookupWordDefinition(getActivity(), getApplicationContext(), selectedItem.toString());
+						Toast.makeText(this, "Looking up definition for "+ selectedItem, Toast.LENGTH_SHORT).show();
+						lookupService.lookupWordDefinition(this, selectedItem.toString());
 					} else {
 						Toast.makeText(this, R.string.no_internet_connection_available, Toast.LENGTH_SHORT).show();
 					}
@@ -140,11 +147,13 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
             Result selectedItem = (Result) parent.getItemAtPosition(position);
 
             if(selectedItem!=null) {
-				if(! definitionSupported(gameState.getDictionaryName())) {
+				WordDefinitionLookupService lookupService = getWordDefinitionLookupService(gameState.getDictionaryName());
+				if(lookupService == null) {
 					Toast.makeText(this, R.string.word_definition_lookup_not_supported_for_this_dictionary, Toast.LENGTH_SHORT).show();
 				} else {
 					if (Util.isNetworkAvailable(getApplicationContext())) {
-						Util.lookupWordDefinition(getActivity(), getApplicationContext(), selectedItem.toString());
+						Toast.makeText(this, "Looking up definition for "+ selectedItem, Toast.LENGTH_SHORT).show();
+						lookupService.lookupWordDefinition(this, selectedItem.toString());
 					} else {
 						Toast.makeText(this, R.string.no_internet_connection_available, Toast.LENGTH_SHORT).show();
 					}
@@ -173,9 +182,13 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		updateScore();
 	}
 
-	private boolean definitionSupported(String dictionaryName) {
-		return dictionaryName.equalsIgnoreCase("2of4brinf") ||
-				dictionaryName.equalsIgnoreCase("2of12inf");
+	private WordDefinitionLookupService getWordDefinitionLookupService(String dictionaryName) {
+		if(dictionaryName.equalsIgnoreCase("2of4brinf") ||
+				dictionaryName.equalsIgnoreCase("2of12inf")) {
+			return new EnglishWordDefinitionLookupService();
+		}
+
+		return null;
 	}
 
 	@Override
@@ -515,5 +528,35 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	private void showInfo() {
 		showDialog(DIALOG_INFO);
+	}
+
+	public void displayToast(String text, int length) {
+		runOnUiThread(() -> Toast.makeText(this, text, length).show());
+	}
+
+	public void displayWordDefinition(String definitionStr) {
+		runOnUiThread(() -> {
+			View view = findViewById(android.R.id.content);
+			Snackbar snackbar = Snackbar.make(view, definitionStr, Snackbar.LENGTH_LONG);
+			View snackbarView = snackbar.getView();
+
+			TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+			if (textView != null) {
+				textView.setMaxLines(10);
+			} else {
+				Log.e("Util", "TextView not found in Snackbar view to adjust number of lines");
+			}
+
+			ViewGroup.LayoutParams params = snackbarView.getLayoutParams();
+			params.width = ViewGroup.LayoutParams.WRAP_CONTENT; // Wrap the width to text size
+			params.height = ViewGroup.LayoutParams.WRAP_CONTENT; // Optional: Wrap height
+			snackbarView.setLayoutParams(params);
+
+			FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
+			layoutParams.gravity = Gravity.CENTER; // Adjust gravity if needed
+			snackbarView.setLayoutParams(layoutParams);
+
+			snackbar.show();
+		});
 	}
 }

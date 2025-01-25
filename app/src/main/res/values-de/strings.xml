@@ -22,13 +22,18 @@
     <string name="PrefScoring">Wertungsmethode</string>
     <string name="PrefAllowThreeLetter">Wörter mit 3 Buchstaben erlauben</string>
     <string name="PrefAllowThreeLetterSummary">Bitte ankreuzen um Wörter mit 3 Buchstaben zu erlauben</string>
-    <string name="PrefTimer">Zeitmesser aktivieren</string>
-    <string name="PrefTimerSummary">Bitte ankreuzen um den Zeitmesser zu aktivieren</string>
+    <string name="PrefTimer">Stoppuhr aktivieren</string>
+    <string name="PrefTimerSummary">Bitte ankreuzen um die Stoppuhr zu aktivieren</string>
     <string name="PrefTimeLimitSummary">Zeitlimit eingeben</string>
     <string name="PrefScoringSummary">Wertungsmethode  auswählen</string>
     <string name="PrefTimeLimit">Zeitlimit (mm:ss)</string>
     <string name="OK">OK</string>
-    <string name="InfoText"><![CDATA[<H1>Word Finder vX.X</H1>&copy; <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a> <br/><br/>Lizenz: <a href=\"http://www.gnu.de/documents/gpl.de.html\">GPLv3</a><BR/> Danksagungen: <BR/>Alan Beale für die <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">Englischen Wörterbücher</a>  <BR/>Joerg Tinner für das <a href=\"https://sites.google.com/site/joergtinner/\">Deutsche Wörterbuch</a> <BR/>Tobias Friedrich für das App Icon Design]]></string>
+    <string name="InfoText"><![CDATA[<H1>Word Finder vX.X</H1>&copy; <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a> <br/>
+    <br/>Lizenz: <a href=\"http://www.gnu.de/documents/gpl.de.html\">GPLv3</a><BR/> Danksagungen:
+    <BR/>Alan Beale für die <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">Englischen Wörterbücher</a>
+    <BR/>Joerg Tinner für das <a href=\"https://sites.google.com/site/joergtinner/\">Deutsche Wörterbuch</a>
+    <BR/>Englische Wortdefinitionen von <a href=\"https://dictionaryapi.dev/\">Free Dictionary API</a>
+    <BR/>Tobias Friedrich für das App Icon Design]]></string>
     <string name="WordGuessTooShort">" ist zu kurz"</string>
     <string name="WordAlreadyFound">" wurde schon gefunden"</string>
     <string name="WordNotInDictionary">" ist nicht im Wörterbuch"</string>
