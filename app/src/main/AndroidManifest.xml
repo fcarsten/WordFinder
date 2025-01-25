@@ -13,13 +13,13 @@
 		android:theme="@style/Theme.AppCompat" android:allowBackup="true"
 		android:fullBackupContent="true"
         tools:ignore="GoogleAppIndexingWarning">
-		<activity android:name="org.carsten.WordFinder" android:exported="true">
+		<activity android:name="org.carstenf.wordfinder.WordFinder" android:exported="true">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name="org.carsten.WordFinderPreferences" android:label="@string/set_preferences">
+		<activity android:name="org.carstenf.wordfinder.WordFinderPreferences" android:label="@string/set_preferences">
 		</activity>
 	</application>
 </manifest>

@@ -4,7 +4,7 @@ android {
     compileSdk 35
 
     defaultConfig {
-        applicationId "org.carsten"
+        applicationId "org.carstenf.wordfinder"
         minSdkVersion 23
         targetSdkVersion 35
     }
@@ -15,7 +15,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
-    namespace 'org.carsten'
+    namespace 'org.carstenf.wordfinder'
     buildFeatures {
         buildConfig true
     }

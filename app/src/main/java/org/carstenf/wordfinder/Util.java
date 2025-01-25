@@ -1,4 +1,4 @@
-package org.carsten;
+package org.carstenf.wordfinder;
 
 import android.app.Activity;
 import android.content.Context;

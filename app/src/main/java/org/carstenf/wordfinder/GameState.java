@@ -4,7 +4,7 @@
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
  *
  */
-package org.carsten;
+package org.carstenf.wordfinder;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -320,7 +320,7 @@ class GameState {
 	}
 
 	void startCountDown() {
-        if (countDownTimer != null)
+		if (countDownTimer != null)
             countDownTimer.cancel();
 
 		if (countDownTime < 0)

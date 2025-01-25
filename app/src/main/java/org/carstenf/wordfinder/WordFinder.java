@@ -4,7 +4,7 @@
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
  *
  */
-package org.carsten;
+package org.carstenf.wordfinder;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

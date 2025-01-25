@@ -1,272 +1,270 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <TableLayout
         android:id="@+id/tableLayout1"
         android:layout_width="fill_parent"
-        android:minHeight="195dp"
-        android:minWidth="195dp"
+        android:layout_height="0dp"
         android:layout_weight="3"
-        android:layout_height="0dp">
+        android:minWidth="195dp"
+        android:minHeight="195dp">
 
         <TableRow
             android:id="@+id/tableRow1"
             android:layout_width="fill_parent"
-            android:layout_weight="1"
             android:layout_height="0dp"
-            >
+            android:layout_weight="1">
 
             <Button
                 android:id="@+id/button01"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
 
             <Button
                 android:id="@+id/button02"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
+
             <Button
                 android:id="@+id/button03"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
 
             <Button
                 android:id="@+id/button04"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow2"
             android:layout_width="fill_parent"
-            android:layout_weight="1"
             android:layout_height="0dp"
-            >
+            android:layout_weight="1">
 
             <Button
                 android:id="@+id/button11"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
 
             <Button
                 android:id="@+id/button12"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
 
             <Button
                 android:id="@+id/button13"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
 
             <Button
                 android:id="@+id/button14"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow3"
             android:layout_width="fill_parent"
-            android:layout_weight="1"
             android:layout_height="0dp"
-            >
+            android:layout_weight="1">
 
             <Button
                 android:id="@+id/button21"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                    app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
 
             <Button
                 android:id="@+id/button22"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                    app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
 
             <Button
                 android:id="@+id/button23"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                    app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
 
             <Button
                 android:id="@+id/button24"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                    app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow4"
             android:layout_width="fill_parent"
-            android:layout_weight="1"
             android:layout_height="0dp"
-            >
+            android:layout_weight="1">
 
             <Button
                 android:id="@+id/button31"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                    app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
 
             <Button
                 android:id="@+id/button32"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                    app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
 
             <Button
                 android:id="@+id/button33"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                    app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
 
             <Button
                 android:id="@+id/button34"
                 style="?android:attr/buttonBarButtonStyle"
-                android:minHeight="48dp"
-                android:minWidth="48dp"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:minWidth="48dp"
+                android:minHeight="48dp"
                 android:onClick="letterClick"
                 android:text="@string/qu"
-                    app:autoSizeTextType="uniform"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                app:autoSizeTextType="uniform" />
         </TableRow>
     </TableLayout>
 
@@ -274,8 +272,8 @@
         android:layout_width="fill_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
-        android:orientation="horizontal"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
 
         <ListView
             android:id="@+id/playerResultsList"
@@ -345,8 +343,8 @@
             android:id="@+id/chronometer1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
-            android:text="@string/_00_00" />
+            android:text="@string/_00_00"
+            android:textSize="18sp" />
 
         <Space
             android:layout_width="wrap_content"

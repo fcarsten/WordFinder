@@ -1,4 +1,4 @@
-package org.carsten;
+package org.carstenf.wordfinder;
 
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 
 import com.takisoft.preferencex.EditTextPreference;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
