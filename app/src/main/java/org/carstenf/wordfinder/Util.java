@@ -5,7 +5,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -78,7 +82,26 @@ public class Util {
                         String definitionStr = word +" ("+partOfSpeech + "): " + definition;
                         app.runOnUiThread(() -> {
                             View view = app.findViewById(android.R.id.content);
-                            Snackbar.make(view, definitionStr, Snackbar.LENGTH_LONG).show();
+                            Snackbar snackbar = Snackbar.make(view, definitionStr, Snackbar.LENGTH_LONG);
+                            View snackbarView = snackbar.getView();
+
+                            TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+                            if (textView != null) {
+                                textView.setMaxLines(10);
+                            } else {
+                                Log.e("Util", "TextView not found in Snackbar view to adjust number of lines");
+                            }
+
+                            ViewGroup.LayoutParams params = snackbarView.getLayoutParams();
+                            params.width = ViewGroup.LayoutParams.WRAP_CONTENT; // Wrap the width to text size
+                            params.height = ViewGroup.LayoutParams.WRAP_CONTENT; // Optional: Wrap height
+                            snackbarView.setLayoutParams(params);
+
+                            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
+                            layoutParams.gravity = Gravity.CENTER; // Adjust gravity if needed
+                            snackbarView.setLayoutParams(layoutParams);
+
+                            snackbar.show();
                         });
                     } catch (Exception e) {
                         app.runOnUiThread(() -> Toast.makeText(context, "Error looking up "+word+": " + e.getMessage(), Toast.LENGTH_SHORT).show());

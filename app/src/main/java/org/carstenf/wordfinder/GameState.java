@@ -337,7 +337,7 @@ class GameState {
 			}
 
 			public void onFinish() {
-			    setTimeUp(true);
+				setTimeUp(true);
 				if (owner != null)
 					owner.updateTimeView(-1);
 			}
