@@ -40,5 +40,5 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
     implementation 'androidx.core:core-ktx:1.15.0'
-
+    implementation "androidx.preference:preference-ktx:1.2.1"
 }
