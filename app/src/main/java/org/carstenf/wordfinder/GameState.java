@@ -18,7 +18,7 @@ import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 
-class GameState {
+public class GameState {
 	final private Dictionary dictionary;
 
 	Dictionary getDictionary() {
@@ -207,14 +207,14 @@ class GameState {
 
 	void stopSolving() {
 		if (solver != null) {
-			solver.cancel(true);
+			solver.cancel();
 			solver = null;
 		}
 	}
 
 	void startSolving() {
 		solver = new SolveTask(this);
-		solver.execute("N/A");
+		solver.execute();
 	}
 
 	boolean isAvailable(int i) {
