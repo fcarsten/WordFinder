@@ -7,7 +7,6 @@
 package org.carstenf.wordfinder;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,9 +16,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
@@ -39,6 +35,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
@@ -474,7 +471,8 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		if (item.getItemId() == R.id.menu_item_info) {
-			showInfo();
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			InfoDialogFragment.Companion.showInfo(fragmentManager);
 			return true;
 		} else if (item.getItemId() == R.id.menu_item_prefs) {
 			showPreferences();
@@ -484,48 +482,10 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		}
 	}
 
-	private static final int DIALOG_INFO = 0;
-
-	@Nullable
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		if (id == DIALOG_INFO) {
-			return createInfoDialog();
-		}
-		return null;
-	}
-
-	private Dialog createInfoDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Info");
-		builder.setPositiveButton(R.string.OK, (dialog, id) -> dialog.cancel());
-
-        AlertDialog dialog = builder.create();
-
-        String infoText = getString(R.string.InfoText);
-
-        Spanned markup = Html
-                .fromHtml(infoText.replace("X.X", BuildConfig.VERSION_NAME));
-
-		TextView textView = new TextView(this);
-		textView.setMovementMethod(LinkMovementMethod.getInstance());
-
-		textView.setText(markup);
-		textView.setLinksClickable(true);
-
-		dialog.setView(textView, getResources().getDimensionPixelSize(R.dimen.dialog_margin), 0, 0 , 0);
-
-		return dialog;
-	}
-
 	private void showPreferences() {
 		Intent settingsActivity = new Intent(getBaseContext(),
 				WordFinderPreferences.class);
 		startActivity(settingsActivity);
-	}
-
-	private void showInfo() {
-		showDialog(DIALOG_INFO);
 	}
 
 	public void displayToast(String text, int length) {
