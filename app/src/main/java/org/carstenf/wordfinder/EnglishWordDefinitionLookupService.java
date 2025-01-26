@@ -18,12 +18,13 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class EnglishWordDefinitionLookupService implements WordDefinitionLookupService {
+    private static final OkHttpClient client = new OkHttpClient();
+    public static final String DICTIONARYAPI_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/";
+
     @Override
     public void lookupWordDefinition(WordFinder wordFinderApp, String word) {
-        OkHttpClient client = new OkHttpClient();
-
         Request request = new Request.Builder()
-                .url("https://api.dictionaryapi.dev/api/v2/entries/en/"+word)
+                .url(DICTIONARYAPI_URL +word)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {

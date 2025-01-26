@@ -183,12 +183,15 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	}
 
 	private WordDefinitionLookupService getWordDefinitionLookupService(String dictionaryName) {
-		if(dictionaryName.equalsIgnoreCase("2of4brinf") ||
-				dictionaryName.equalsIgnoreCase("2of12inf")) {
-			return new EnglishWordDefinitionLookupService();
+		switch (dictionaryName.toLowerCase()){
+			case "2of4brinf":
+			case "2of12inf":
+				return new EnglishWordDefinitionLookupService();
+			case "german":
+				return new GermanWordDefinitionLookupService();
+			default:
+				return null;
 		}
-
-		return null;
 	}
 
 	@Override
@@ -311,7 +314,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		super.onStart();
 		getPrefs();
         if (!gameState.hasGameStarted()) {
-            showAllRow.setVisibility(View.INVISIBLE);
+            showAllRow.setVisibility(View.GONE);
             if(gameState.getCountDownTime()>=0)
                 showConfirmStartGameDialog();
             else

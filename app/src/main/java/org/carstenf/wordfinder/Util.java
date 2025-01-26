@@ -40,8 +40,4 @@ public class Util {
         }
         return false;
     }
-
-    static public void lookupWordDefinition(Activity app, Context context, String word) {
-    }
-
 }
