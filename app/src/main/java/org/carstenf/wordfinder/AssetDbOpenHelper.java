@@ -4,7 +4,7 @@
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
  *
  */
-package org.carsten;
+package org.carstenf.wordfinder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,21 +38,17 @@ class AssetDbOpenHelper {
 				Log.i(WordFinder.TAG, "db onUpdate");
 			}
 		};
-		(new Thread(new Runnable() {
-
-			@Override
-			public void run() {
-				synchronized (createDbLock) {
-					Log.i(WordFinder.TAG, "Started creating db");
-					try {
-						createDataBase(context, dbName, dbFileName);
-					} catch (IOException e) {
-						Log.e(WordFinder.TAG, e.getMessage(), e);
-					}
-					Log.i(WordFinder.TAG, "Finished creating db");
-				}
-			}
-		}, "DB Installer")).start();
+		(new Thread(() -> {
+            synchronized (createDbLock) {
+                Log.i(WordFinder.TAG, "Started creating db");
+                try {
+                    createDataBase(context, dbName, dbFileName);
+                } catch (IOException e) {
+                    Log.e(WordFinder.TAG, e.getMessage(), e);
+                }
+                Log.i(WordFinder.TAG, "Finished creating db");
+            }
+        }, "DB Installer")).start();
 	}
 
 	private final Object createDbLock = new Object();

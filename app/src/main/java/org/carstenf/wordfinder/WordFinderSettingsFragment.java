@@ -1,4 +1,4 @@
-package org.carsten;
+package org.carstenf.wordfinder;
 
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import com.takisoft.preferencex.EditTextPreference;
 import com.takisoft.preferencex.PreferenceFragmentCompat;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,7 +19,7 @@ public class WordFinderSettingsFragment extends PreferenceFragmentCompat {
 	@Override
 	public void onCreatePreferencesFix(Bundle savedInstanceState, String rootKey) {
 		setPreferencesFromResource(R.xml.preferences, rootKey);
-		EditTextPreference timeEdit = (EditTextPreference) findPreference("countdown_time_pref");
+		EditTextPreference timeEdit = findPreference("countdown_time_pref");
 
 		if(timeEdit!=null)
 			timeEdit.setOnBindEditTextListener( (@NonNull EditText editText) -> {

@@ -39,10 +39,14 @@
 Acknowledgements:
 <BR/>Alan Beale for the <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">English dictionaries</a>
 <BR/>Joerg Tinner for the <a href=\"https://sites.google.com/site/joergtinner/\">German dictionary</a>
+<BR/><a href=\"https://dictionaryapi.dev/\">Free Dictionary API</a> for English word definitions
+<BR/><a href=\"https://de.wiktionary.org/\">Wiktionary API</a> for German word definitions
 <BR/>Tobias Friedrich for the app icon design
 ]]></string>
     <string name="WordGuessTooShort">is too short</string>
     <string name="WordAlreadyFound">has already been found</string>
     <string name="WordNotInDictionary">is not in the dictionary</string>
     <string name="default_dict">2of12inf</string>
+    <string name="no_internet_connection_available">No internet connection available</string>
+    <string name="word_definition_lookup_not_supported_for_this_dictionary">Word definition lookup not supported for this dictionary</string>
 </resources>

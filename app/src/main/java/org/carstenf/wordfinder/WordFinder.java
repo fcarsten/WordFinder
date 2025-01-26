@@ -4,7 +4,7 @@
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
  *
  */
-package org.carsten;
+package org.carstenf.wordfinder;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -22,12 +22,15 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +39,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
 
@@ -73,6 +78,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
     private int guessButtonEnabledTextColour;
 
     /** Called when the activity is first created. */
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -86,9 +92,9 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		this.computerResultListView = findViewById(R.id.computerResultsList);
 
 		this.countDownView = findViewById(R.id.chronometer1);
-        this.countDownView.setVisibility(View.INVISIBLE);
+		this.countDownView.setVisibility(View.INVISIBLE);
 
-        scoreTextView = findViewById(R.id.scoreTextView);
+		scoreTextView = findViewById(R.id.scoreTextView);
 		for (int c = 0; c < 16; c++) {
 			letterButtons[c] = new LetterButton(c, this.findViewById(letterButtonIds[c]));
 			idToLetterButton.put(letterButtonIds[c], letterButtons[c]);
@@ -110,9 +116,45 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 				gameState.getPlayerResultList());
 		playerResultListView.setAdapter(playerResultList);
 
+		playerResultListView.setOnItemClickListener((parent, view, position, id) -> {
+            Result selectedItem = (Result) parent.getItemAtPosition(position);
+
+            if(selectedItem!=null ) {
+				WordDefinitionLookupService lookupService = getWordDefinitionLookupService(gameState.getDictionaryName());
+				if(lookupService == null) {
+					Toast.makeText(this, R.string.word_definition_lookup_not_supported_for_this_dictionary, Toast.LENGTH_SHORT).show();
+				} else {
+					if (Util.isNetworkAvailable(getApplicationContext())) {
+						Toast.makeText(this, "Looking up definition for "+ selectedItem, Toast.LENGTH_SHORT).show();
+						lookupService.lookupWordDefinition(this, selectedItem.toString());
+					} else {
+						Toast.makeText(this, R.string.no_internet_connection_available, Toast.LENGTH_SHORT).show();
+					}
+				}
+            }
+        });
+
 		computerResultList = new ArrayAdapter<>(this, R.layout.list_item,
 				gameState.getComputerResultList());
 		computerResultListView.setAdapter(computerResultList);
+
+		computerResultListView.setOnItemClickListener((parent, view, position, id) -> {
+            Result selectedItem = (Result) parent.getItemAtPosition(position);
+
+            if(selectedItem!=null) {
+				WordDefinitionLookupService lookupService = getWordDefinitionLookupService(gameState.getDictionaryName());
+				if(lookupService == null) {
+					Toast.makeText(this, R.string.word_definition_lookup_not_supported_for_this_dictionary, Toast.LENGTH_SHORT).show();
+				} else {
+					if (Util.isNetworkAvailable(getApplicationContext())) {
+						Toast.makeText(this, "Looking up definition for "+ selectedItem, Toast.LENGTH_SHORT).show();
+						lookupService.lookupWordDefinition(this, selectedItem.toString());
+					} else {
+						Toast.makeText(this, R.string.no_internet_connection_available, Toast.LENGTH_SHORT).show();
+					}
+				}
+            }
+        });
 
 		TypedArray themeArray = getTheme().obtainStyledAttributes(new int[] {android.R.attr.editTextColor});
 		try {
@@ -135,7 +177,19 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		updateScore();
 	}
 
-    @Override
+	private WordDefinitionLookupService getWordDefinitionLookupService(String dictionaryName) {
+		switch (dictionaryName.toLowerCase()){
+			case "2of4brinf":
+			case "2of12inf":
+				return new EnglishWordDefinitionLookupService();
+			case "german":
+				return new GermanWordDefinitionLookupService();
+			default:
+				return null;
+		}
+	}
+
+	@Override
     public void onResume() {
         super.onResume();
         getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
@@ -168,7 +222,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	private void getPrefs() {
         SharedPreferences prefs = getSharedPreferences();
-		//noinspection ConstantConditions
+
 		String defaultDict = getString(R.string.default_dict);
 		gameState.setDictionaryName(prefs.getString("dict_pref", defaultDict));
 		gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count"));
@@ -224,7 +278,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	@SuppressLint("SetTextI18n")
 	void updateTimeView(long time) {
-        if(isFinishing()) return;
+		if(isFinishing()) return;
 
 		if (time >= 0) {
 			if (this.countDownView.getVisibility() != View.VISIBLE)
@@ -236,7 +290,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 				ms = "0" + ms;
 			countDownView.setText(h + ":" + ms);
 		} else {
-		    showTimeIsUpDialog();
+			showTimeIsUpDialog();
 			this.countDownView.setVisibility(View.INVISIBLE);
 		}
 	}
@@ -255,7 +309,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		super.onStart();
 		getPrefs();
         if (!gameState.hasGameStarted()) {
-            showAllRow.setVisibility(View.INVISIBLE);
+            showAllRow.setVisibility(View.GONE);
             if(gameState.getCountDownTime()>=0)
                 showConfirmStartGameDialog();
             else
@@ -454,7 +508,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
                 .fromHtml(infoText.replace("X.X", BuildConfig.VERSION_NAME));
 
 		TextView textView = new TextView(this);
-        textView.setMovementMethod(LinkMovementMethod.getInstance());
+		textView.setMovementMethod(LinkMovementMethod.getInstance());
 
 		textView.setText(markup);
 		textView.setLinksClickable(true);
@@ -472,5 +526,35 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	private void showInfo() {
 		showDialog(DIALOG_INFO);
+	}
+
+	public void displayToast(String text, int length) {
+		runOnUiThread(() -> Toast.makeText(this, text, length).show());
+	}
+
+	public void displayWordDefinition(String definitionStr) {
+		runOnUiThread(() -> {
+			View view = findViewById(android.R.id.content);
+			Snackbar snackbar = Snackbar.make(view, definitionStr, Snackbar.LENGTH_LONG);
+			View snackbarView = snackbar.getView();
+
+			TextView textView = snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
+			if (textView != null) {
+				textView.setMaxLines(10);
+			} else {
+				Log.e("Util", "TextView not found in Snackbar view to adjust number of lines");
+			}
+
+			ViewGroup.LayoutParams params = snackbarView.getLayoutParams();
+			params.width = ViewGroup.LayoutParams.WRAP_CONTENT; // Wrap the width to text size
+			params.height = ViewGroup.LayoutParams.WRAP_CONTENT; // Optional: Wrap height
+			snackbarView.setLayoutParams(params);
+
+			FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) snackbarView.getLayoutParams();
+			layoutParams.gravity = Gravity.CENTER; // Adjust gravity if needed
+			snackbarView.setLayoutParams(layoutParams);
+
+			snackbar.show();
+		});
 	}
 }

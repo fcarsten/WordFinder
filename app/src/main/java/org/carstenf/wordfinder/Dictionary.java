@@ -4,7 +4,7 @@
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
  *
  */
-package org.carsten;
+package org.carstenf.wordfinder;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -56,22 +56,16 @@ class Dictionary {
         if(sqlite==null)
             return null;
 
-        Cursor cursor=null;
-
-        try {
-            cursor = builder.query(
-                    sqlite,
-                    TEXT_COLUMN, "text = ?",
-                    new String[]{s}, null, null, null);
+        try (Cursor cursor = builder.query(
+                sqlite,
+                TEXT_COLUMN, "text = ?",
+                new String[]{s}, null, null, null)) {
             if (cursor == null) {
                 return null;
             } else if (!cursor.moveToFirst()) {
                 return null;
             }
             return cursor.getString(0);
-        } finally {
-            if(cursor!=null)
-                cursor.close();
         }
 	}
 	
