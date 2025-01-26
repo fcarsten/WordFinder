@@ -9,7 +9,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
 //
-// Created by DeepSeek (https://chat.deepseek.com/)
+// Created with help from DeepSeek (https://chat.deepseek.com/)
 //
 class WiktionaryLookup {
 

@@ -33,6 +33,7 @@
     <BR/>Alan Beale für die <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">Englischen Wörterbücher</a>
     <BR/>Joerg Tinner für das <a href=\"https://sites.google.com/site/joergtinner/\">Deutsche Wörterbuch</a>
     <BR/>Englische Wortdefinitionen von <a href=\"https://dictionaryapi.dev/\">Free Dictionary API</a>
+    <BR/>Deutsche Wortdefinitionen von <a href=\"https://de.wiktionary.org/\">Wiktionary API</a>
     <BR/>Tobias Friedrich für das App Icon Design]]></string>
     <string name="WordGuessTooShort">" ist zu kurz"</string>
     <string name="WordAlreadyFound">" wurde schon gefunden"</string>

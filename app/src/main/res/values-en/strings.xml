@@ -39,7 +39,8 @@
 Acknowledgements:
 <BR/>Alan Beale for the <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">English dictionaries</a>
 <BR/>Joerg Tinner for the <a href=\"https://sites.google.com/site/joergtinner/\">German dictionary</a>
-<BR/>Word Definitions from <a href=\"https://dictionaryapi.dev/\">Free Dictionary API</a>
+<BR/><a href=\"https://dictionaryapi.dev/\">Free Dictionary API</a> for English word definitions
+<BR/><a href=\"https://de.wiktionary.org/\">Wiktionary API</a> for German word definitions
 <BR/>Tobias Friedrich for the app icon design
 ]]></string>
     <string name="WordGuessTooShort">is too short</string>
