@@ -31,15 +31,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class WordFinder extends AppCompatActivity implements OnSharedPreferenceChangeListener {
 
@@ -61,7 +63,6 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	private ListView computerResultListView;
 
-	private ArrayAdapter<Result> computerResultList;
 
 	private Button okButton;
 
@@ -97,17 +98,12 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 			idToLetterButton.put(letterButtonIds[c], letterButtons[c]);
 		}
 
-
-		gameState = (GameState) getLastCustomNonConfigurationInstance();
-		if (gameState == null) {
-			try {
-				gameState = new GameState(this, new Dictionary(this));
-			} catch (IOException e) {
-				throw new RuntimeException("Could not create Dictionaries: "+e.getMessage(), e);
-			}
-		} else {
-			gameState.setOwner(this);
-		}
+		gameState = new ViewModelProvider(this).get(GameState.class);
+		try {
+            gameState.setDictionary(new Dictionary(this));
+        } catch (IOException e) {
+			throw new RuntimeException("Could not create Dictionaries: "+e.getMessage(), e);
+        }
 
 		playerResultList = new ArrayAdapter<>(this, R.layout.list_item,
 				gameState.getPlayerResultList());
@@ -131,9 +127,18 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
             }
         });
 
-		computerResultList = new ArrayAdapter<>(this, R.layout.list_item,
-				gameState.getComputerResultList());
-		computerResultListView.setAdapter(computerResultList);
+		MutableLiveData<ArrayList<Result>> computerResultList = gameState.getComputerResultList();
+
+		 ArrayAdapter<Result>  computerResultListAdapter = new ArrayAdapter<>(this, R.layout.list_item);
+
+		computerResultList.observe(this, list -> {
+			computerResultListAdapter.clear();
+			computerResultListAdapter.addAll(list);
+			computerResultListAdapter.notifyDataSetChanged();
+			updateScore();
+		});
+
+		computerResultListView.setAdapter(computerResultListAdapter);
 
 		computerResultListView.setOnItemClickListener((parent, view, position, id) -> {
             Result selectedItem = (Result) parent.getItemAtPosition(position);
@@ -152,6 +157,8 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 				}
             }
         });
+
+		gameState.getCountDownTimerCurrentValue().observe(this, this::updateTimeView);
 
 		TypedArray themeArray = getTheme().obtainStyledAttributes(new int[] {android.R.attr.editTextColor});
 		try {
@@ -337,12 +344,12 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		}
 	}
 
-	@Nullable
-	@Override
-	public Object onRetainCustomNonConfigurationInstance() {
-		gameState.setOwner(null);
-		return gameState;
-	}
+//	@Nullable
+//	@Override
+//	public Object onRetainCustomNonConfigurationInstance() {
+//		gameState.setOwner(null);
+//		return gameState;
+//	}
 
 	private void labelDices() {
 		for (int c = 0; c < 16; c++) {
@@ -357,7 +364,6 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
         gameState.stopSolving();
 
         playerResultList.clear();
-        computerResultList.clear();
 
         gameState.shuffle();
 
@@ -401,14 +407,24 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 			playerResultList.insert(new Result(guess), 0);
 		} else {
 			guess = guess.replaceAll("Q", "QU");
-            String validationResult = gameState.validatePlayerGuess(guess);
+			GameState.PLAYER_GUESS_STATE validationResult = gameState.validatePlayerGuess(guess);
 			if (validationResult ==null) {
 				playerResultList.insert(new Result(guess), 0);
 			} else {
+				String text = "";
+				switch (validationResult){
+					case ALREADY_FOUND:
+						text = getString(R.string.WordAlreadyFound);
+						break;
+					case NOT_IN_DICTIONARY:
+						text = getString(R.string.WordNotInDictionary);
+						break;
+					case TOO_SHORT:
+						text = getString(R.string.WordGuessTooShort);
+				}
 
                 Context context = getApplicationContext();
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(context, "\""+guess+"\" " + validationResult, duration);
+                Toast toast = Toast.makeText(context, "\""+guess+"\" " + text, Toast.LENGTH_SHORT);
                 toast.show();
 
 				Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
@@ -453,12 +469,6 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	public void solveClick(View view) {
 		showComputerResults(true);
-	}
-
-	public void updateComputerResultView() {
-		if (computerResultList != null)
-			computerResultList.notifyDataSetChanged();
-		updateScore();
 	}
 
 	@Override

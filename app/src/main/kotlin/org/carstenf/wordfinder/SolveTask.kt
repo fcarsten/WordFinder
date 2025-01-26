@@ -36,7 +36,7 @@ class SolveTask(private val gameState: GameState) {
     private fun findAnyWord(move: Int, taken: BooleanArray, depth: Int, res: String, prefixes: HashSet<String>) {
         taken[move] = true
         if (depth == 0) {
-            Log.i(WordFinder.TAG, res + gameState.getBoard(move))
+//            Log.i(WordFinder.TAG, res + gameState.getBoard(move))
             prefixes.add(res + gameState.getBoard(move))
         } else {
             for (next in WordFinder.MOVES[move]) {
@@ -49,18 +49,14 @@ class SolveTask(private val gameState: GameState) {
     }
 
     private fun solve1(prefix: String) {
-        val cursor = gameState.dictionary.getAllWords(prefix, gameState.dictionaryName)
-        cursor.use {
-            if (it == null) return
-            it.moveToFirst()
-            do {
-                val word = it.getString(0)
-                val minLength = if (gameState.isAllow3LetterWords) 3 else 4
-                if (word.length >= minLength && gameState.findWord(word)) {
-                    Log.d(WordFinder.TAG, "Found: $word")
-                    publishProgress(word)
-                }
-            } while (it.moveToNext())
+        val wordList = gameState.dictionary.getAllWords(prefix, gameState.dictionaryName) ?: return
+
+        for (word in wordList) {
+            val minLength = if (gameState.isAllow3LetterWords) 3 else 4
+            if (word.length >= minLength && gameState.findWord(word)) {
+                Log.d(WordFinder.TAG, "Found: $word")
+                publishProgress(word)
+            }
         }
     }
 

@@ -7,6 +7,8 @@
 package org.carstenf.wordfinder;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 import android.content.res.AssetManager;
@@ -18,7 +20,7 @@ import androidx.annotation.Nullable;
 
 import org.jetbrains.annotations.NotNull;
 
-class Dictionary {
+public class Dictionary {
 
 	private final HashMap<String, AssetDbOpenHelper> mDatabaseOpenHelperMap = new HashMap<>();
 
@@ -52,48 +54,54 @@ class Dictionary {
         AssetDbOpenHelper helper = mDatabaseOpenHelperMap.get(db.trim().toUpperCase());
         if(helper==null) return null;
         
-        SQLiteDatabase sqlite = helper.getReadableDatabase();
-        if(sqlite==null)
-            return null;
+        try (SQLiteDatabase sqlite = helper.getReadableDatabase()) {
+			if (sqlite == null)
+				return null;
 
-        try (Cursor cursor = builder.query(
-                sqlite,
-                TEXT_COLUMN, "text = ?",
-                new String[]{s}, null, null, null)) {
-            if (cursor == null) {
-                return null;
-            } else if (!cursor.moveToFirst()) {
-                return null;
-            }
-            return cursor.getString(0);
-        }
+			try (Cursor cursor = builder.query(
+					sqlite,
+					TEXT_COLUMN, "text = ?",
+					new String[]{s}, null, null, null)) {
+				if (cursor == null) {
+					return null;
+				} else if (!cursor.moveToFirst()) {
+					return null;
+				}
+				return cursor.getString(0);
+			}
+		}
 	}
 	
 	final static private String[] TEXT_COLUMN= new String[] { "text" };
 
 	@Nullable
-    Cursor getAllWords(@NonNull String prefix, @NonNull String db) {
+	Collection<String> getAllWords(@NonNull String prefix, @NonNull String db) {
+		Collection<String> result= new ArrayList<>();
 
         AssetDbOpenHelper dbHelper = mDatabaseOpenHelperMap.get(db.trim().toUpperCase());
         if(dbHelper==null)
             return null;
 
-        SQLiteDatabase sqlite = dbHelper.getReadableDatabase();
-        if(sqlite==null)
-            return null;
+		try(SQLiteDatabase sqlite = dbHelper.getReadableDatabase()) {
+			if (sqlite == null)
+				return null;
 
-        Cursor cursor = builder.query(
-    				sqlite,
+			try(Cursor cursor = builder.query(
+					sqlite,
 					TEXT_COLUMN, "prefix = ?",
-					new String[] { prefix }, null, null, null);
-
-		if (cursor == null) {
-			return null;
-		} else if (!cursor.moveToFirst()) {
-			cursor.close();
-			return null;
+					new String[]{prefix}, null, null, null)) {
+				if (cursor == null) {
+					return null;
+				} else if (!cursor.moveToFirst()) {
+					return null;
+				}
+				do {
+					result.add(cursor.getString(0));
+				} while (cursor.moveToNext());
+			}
 		}
-		return cursor;
+
+		return result;
 	}
 
 }

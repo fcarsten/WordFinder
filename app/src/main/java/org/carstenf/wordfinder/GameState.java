@@ -11,26 +11,27 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import android.os.CountDownTimer;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-public class GameState {
-	final private Dictionary dictionary;
+public class GameState extends ViewModel {
+	private Dictionary dictionary;
 
 	Dictionary getDictionary() {
 		return dictionary;
 	}
 
-	final private char[] board = new char[16];
-	private WordFinder owner;
-
-	void setOwner(WordFinder owner) {
-		this.owner = owner;
+	public void setDictionary(Dictionary dictionary) {
+		this.dictionary = dictionary;
 	}
+	final private char[] board = new char[16];
 
 	//
 	// English letter frequencies: http://en.wikipedia.org/wiki/Letter_frequency
@@ -95,16 +96,17 @@ public class GameState {
             0.988660,
             1.000000 };
 
-	GameState(WordFinder owner, Dictionary dictionary) {
-		this.owner = owner;
-		this.dictionary = dictionary;
-	}
-
-	final private ArrayList<Result> computerResultList = new ArrayList<>();
+	final private MutableLiveData<ArrayList<Result>> computerResultList = new MutableLiveData<>(new ArrayList<>());
 	final private ArrayList<Result> playerResultList = new ArrayList<>();
 
+	public MutableLiveData<Long> getCountDownTimerCurrentValue() {
+		return countDownTimerCurrentValue;
+	}
+
+	final private MutableLiveData<Long> countDownTimerCurrentValue = new MutableLiveData<>(0L);
+
 	@NonNull
-    ArrayList<Result> getComputerResultList() {
+	MutableLiveData<ArrayList<Result>> getComputerResultList() {
 		return computerResultList;
 	}
 
@@ -138,6 +140,9 @@ public class GameState {
 		for (int i = 0; i < 16; i++) {
 			board[i] = pickRandomLetter();
 		}
+
+		Objects.requireNonNull(computerResultList.getValue()).clear();
+		computerResultList.postValue(computerResultList.getValue());
 	}
 
 	private char pickRandomLetter() {
@@ -190,19 +195,20 @@ public class GameState {
 	}
 
 	void addComputerResult(Result result) {
-		computerResultList.add(result);
-		Collections.sort(computerResultList, (object1, object2) -> {
-            int s1 = object1.toString().length();
-            int s2 = object2.toString().length();
-            int res = -Double.compare(s1, s2);
-            if (res == 0)
-                res = object1.toString().compareTo(object2.toString());
-            return res;
-        });
+		ArrayList<Result> list = computerResultList.getValue();
+		if(list!=null) {
+			list.add(result);
+			Collections.sort(list, (object1, object2) -> {
+				int s1 = object1.toString().length();
+				int s2 = object2.toString().length();
+				int res = -Double.compare(s1, s2);
+				if (res == 0)
+					res = object1.toString().compareTo(object2.toString());
+				return res;
+			});
 
-		if (owner != null)
-			owner.updateComputerResultView();
-
+			computerResultList.postValue(list);
+		}
 	}
 
 	void stopSolving() {
@@ -259,17 +265,23 @@ public class GameState {
 		playerTaken[move] = true;
 	}
 
-	String validatePlayerGuess(@NotNull String guess) {
+	public enum PLAYER_GUESS_STATE {
+		TOO_SHORT,
+		ALREADY_FOUND,
+		NOT_IN_DICTIONARY
+	}
+
+	PLAYER_GUESS_STATE validatePlayerGuess(@NotNull String guess) {
 		int minLength = isAllow3LetterWords() ? 3 : 4;
 
-		if(guess.length() < minLength) return owner.getString(R.string.WordGuessTooShort);
+		if(guess.length() < minLength) return PLAYER_GUESS_STATE.TOO_SHORT;
 
 		for (Result result : playerResultList) {
 			if (result.toString().equalsIgnoreCase(guess))
-				return owner.getString(R.string.WordAlreadyFound);
+				return PLAYER_GUESS_STATE.ALREADY_FOUND;
 		}
 		if(getDictionary().lookup(guess, dictionaryName) == null) {
-			return owner.getString(R.string.WordNotInDictionary);
+			return PLAYER_GUESS_STATE.NOT_IN_DICTIONARY;
 		}
 
 		return null;
@@ -297,11 +309,15 @@ public class GameState {
 					iter.remove();
 			}
 
-			for (Iterator<Result> iter = computerResultList.iterator(); iter
-					.hasNext();) {
-				Result next = iter.next();
-				if (next.toString().length() < 4)
-					iter.remove();
+			ArrayList<Result> crl = computerResultList.getValue();
+			if(crl!=null) {
+				for (Iterator<Result> iter = crl.iterator(); iter
+						.hasNext(); ) {
+					Result next = iter.next();
+					if (next.toString().length() < 4)
+						iter.remove();
+				}
+				computerResultList.postValue(crl);
 			}
 		}
 	}
@@ -326,26 +342,24 @@ public class GameState {
 		if (countDownTime < 0)
 			return;
 
-		if (owner != null)
-			owner.updateTimeView(countDownTime);
+		countDownTimerCurrentValue.postValue(countDownTime);
 
 		countDownTimer = new CountDownTimer(countDownTime, 1000) {
 
 			public void onTick(long millisUntilFinished) {
-				if (owner != null)
-					owner.updateTimeView(millisUntilFinished / 1000);
+				countDownTimerCurrentValue.postValue(millisUntilFinished / 1000);
 			}
 
 			public void onFinish() {
 				setTimeUp(true);
-				if (owner != null)
-					owner.updateTimeView(-1);
+				countDownTimerCurrentValue.postValue(-1L);
 			}
 		}.start();
 
 	}
 
-	private int getScore(@NonNull List<Result> list) {
+	private int getScore(List<Result> list) {
+		if(list==null) return 0;
 
 		int res = 0;
 		switch (this.scoreAlg) {
@@ -390,6 +404,6 @@ public class GameState {
 	}
 
 	int getComputerScore() {
-		return getScore(computerResultList);
+		return getScore(computerResultList.getValue());
 	}
 }

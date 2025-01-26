@@ -41,7 +41,7 @@ class InfoDialogFragment : DialogFragment() {
     }
 
     companion object {
-        const val TAG = "InfoDialogFragment"
+        private const val TAG = "InfoDialogFragment"
 
         fun showInfo(fragmentManager: androidx.fragment.app.FragmentManager) {
             val dialogFragment = InfoDialogFragment()
