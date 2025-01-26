@@ -25,7 +25,20 @@ public class GermanWordDefinitionLookupService implements WordDefinitionLookupSe
 
     @Override
     public void lookupWordDefinition(WordFinder wordFinderApp, String word) {
-        getMeaning(wordFinderApp, word);
+        String lowercaseWord= word.toLowerCase();
+        String capitalizedWord = Character.toUpperCase(lowercaseWord.charAt(0)) + lowercaseWord.substring(1);
+        // capitalizedWord = "fasern|Fasern";
+
+        WiktionaryLookup wiktionaryLookup = new WiktionaryLookup();
+        wiktionaryLookup.getMeaningAsync( capitalizedWord, meaning -> {
+            if (meaning != null) {
+                wordFinderApp.displayWordDefinition(meaning);
+            } else {
+                wordFinderApp.displayToast("Definition not found for: " + word, Toast.LENGTH_SHORT);
+            }
+        });
+
+//        getMeaning(wordFinderApp, word);
     }
 
     public static void getMeaning(@NonNull WordFinder wordFinderApp, @NonNull String word) {
