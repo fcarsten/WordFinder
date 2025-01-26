@@ -27,5 +27,7 @@ public class WordFinderPreferences extends AppCompatActivity {
 				.beginTransaction()
 				.replace(R.id.content, new WordFinderSettingsFragment())
 				.commit();
+
+		frame.setFitsSystemWindows(true);
 	}
 }
