@@ -15,9 +15,7 @@ class WiktionaryLookup {
 
     private val client = OkHttpClient()
     private val objectMapper = ObjectMapper()
-//    private val baseUrl = "https://de.wiktionary.org/w/api.php"
     private val WIKTIONARY_API_URL: String = "https://de.wiktionary.org/w/api.php?action=query&prop=extracts&explaintext=true&format=json&titles="
-    // private val WIKTIONARY_API_URI: String = "https://de.wiktionary.org/w/api.php?action=query&prop=extracts&explaintext=true&format=json&titles=fasern|Fasern";
 
     // Function to fetch the meaning of a word (callable from Java)
     fun getMeaningAsync(word: String, callback: WiktionaryCallback) {
@@ -25,7 +23,7 @@ class WiktionaryLookup {
             val meaning = withContext(Dispatchers.IO) {
                 fetchMeaning(word)
             }
-            callback.onResult(meaning)
+            callback.onResult(meaning?.let { extractMeanings(it) })
         }
     }
 
@@ -92,5 +90,34 @@ class WiktionaryLookup {
         }
 
         return Pair(meaning, continueParams)
+    }
+
+    /**
+    * Extracts the actual word meanings from the Wiktionary API response.
+    * The meanings start after a line that begins with "Bedeutungen:".
+    * The meanings are lines that start with '[' and end before the first line that does not start with '['.
+    */
+    fun extractMeanings(responseText: String): String {
+        val lines = responseText.split("\n")
+        val meanings = mutableListOf<String>()
+        var isMeaningSection = false
+
+        for (line in lines) {
+            if (line.startsWith("Bedeutungen:")) {
+                isMeaningSection = true
+                continue // Skip the "Bedeutungen:" line
+            }
+
+            if (isMeaningSection) {
+                if (line.startsWith("[")) {
+                    meanings.add(line)
+                } else {
+                    // Stop when we encounter a line that does not start with '['
+                    break
+                }
+            }
+        }
+
+        return meanings.joinToString("\n") // Combine meanings into a single string
     }
 }
