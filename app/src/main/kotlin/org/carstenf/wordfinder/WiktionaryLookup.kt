@@ -11,11 +11,12 @@ import java.io.IOException
 //
 // Created with help from DeepSeek (https://chat.deepseek.com/)
 //
+const val WIKTIONARY_API_URL: String = "https://de.wiktionary.org/w/api.php?action=query&prop=extracts&explaintext=true&format=json&titles="
+
 class WiktionaryLookup {
 
     private val client = OkHttpClient()
     private val objectMapper = ObjectMapper()
-    private val WIKTIONARY_API_URL: String = "https://de.wiktionary.org/w/api.php?action=query&prop=extracts&explaintext=true&format=json&titles="
 
     // Function to fetch the meaning of a word (callable from Java)
     fun getMeaningAsync(word: String, callback: WiktionaryCallback) {
@@ -97,7 +98,7 @@ class WiktionaryLookup {
     * The meanings start after a line that begins with "Bedeutungen:".
     * The meanings are lines that start with '[' and end before the first line that does not start with '['.
     */
-    fun extractMeanings(responseText: String): String {
+    private fun extractMeanings(responseText: String): String {
         val lines = responseText.split("\n")
         val meanings = mutableListOf<String>()
         var isMeaningSection = false

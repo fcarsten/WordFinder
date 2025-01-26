@@ -7,7 +7,6 @@
 package org.carstenf.wordfinder;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -79,10 +78,6 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
     private int guessButtonEnabledTextColour;
 
     /** Called when the activity is first created. */
-
-	public Activity getActivity() {
-		return this;
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
