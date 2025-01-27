@@ -5,6 +5,8 @@
     android:layout_height="wrap_content"
     android:clickable="false"
     android:focusable="false"
+    android:minWidth="48dp"
+    android:minHeight="48dp"
     android:textColor="#FFFFE0"
     android:textSize="18sp"
     android:textStyle="bold" />

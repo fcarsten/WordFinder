@@ -346,16 +346,24 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		if (move >= 0) {
 			for (LetterButton button : letterButtons) {
 				button.setEnabled(false);
+				button.setContentDescription("Unavailable Letter Button");
 			}
 
 			for (int bid : MOVES[move]) {
-				letterButtons[bid].setEnabled(gameState.isAvailable(bid));
+				boolean enabled = gameState.isAvailable(bid);
+				letterButtons[bid].setEnabled(enabled);
+				if(!enabled) {
+					letterButtons[bid].setContentDescription("Disabled Letter "+ gameState.getBoard(bid));
+				}
 			}
 		} else {
 			for (int c = 0; c < 16; c++) {
 				char l = gameState.getBoard(c);
-				letterButtons[c].setEnabled(l != '\0' && gameState.isAvailable(c));
-				// Can be taken if re-load due to orientation change
+				boolean enabled = l != '\0' && gameState.isAvailable(c);
+				letterButtons[c].setEnabled(enabled);
+				if(!enabled) {
+					letterButtons[c].setContentDescription("Disabled Letter "+ l);
+				}
 			}
 		}
 	}
@@ -364,6 +372,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		for (int c = 0; c < 16; c++) {
 			char l = gameState.getBoard(c);
 			letterButtons[c].setText(String.valueOf(l == 'Q' ? "Qu" : l));
+			letterButtons[c].setContentDescription("Letter "+ l);
 		}
 	}
 
@@ -475,6 +484,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	private void updateOkButton() {
 		okButton.setText(gameState.getCurrentGuess().replaceAll("Q", "Q(u)"));
+		okButton.setContentDescription("Current guess: "+(gameState.getCurrentGuess().isBlank()? "empty" : gameState.getCurrentGuess()) );
 		int minLength = gameState.isAllow3LetterWords() ? 3 : 4;
 		boolean enabled = gameState.getCurrentGuess().length() >= minLength;
 		if(enabled) {
