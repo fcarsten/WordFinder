@@ -77,10 +77,9 @@ public class Dictionary {
 	@Nullable
 	Collection<String> getAllWords(@NonNull String prefix, @NonNull String db) {
 		Collection<String> result= new ArrayList<>();
-
-        AssetDbOpenHelper dbHelper = mDatabaseOpenHelperMap.get(db.trim().toUpperCase());
-        if(dbHelper==null)
-            return null;
+		AssetDbOpenHelper dbHelper = mDatabaseOpenHelperMap.get(db.trim().toUpperCase());
+		if(dbHelper==null)
+			return null;
 
 		try(SQLiteDatabase sqlite = dbHelper.getReadableDatabase()) {
 			if (sqlite == null)

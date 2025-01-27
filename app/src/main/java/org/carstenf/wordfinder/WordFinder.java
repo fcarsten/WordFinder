@@ -344,13 +344,6 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		}
 	}
 
-//	@Nullable
-//	@Override
-//	public Object onRetainCustomNonConfigurationInstance() {
-//		gameState.setOwner(null);
-//		return gameState;
-//	}
-
 	private void labelDices() {
 		for (int c = 0; c < 16; c++) {
 			char l = gameState.getBoard(c);
