@@ -328,6 +328,7 @@
             android:id="@+id/okButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/press_to_submit_current_word"
             android:onClick="okClick"
             android:text=""
             android:textSize="18sp"

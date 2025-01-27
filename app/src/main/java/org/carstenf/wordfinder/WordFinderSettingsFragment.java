@@ -7,9 +7,9 @@ import android.text.Spanned;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceFragmentCompat;
 
 import com.takisoft.preferencex.EditTextPreference;
-import com.takisoft.preferencex.PreferenceFragmentCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class WordFinderSettingsFragment extends PreferenceFragmentCompat {
 	@Override
-	public void onCreatePreferencesFix(Bundle savedInstanceState, String rootKey) {
+	public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 		setPreferencesFromResource(R.xml.preferences, rootKey);
 		EditTextPreference timeEdit = findPreference("countdown_time_pref");
 

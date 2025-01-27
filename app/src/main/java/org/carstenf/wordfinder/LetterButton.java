@@ -8,12 +8,14 @@ package org.carstenf.wordfinder;
 
 import android.widget.Button;
 
+import org.jetbrains.annotations.NotNull;
+
 class LetterButton {
 
 	final private int pos;
 	final private Button button;
 
-	LetterButton(int pos, Button button) {
+	LetterButton(int pos, @NotNull Button button) {
 		this.pos=pos;
 		this.button=button;
 	}
@@ -30,4 +32,7 @@ class LetterButton {
 		return pos;
 	}
 
+	public void setContentDescription(String s) {
+		button.setContentDescription(s);
+	}
 }

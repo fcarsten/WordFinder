@@ -7,7 +7,6 @@
 package org.carstenf.wordfinder;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,10 +15,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.preference.PreferenceManager;
-import android.text.Html;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
@@ -28,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -36,13 +32,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class WordFinder extends AppCompatActivity implements OnSharedPreferenceChangeListener {
 
@@ -64,7 +64,6 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	private ListView computerResultListView;
 
-	private ArrayAdapter<Result> computerResultList;
 
 	private Button okButton;
 
@@ -77,12 +76,11 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	private TextView countDownView;
     private int guessButtonEnabledTextColour;
 
-    /** Called when the activity is first created. */
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
 
 		this.okButton = findViewById(R.id.okButton);
 
@@ -100,61 +98,49 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 			idToLetterButton.put(letterButtonIds[c], letterButtons[c]);
 		}
 
+		gameState = new ViewModelProvider(this).get(GameState.class);
+		try {
+            gameState.setDictionary(new Dictionary(this));
+        } catch (IOException e) {
+			throw new RuntimeException("Could not create Dictionaries: "+e.getMessage(), e);
+        }
 
-		gameState = (GameState) getLastCustomNonConfigurationInstance();
-		if (gameState == null) {
-			try {
-				gameState = new GameState(this, new Dictionary(this));
-			} catch (IOException e) {
-				throw new RuntimeException("Could not create Dictionaries: "+e.getMessage(), e);
+		gameState.getWordLookupError().observe(this, (String text) -> {
+			if(text!=null) displayToast(text, Toast.LENGTH_SHORT);
+		});
+
+		gameState.getWordLookupResult().observe(this, (WordInfo wordInfo) -> {
+			if(wordInfo==null) return;
+
+			if(wordInfo.getWordDefinition() == null && wordInfo.getWordDefinition().isBlank()) {
+				displayToast("Definition not found for: "+ wordInfo.getWord(), Toast.LENGTH_SHORT);
+			} else {
+				displayWordDefinition(wordInfo.getWordDefinition());
 			}
-		} else {
-			gameState.setOwner(this);
-		}
+		});
 
 		playerResultList = new ArrayAdapter<>(this, R.layout.list_item,
 				gameState.getPlayerResultList());
 		playerResultListView.setAdapter(playerResultList);
 
-		playerResultListView.setOnItemClickListener((parent, view, position, id) -> {
-            Result selectedItem = (Result) parent.getItemAtPosition(position);
+		playerResultListView.setOnItemClickListener((parent, view, position, id) -> wordDefinitionLookup(parent, position));
 
-            if(selectedItem!=null ) {
-				WordDefinitionLookupService lookupService = getWordDefinitionLookupService(gameState.getDictionaryName());
-				if(lookupService == null) {
-					Toast.makeText(this, R.string.word_definition_lookup_not_supported_for_this_dictionary, Toast.LENGTH_SHORT).show();
-				} else {
-					if (Util.isNetworkAvailable(getApplicationContext())) {
-						Toast.makeText(this, "Looking up definition for "+ selectedItem, Toast.LENGTH_SHORT).show();
-						lookupService.lookupWordDefinition(this, selectedItem.toString());
-					} else {
-						Toast.makeText(this, R.string.no_internet_connection_available, Toast.LENGTH_SHORT).show();
-					}
-				}
-            }
-        });
+		MutableLiveData<ArrayList<Result>> computerResultList = gameState.getComputerResultList();
 
-		computerResultList = new ArrayAdapter<>(this, R.layout.list_item,
-				gameState.getComputerResultList());
-		computerResultListView.setAdapter(computerResultList);
+		 ArrayAdapter<Result>  computerResultListAdapter = new ArrayAdapter<>(this, R.layout.list_item);
 
-		computerResultListView.setOnItemClickListener((parent, view, position, id) -> {
-            Result selectedItem = (Result) parent.getItemAtPosition(position);
+		computerResultList.observe(this, list -> {
+			computerResultListAdapter.clear();
+			computerResultListAdapter.addAll(list);
+			computerResultListAdapter.notifyDataSetChanged();
+			updateScore();
+		});
 
-            if(selectedItem!=null) {
-				WordDefinitionLookupService lookupService = getWordDefinitionLookupService(gameState.getDictionaryName());
-				if(lookupService == null) {
-					Toast.makeText(this, R.string.word_definition_lookup_not_supported_for_this_dictionary, Toast.LENGTH_SHORT).show();
-				} else {
-					if (Util.isNetworkAvailable(getApplicationContext())) {
-						Toast.makeText(this, "Looking up definition for "+ selectedItem, Toast.LENGTH_SHORT).show();
-						lookupService.lookupWordDefinition(this, selectedItem.toString());
-					} else {
-						Toast.makeText(this, R.string.no_internet_connection_available, Toast.LENGTH_SHORT).show();
-					}
-				}
-            }
-        });
+		computerResultListView.setAdapter(computerResultListAdapter);
+
+		computerResultListView.setOnItemClickListener((parent, view, position, id) -> wordDefinitionLookup(parent, position));
+
+		gameState.getCountDownTimerCurrentValue().observe(this, this::updateTimeView);
 
 		TypedArray themeArray = getTheme().obtainStyledAttributes(new int[] {android.R.attr.editTextColor});
 		try {
@@ -175,6 +161,37 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		updateOkButton();
 
 		updateScore();
+	}
+
+	private void wordDefinitionLookup(AdapterView<?> parent, int position) {
+		Result selectedItem = (Result) parent.getItemAtPosition(position);
+
+		if(selectedItem==null) return;
+		String selectedWord = selectedItem.getResult();
+
+		WordDefinitionLookupService lookupService = getWordDefinitionLookupService(gameState.getDictionaryName());
+
+		if (lookupService == null) {
+			Toast.makeText(this, R.string.word_definition_lookup_not_supported_for_this_dictionary, Toast.LENGTH_SHORT).show();
+		} else {
+			WordInfo wordInfo = gameState.getWordInfoFromCache(selectedWord, lookupService.getLanguage());
+
+			if (wordInfo != null) {
+				String wordDefinition = wordInfo.getWordDefinition();
+				if(wordDefinition ==null || wordDefinition.isBlank()) {
+					displayToast("Definition not found for: "+ selectedWord, Toast.LENGTH_SHORT);
+				} else {
+					displayWordDefinition(wordDefinition);
+				}
+			} else {
+				if (Util.isNetworkAvailable(getApplicationContext())) {
+					Toast.makeText(this, "Looking up definition for " + selectedItem, Toast.LENGTH_SHORT).show();
+					lookupService.lookupWordDefinition(gameState, selectedWord);
+				} else {
+					Toast.makeText(this, R.string.no_internet_connection_available, Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
 	}
 
 	private WordDefinitionLookupService getWordDefinitionLookupService(String dictionaryName) {
@@ -228,6 +245,9 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count"));
 		gameState.setAllow3LetterWords(prefs
 				.getBoolean("threeLetterPref", true));
+
+		gameState.setAutoAddPrefixalWords(prefs
+				.getBoolean("autoAddPrefixPref", true));
 
 		if (prefs.getBoolean("countdown_pref", false)) {
 			String timeStr = prefs.getString("countdown_time_pref", "02:00");
@@ -326,31 +346,33 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		if (move >= 0) {
 			for (LetterButton button : letterButtons) {
 				button.setEnabled(false);
+				button.setContentDescription("Unavailable Letter Button");
 			}
 
 			for (int bid : MOVES[move]) {
-				letterButtons[bid].setEnabled(gameState.isAvailable(bid));
+				boolean enabled = gameState.isAvailable(bid);
+				letterButtons[bid].setEnabled(enabled);
+				if(!enabled) {
+					letterButtons[bid].setContentDescription("Disabled Letter "+ gameState.getBoard(bid));
+				}
 			}
 		} else {
 			for (int c = 0; c < 16; c++) {
 				char l = gameState.getBoard(c);
-				letterButtons[c].setEnabled(l != '\0' && gameState.isAvailable(c));
-				// Can be taken if re-load due to orientation change
+				boolean enabled = l != '\0' && gameState.isAvailable(c);
+				letterButtons[c].setEnabled(enabled);
+				if(!enabled) {
+					letterButtons[c].setContentDescription("Disabled Letter "+ l);
+				}
 			}
 		}
-	}
-
-	@Nullable
-	@Override
-	public Object onRetainCustomNonConfigurationInstance() {
-		gameState.setOwner(null);
-		return gameState;
 	}
 
 	private void labelDices() {
 		for (int c = 0; c < 16; c++) {
 			char l = gameState.getBoard(c);
 			letterButtons[c].setText(String.valueOf(l == 'Q' ? "Qu" : l));
+			letterButtons[c].setContentDescription("Letter "+ l);
 		}
 	}
 
@@ -360,7 +382,6 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
         gameState.stopSolving();
 
         playerResultList.clear();
-        computerResultList.clear();
 
         gameState.shuffle();
 
@@ -400,34 +421,70 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	public void okClick(View view) {
 		String guess = gameState.getCurrentGuess();
+
 		if (gameState.validatePlayerGuess(guess) == null) {
 			playerResultList.insert(new Result(guess), 0);
+			if(gameState.autoAddPrefixalWords()) {
+				testAndAddPrefixWords(guess);
+			}
 		} else {
 			guess = guess.replaceAll("Q", "QU");
-            String validationResult = gameState.validatePlayerGuess(guess);
+			GameState.PLAYER_GUESS_STATE validationResult = gameState.validatePlayerGuess(guess);
 			if (validationResult ==null) {
 				playerResultList.insert(new Result(guess), 0);
+				if(gameState.autoAddPrefixalWords()) {
+					testAndAddPrefixWords(guess);
+				}
 			} else {
+				String text = "";
+				switch (validationResult){
+					case ALREADY_FOUND:
+						text = getString(R.string.WordAlreadyFound);
+						break;
+					case NOT_IN_DICTIONARY:
+						text = getString(R.string.WordNotInDictionary);
+						break;
+					case TOO_SHORT:
+						text = getString(R.string.WordGuessTooShort);
+				}
 
                 Context context = getApplicationContext();
-                int duration = Toast.LENGTH_SHORT;
-                Toast toast = Toast.makeText(context, "\""+guess+"\" " + validationResult, duration);
+                Toast toast = Toast.makeText(context, "\""+guess+"\" " + text, Toast.LENGTH_SHORT);
                 toast.show();
 
 				Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 				vibrator.vibrate(100);
 			}
 		}
+
 		gameState.clearGuess();
-
 		updateScore();
-
 		updateDiceState(-1);
 		updateOkButton();
 	}
 
+	private void testAndAddPrefixWords(@NonNull String word) {
+		while (!word.isEmpty()) {
+			word = word.substring(0, word.length() - 1); // Remove the last character
+			GameState.PLAYER_GUESS_STATE result = gameState.validatePlayerGuess(word);
+			if(result==null) {
+				playerResultList.insert(new Result(word), 0);
+			} else {
+				switch (result) {
+					case ALREADY_FOUND:
+					case NOT_IN_DICTIONARY:
+						continue;
+					case TOO_SHORT:
+						return;
+				}
+			}
+		}
+
+	}
+
 	private void updateOkButton() {
 		okButton.setText(gameState.getCurrentGuess().replaceAll("Q", "Q(u)"));
+		okButton.setContentDescription("Current guess: "+(gameState.getCurrentGuess().isBlank()? "empty" : gameState.getCurrentGuess()) );
 		int minLength = gameState.isAllow3LetterWords() ? 3 : 4;
 		boolean enabled = gameState.getCurrentGuess().length() >= minLength;
 		if(enabled) {
@@ -458,12 +515,6 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		showComputerResults(true);
 	}
 
-	public void updateComputerResultView() {
-		if (computerResultList != null)
-			computerResultList.notifyDataSetChanged();
-		updateScore();
-	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -474,7 +525,8 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	@Override
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 		if (item.getItemId() == R.id.menu_item_info) {
-			showInfo();
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			InfoDialogFragment.Companion.showInfo(fragmentManager);
 			return true;
 		} else if (item.getItemId() == R.id.menu_item_prefs) {
 			showPreferences();
@@ -484,48 +536,10 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		}
 	}
 
-	private static final int DIALOG_INFO = 0;
-
-	@Nullable
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		if (id == DIALOG_INFO) {
-			return createInfoDialog();
-		}
-		return null;
-	}
-
-	private Dialog createInfoDialog() {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Info");
-		builder.setPositiveButton(R.string.OK, (dialog, id) -> dialog.cancel());
-
-        AlertDialog dialog = builder.create();
-
-        String infoText = getString(R.string.InfoText);
-
-        Spanned markup = Html
-                .fromHtml(infoText.replace("X.X", BuildConfig.VERSION_NAME));
-
-		TextView textView = new TextView(this);
-		textView.setMovementMethod(LinkMovementMethod.getInstance());
-
-		textView.setText(markup);
-		textView.setLinksClickable(true);
-
-		dialog.setView(textView, getResources().getDimensionPixelSize(R.dimen.dialog_margin), 0, 0 , 0);
-
-		return dialog;
-	}
-
 	private void showPreferences() {
 		Intent settingsActivity = new Intent(getBaseContext(),
 				WordFinderPreferences.class);
 		startActivity(settingsActivity);
-	}
-
-	private void showInfo() {
-		showDialog(DIALOG_INFO);
 	}
 
 	public void displayToast(String text, int length) {

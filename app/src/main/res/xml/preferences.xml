@@ -1,23 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<PreferenceCategory android:title="@string/GamePreferences"
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<androidx.preference.PreferenceCategory
+		android:title="@string/GamePreferences"
 		android:orderingFromXml="true">
-		<ListPreference android:title="@string/PrefDictionary"
+
+		<androidx.preference.ListPreference
+			android:title="@string/PrefDictionary"
 			android:summary="@string/PrefSelectDict"
-			android:key="dict_pref" android:defaultValue="@string/default_dict"
-			android:entries="@array/databases_entries" android:entryValues="@array/databases_values" />
-		<ListPreference android:title="@string/PrefScoring"
-			android:summary="@string/PrefScoringSummary" android:key="scoring_pref"
-			android:defaultValue="count" android:entries="@array/scoring_algs_entries"
+			android:key="dict_pref"
+			android:defaultValue="@string/default_dict"
+			android:entries="@array/databases_entries"
+			android:entryValues="@array/databases_values" />
+
+		<androidx.preference.ListPreference
+			android:title="@string/PrefScoring"
+			android:summary="@string/PrefScoringSummary"
+			android:key="scoring_pref"
+			android:defaultValue="count"
+			android:entries="@array/scoring_algs_entries"
 			android:entryValues="@array/scoring_algs_values" />
-		<CheckBoxPreference android:title="@string/PrefAllowThreeLetter"
-			android:defaultValue="true" android:summary="@string/PrefAllowThreeLetterSummary"
+
+		<androidx.preference.CheckBoxPreference
+			android:title="@string/PrefAllowThreeLetter"
+			android:defaultValue="true"
+			android:summary="@string/PrefAllowThreeLetterSummary"
 			android:key="threeLetterPref" />
-		<CheckBoxPreference android:title="@string/PrefTimer" android:id="@+id/countdown_enabled_box"
-			android:defaultValue="false" android:summary="@string/PrefTimerSummary"
+
+		<androidx.preference.CheckBoxPreference
+			android:title="@string/PrefAutoAddPrefixalWords"
+			android:defaultValue="false"
+			android:summary="@string/PrefAutoAddPrefixalWordsSummary"
+			android:key="autoAddPrefixPref" />
+
+		<androidx.preference.CheckBoxPreference
+			android:title="@string/PrefTimer"
+			android:defaultValue="false"
+			android:summary="@string/PrefTimerSummary"
 			android:key="countdown_pref" />
-		<EditTextPreference android:summary="@string/PrefTimeLimitSummary"
-			android:inputType="time" android:defaultValue="02:00" android:id="@+id/countdown_time_edit"
-			android:title="@string/PrefTimeLimit" android:key="countdown_time_pref" android:dependency="countdown_pref"/>
-	</PreferenceCategory>
-</PreferenceScreen>
+
+		<com.takisoft.preferencex.EditTextPreference
+			android:summary="@string/PrefTimeLimitSummary"
+			android:inputType="time"
+			android:defaultValue="02:00"
+			android:title="@string/PrefTimeLimit"
+			android:key="countdown_time_pref"
+			android:dependency="countdown_pref" />
+	</androidx.preference.PreferenceCategory>
+</androidx.preference.PreferenceScreen>

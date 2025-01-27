@@ -7,18 +7,27 @@
 package org.carstenf.wordfinder;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.widget.FrameLayout;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 public class WordFinderPreferences extends AppCompatActivity {
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		// Create a FrameLayout to host the fragment
 		FrameLayout frame = new FrameLayout(this);
 		frame.setId(R.id.content);
 		setContentView(frame);
-		this.getSupportFragmentManager().beginTransaction()
-				.replace(R.id.content, new WordFinderSettingsFragment(), null).commit();
+
+		// Load the PreferenceFragment
+		getSupportFragmentManager()
+				.beginTransaction()
+				.replace(R.id.content, new WordFinderSettingsFragment())
+				.commit();
+
+		frame.setFitsSystemWindows(true);
 	}
 }
-
