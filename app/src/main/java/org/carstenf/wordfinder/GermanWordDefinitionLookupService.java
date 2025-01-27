@@ -1,11 +1,9 @@
 package org.carstenf.wordfinder;
 
-import android.widget.Toast;
-
 public class GermanWordDefinitionLookupService implements WordDefinitionLookupService {
 
     @Override
-    public void lookupWordDefinition(WordFinder wordFinderApp, String word) {
+    public void lookupWordDefinition(GameState gameState, String word) {
         String lowercaseWord= word.toLowerCase();
         String capitalizedWord = Character.toUpperCase(lowercaseWord.charAt(0)) + lowercaseWord.substring(1);
         String searchTerm = capitalizedWord + "|" + lowercaseWord  ;
@@ -13,10 +11,16 @@ public class GermanWordDefinitionLookupService implements WordDefinitionLookupSe
         WiktionaryLookup wiktionaryLookup = new WiktionaryLookup();
         wiktionaryLookup.getMeaningAsync( searchTerm, meaning -> {
             if (meaning != null  && !meaning.isBlank()) {
-                wordFinderApp.displayWordDefinition(word+":\n" + meaning);
+                gameState.processWordLookupResult(new WordInfo(word, getLanguage(), word+":\n" + meaning, null));
             } else {
-                wordFinderApp.displayToast("Definition not found for: " + word, Toast.LENGTH_SHORT);
+                gameState.processWordLookupError(word, getLanguage(),
+                        "Definition not found for: " + word);
             }
         });
+    }
+
+    @Override
+    public String getLanguage() {
+        return "D";
     }
 }

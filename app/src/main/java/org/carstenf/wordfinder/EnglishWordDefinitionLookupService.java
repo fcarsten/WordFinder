@@ -1,7 +1,6 @@
 package org.carstenf.wordfinder;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -22,7 +21,7 @@ public class EnglishWordDefinitionLookupService implements WordDefinitionLookupS
     public static final String DICTIONARYAPI_URL = "https://api.dictionaryapi.dev/api/v2/entries/en/";
 
     @Override
-    public void lookupWordDefinition(WordFinder wordFinderApp, String word) {
+    public void lookupWordDefinition(GameState gameState, String word) {
         Request request = new Request.Builder()
                 .url(DICTIONARYAPI_URL +word)
                 .build();
@@ -31,7 +30,7 @@ public class EnglishWordDefinitionLookupService implements WordDefinitionLookupS
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 Log.e("API Response", e.getMessage(), e);
-                wordFinderApp.displayToast("Error looking up word: " +e.getMessage(), Toast.LENGTH_SHORT);
+                gameState.processWordLookupError(word, getLanguage(), "Error looking up word: " +e.getMessage());
             }
 
             @Override
@@ -39,7 +38,8 @@ public class EnglishWordDefinitionLookupService implements WordDefinitionLookupS
                 if (response.isSuccessful()) {
                     ResponseBody responseBody = response.body();
                     if (responseBody == null) {
-                        wordFinderApp.displayToast("Definition lookup for " +word+" failed with empty response.", Toast.LENGTH_SHORT);
+                        gameState.processWordLookupError(word, getLanguage(),
+                                "Definition lookup for " +word+" failed with empty response.");
                         return;
                     }
 
@@ -60,16 +60,23 @@ public class EnglishWordDefinitionLookupService implements WordDefinitionLookupS
 
                         String definitionStr = word +" ("+partOfSpeech + "): " + definition;
 
-                        wordFinderApp.displayWordDefinition(definitionStr);
+                        gameState.processWordLookupResult(new WordInfo(word, getLanguage(), definitionStr, null));
 
                     } catch (Exception e) {
-                        wordFinderApp.displayToast("Error looking up "+word+": " + e.getMessage(), Toast.LENGTH_SHORT);
+                        gameState.processWordLookupError(word, getLanguage(),
+                                "Error looking up "+word+": " + e.getMessage());
                     }
                 }
                 else {
-                    wordFinderApp.displayToast("Definition not found for: "+ word, Toast.LENGTH_SHORT);
+                    gameState.processWordLookupError(word, getLanguage(),
+                            "Definition not found for: "+ word);
                 }
             }
         });
+    }
+
+    @Override
+    public String getLanguage() {
+        return "E";
     }
 }

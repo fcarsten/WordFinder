@@ -33,6 +33,8 @@ public class GameState extends ViewModel {
 	}
 	final private char[] board = new char[16];
 
+	WordInfoCache wordInfoCache = new WordInfoCache();
+
 	//
 	// English letter frequencies: http://en.wikipedia.org/wiki/Letter_frequency
 	//
@@ -104,6 +106,17 @@ public class GameState extends ViewModel {
 	}
 
 	final private MutableLiveData<Long> countDownTimerCurrentValue = new MutableLiveData<>(0L);
+
+	public MutableLiveData<WordInfo> getWordLookupResult() {
+		return wordLookupResult;
+	}
+
+	public MutableLiveData<String> getWordLookupError() {
+		return wordLookupError;
+	}
+
+	final private MutableLiveData<WordInfo> wordLookupResult = new MutableLiveData<>(null);
+	final private MutableLiveData<String> wordLookupError = new MutableLiveData<>(null);
 
 	@NonNull
 	MutableLiveData<ArrayList<Result>> getComputerResultList() {
@@ -263,6 +276,20 @@ public class GameState extends ViewModel {
 		lastMove = move;
 		currentGuess = currentGuess + board[move];
 		playerTaken[move] = true;
+	}
+
+	public WordInfo getWordInfoFromCache(String word, String language) {
+		return wordInfoCache.get(word, language);
+	}
+
+	public void processWordLookupError(String word, String language, String error) {
+		wordInfoCache.put(new WordInfo(word, language, null, null));
+		wordLookupError.postValue(error);
+	}
+
+	public void processWordLookupResult(WordInfo wordInfo) {
+		wordInfoCache.put(wordInfo);
+		wordLookupResult.postValue(wordInfo);
 	}
 
 	public enum PLAYER_GUESS_STATE {

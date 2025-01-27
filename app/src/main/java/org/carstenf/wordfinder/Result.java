@@ -15,7 +15,12 @@ import androidx.annotation.NonNull;
  */
 class Result {
 
-    @NonNull
+	@NonNull
+	public String getResult() {
+		return result;
+	}
+
+	@NonNull
     final private String result;
 
 	Result(	@NonNull String result) {

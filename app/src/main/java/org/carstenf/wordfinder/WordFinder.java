@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -75,12 +76,11 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	private TextView countDownView;
     private int guessButtonEnabledTextColour;
 
-    /** Called when the activity is first created. */
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+
 
 		this.okButton = findViewById(R.id.okButton);
 
@@ -105,27 +105,25 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 			throw new RuntimeException("Could not create Dictionaries: "+e.getMessage(), e);
         }
 
+		gameState.getWordLookupError().observe(this, (String text) -> {
+			if(text!=null) displayToast(text, Toast.LENGTH_SHORT);
+		});
+
+		gameState.getWordLookupResult().observe(this, (WordInfo wordInfo) -> {
+			if(wordInfo==null) return;
+
+			if(wordInfo.getWordDefinition() == null && wordInfo.getWordDefinition().isBlank()) {
+				displayToast("Definition not found for: "+ wordInfo.getWord(), Toast.LENGTH_SHORT);
+			} else {
+				displayWordDefinition(wordInfo.getWordDefinition());
+			}
+		});
+
 		playerResultList = new ArrayAdapter<>(this, R.layout.list_item,
 				gameState.getPlayerResultList());
 		playerResultListView.setAdapter(playerResultList);
 
-		playerResultListView.setOnItemClickListener((parent, view, position, id) -> {
-            Result selectedItem = (Result) parent.getItemAtPosition(position);
-
-            if(selectedItem!=null ) {
-				WordDefinitionLookupService lookupService = getWordDefinitionLookupService(gameState.getDictionaryName());
-				if(lookupService == null) {
-					Toast.makeText(this, R.string.word_definition_lookup_not_supported_for_this_dictionary, Toast.LENGTH_SHORT).show();
-				} else {
-					if (Util.isNetworkAvailable(getApplicationContext())) {
-						Toast.makeText(this, "Looking up definition for "+ selectedItem, Toast.LENGTH_SHORT).show();
-						lookupService.lookupWordDefinition(this, selectedItem.toString());
-					} else {
-						Toast.makeText(this, R.string.no_internet_connection_available, Toast.LENGTH_SHORT).show();
-					}
-				}
-            }
-        });
+		playerResultListView.setOnItemClickListener((parent, view, position, id) -> wordDefinitionLookup(parent, position));
 
 		MutableLiveData<ArrayList<Result>> computerResultList = gameState.getComputerResultList();
 
@@ -140,23 +138,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 		computerResultListView.setAdapter(computerResultListAdapter);
 
-		computerResultListView.setOnItemClickListener((parent, view, position, id) -> {
-            Result selectedItem = (Result) parent.getItemAtPosition(position);
-
-            if(selectedItem!=null) {
-				WordDefinitionLookupService lookupService = getWordDefinitionLookupService(gameState.getDictionaryName());
-				if(lookupService == null) {
-					Toast.makeText(this, R.string.word_definition_lookup_not_supported_for_this_dictionary, Toast.LENGTH_SHORT).show();
-				} else {
-					if (Util.isNetworkAvailable(getApplicationContext())) {
-						Toast.makeText(this, "Looking up definition for "+ selectedItem, Toast.LENGTH_SHORT).show();
-						lookupService.lookupWordDefinition(this, selectedItem.toString());
-					} else {
-						Toast.makeText(this, R.string.no_internet_connection_available, Toast.LENGTH_SHORT).show();
-					}
-				}
-            }
-        });
+		computerResultListView.setOnItemClickListener((parent, view, position, id) -> wordDefinitionLookup(parent, position));
 
 		gameState.getCountDownTimerCurrentValue().observe(this, this::updateTimeView);
 
@@ -179,6 +161,37 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		updateOkButton();
 
 		updateScore();
+	}
+
+	private void wordDefinitionLookup(AdapterView<?> parent, int position) {
+		Result selectedItem = (Result) parent.getItemAtPosition(position);
+
+		if(selectedItem==null) return;
+		String selectedWord = selectedItem.getResult();
+
+		WordDefinitionLookupService lookupService = getWordDefinitionLookupService(gameState.getDictionaryName());
+
+		if (lookupService == null) {
+			Toast.makeText(this, R.string.word_definition_lookup_not_supported_for_this_dictionary, Toast.LENGTH_SHORT).show();
+		} else {
+			WordInfo wordInfo = gameState.getWordInfoFromCache(selectedWord, lookupService.getLanguage());
+
+			if (wordInfo != null) {
+				String wordDefinition = wordInfo.getWordDefinition();
+				if(wordDefinition ==null || wordDefinition.isBlank()) {
+					displayToast("Definition not found for: "+ selectedWord, Toast.LENGTH_SHORT);
+				} else {
+					displayWordDefinition(wordDefinition);
+				}
+			} else {
+				if (Util.isNetworkAvailable(getApplicationContext())) {
+					Toast.makeText(this, "Looking up definition for " + selectedItem, Toast.LENGTH_SHORT).show();
+					lookupService.lookupWordDefinition(gameState, selectedWord);
+				} else {
+					Toast.makeText(this, R.string.no_internet_connection_available, Toast.LENGTH_SHORT).show();
+				}
+			}
+		}
 	}
 
 	private WordDefinitionLookupService getWordDefinitionLookupService(String dictionaryName) {
