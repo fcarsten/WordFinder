@@ -23,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class GameState extends ViewModel {
 	private Dictionary dictionary;
+	private boolean autoAddPrefixalWords;
 
 	Dictionary getDictionary() {
 		return dictionary;
@@ -290,6 +291,14 @@ public class GameState extends ViewModel {
 	public void processWordLookupResult(WordInfo wordInfo) {
 		wordInfoCache.put(wordInfo);
 		wordLookupResult.postValue(wordInfo);
+	}
+
+	public boolean autoAddPrefixalWords() {
+		return autoAddPrefixalWords;
+	}
+
+	public void setAutoAddPrefixalWords(boolean autoAddPrefixPref) {
+		autoAddPrefixalWords = autoAddPrefixPref;
 	}
 
 	public enum PLAYER_GUESS_STATE {

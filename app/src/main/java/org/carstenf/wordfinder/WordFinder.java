@@ -246,6 +246,9 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		gameState.setAllow3LetterWords(prefs
 				.getBoolean("threeLetterPref", true));
 
+		gameState.setAutoAddPrefixalWords(prefs
+				.getBoolean("autoAddPrefixPref", true));
+
 		if (prefs.getBoolean("countdown_pref", false)) {
 			String timeStr = prefs.getString("countdown_time_pref", "02:00");
 			long time = parseTime(timeStr);
@@ -409,13 +412,20 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	public void okClick(View view) {
 		String guess = gameState.getCurrentGuess();
+
 		if (gameState.validatePlayerGuess(guess) == null) {
 			playerResultList.insert(new Result(guess), 0);
+			if(gameState.autoAddPrefixalWords()) {
+				testAndAddPrefixWords(guess);
+			}
 		} else {
 			guess = guess.replaceAll("Q", "QU");
 			GameState.PLAYER_GUESS_STATE validationResult = gameState.validatePlayerGuess(guess);
 			if (validationResult ==null) {
 				playerResultList.insert(new Result(guess), 0);
+				if(gameState.autoAddPrefixalWords()) {
+					testAndAddPrefixWords(guess);
+				}
 			} else {
 				String text = "";
 				switch (validationResult){
@@ -437,12 +447,30 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 				vibrator.vibrate(100);
 			}
 		}
+
 		gameState.clearGuess();
-
 		updateScore();
-
 		updateDiceState(-1);
 		updateOkButton();
+	}
+
+	private void testAndAddPrefixWords(@NonNull String word) {
+		while (!word.isEmpty()) {
+			word = word.substring(0, word.length() - 1); // Remove the last character
+			GameState.PLAYER_GUESS_STATE result = gameState.validatePlayerGuess(word);
+			if(result==null) {
+				playerResultList.insert(new Result(word), 0);
+			} else {
+				switch (result) {
+					case ALREADY_FOUND:
+					case NOT_IN_DICTIONARY:
+						continue;
+					case TOO_SHORT:
+						return;
+				}
+			}
+		}
+
 	}
 
 	private void updateOkButton() {

@@ -27,6 +27,12 @@
 			android:key="threeLetterPref" />
 
 		<androidx.preference.CheckBoxPreference
+			android:title="@string/PrefAutoAddPrefixalWords"
+			android:defaultValue="false"
+			android:summary="@string/PrefAutoAddPrefixalWordsSummary"
+			android:key="autoAddPrefixPref" />
+
+		<androidx.preference.CheckBoxPreference
 			android:title="@string/PrefTimer"
 			android:defaultValue="false"
 			android:summary="@string/PrefTimerSummary"
