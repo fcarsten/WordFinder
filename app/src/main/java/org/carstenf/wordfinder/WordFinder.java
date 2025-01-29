@@ -223,9 +223,11 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
         super.onResume();
 
 		if (!gameState.hasGameStarted()) {
-			shuffle();
 			if(gameState.getCountDownTime()>=0)
-				showConfirmStartGameDialog(false);
+				showConfirmStartGameDialog(true);
+			else {
+				shuffle();
+			}
 		} else  {
 			if(gameState.isTimeUp()) {
 				showTimeIsUpDialog();
