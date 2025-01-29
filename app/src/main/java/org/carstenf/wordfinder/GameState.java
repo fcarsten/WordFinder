@@ -106,7 +106,7 @@ public class GameState extends ViewModel {
 		return countDownTimerCurrentValue;
 	}
 
-	final private MutableLiveData<Long> countDownTimerCurrentValue = new MutableLiveData<>(0L);
+	final private MutableLiveData<Long> countDownTimerCurrentValue = new MutableLiveData<>(-1L);
 
 	public MutableLiveData<WordInfo> getWordLookupResult() {
 		return wordLookupResult;

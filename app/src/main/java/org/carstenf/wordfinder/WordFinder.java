@@ -59,6 +59,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 			8, 9, 13 }, { 8, 9, 10, 12, 14 }, { 9, 10, 11, 13, 15 },
 			{ 10, 11, 14 } };
+	private static final String SHOW_COMPUTER_RESULTS_FLAG = "SHOW_COMPUTER_RESULTS_FLAG";
 
 	private ArrayAdapter<Result> playerResultList;
 
@@ -75,12 +76,23 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	private TextView countDownView;
     private int guessButtonEnabledTextColour;
+	private boolean showComputerResultsFlag;
+
+	@Override
+	public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+		outState.putBoolean(SHOW_COMPUTER_RESULTS_FLAG, showComputerResultsFlag);
+    }
+
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		showComputerResults(savedInstanceState.getBoolean(SHOW_COMPUTER_RESULTS_FLAG, false));
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
-
 
 		this.okButton = findViewById(R.id.okButton);
 
@@ -127,7 +139,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 		MutableLiveData<ArrayList<Result>> computerResultList = gameState.getComputerResultList();
 
-		 ArrayAdapter<Result>  computerResultListAdapter = new ArrayAdapter<>(this, R.layout.list_item);
+		ArrayAdapter<Result>  computerResultListAdapter = new ArrayAdapter<>(this, R.layout.list_item);
 
 		computerResultList.observe(this, list -> {
 			computerResultListAdapter.clear();
@@ -209,7 +221,18 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	@Override
     public void onResume() {
         super.onResume();
-        getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+
+		if (!gameState.hasGameStarted()) {
+			shuffle();
+			if(gameState.getCountDownTime()>=0)
+				showConfirmStartGameDialog(false);
+		} else  {
+			if(gameState.isTimeUp()) {
+				showTimeIsUpDialog();
+			}
+		}
+
+		getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         if(preferencesChanged){
             this.countDownView.setVisibility(View.INVISIBLE);
             getPrefs();
@@ -284,11 +307,13 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
         dialog.show();
     }
 
-    public void showConfirmStartGameDialog() {
+    public void showConfirmStartGameDialog(boolean doShuffle) {
         AlertDialog.Builder builder = new AlertDialog.Builder(WordFinder.this);
         builder.setMessage(R.string.start_game_diag_msg)
                 .setTitle(R.string.start_game_diag_title)
-                .setPositiveButton(R.string.start_game_diag_ok, (dialog, which) -> shuffle());
+                .setPositiveButton(R.string.start_game_diag_ok, (dialog, which) -> {
+					if(doShuffle) shuffle();
+				});
 
         AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
@@ -309,8 +334,10 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 			if (ms.length() == 1)
 				ms = "0" + ms;
 			countDownView.setText(h + ":" + ms);
+			if(time== 0) {
+				showTimeIsUpDialog();
+			}
 		} else {
-			showTimeIsUpDialog();
 			this.countDownView.setVisibility(View.INVISIBLE);
 		}
 	}
@@ -328,19 +355,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	protected void onStart() {
 		super.onStart();
 		getPrefs();
-        if (!gameState.hasGameStarted()) {
-            showAllRow.setVisibility(View.GONE);
-            if(gameState.getCountDownTime()>=0)
-                showConfirmStartGameDialog();
-            else
-                shuffle();
-        } else  {
-            if(gameState.isTimeUp()) {
-                showTimeIsUpDialog();
-            }
-            showAllRow.setVisibility(View.VISIBLE);
-        }
-    }
+	}
 
 	private void updateDiceState(int move) {
 		if (move >= 0) {
@@ -502,6 +517,8 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	}
 
 	private void showComputerResults(boolean show) {
+		this.showComputerResultsFlag = show;
+
 		if (show) {
 			showAllRow.setVisibility(View.GONE);
 			computerResultListView.setVisibility(View.VISIBLE);

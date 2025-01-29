@@ -322,13 +322,15 @@
         android:id="@+id/buttonRow"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="bottom">
+        android:gravity="bottom"
+        android:minHeight="48dp">
 
         <Button
             android:id="@+id/okButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/press_to_submit_current_word"
+            android:minHeight="48dp"
             android:onClick="okClick"
             android:text=""
             android:textSize="18sp"
@@ -343,7 +345,7 @@
         <TextView
             android:id="@+id/chronometer1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/_00_00"
             android:textSize="18sp" />
 
@@ -355,7 +357,7 @@
         <TextView
             android:id="@+id/scoreTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:paddingLeft="10dp"
             android:paddingEnd="10dp"
             android:paddingRight="10dp"
@@ -367,6 +369,7 @@
             android:id="@+id/shuffleButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:onClick="shuffleClick"
             android:text="@string/shuffle"
             android:textSize="18sp"
