@@ -6,6 +6,7 @@
  */
 package org.carstenf.wordfinder;
 
+import android.view.Gravity;
 import android.widget.Button;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +26,11 @@ class LetterButton {
 	}
 
 	void setEnabled(boolean b) {
+		if(b) {
+			button.setGravity(Gravity.CENTER_HORIZONTAL| Gravity.TOP);
+		} else {
+			button.setGravity(Gravity.CENTER_HORIZONTAL| Gravity.BOTTOM);
+		}
 		button.setEnabled(b);		
 	}
 

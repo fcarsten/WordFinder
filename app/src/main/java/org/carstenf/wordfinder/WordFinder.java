@@ -23,6 +23,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -106,8 +107,21 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 		scoreTextView = findViewById(R.id.scoreTextView);
 		for (int c = 0; c < 16; c++) {
-			letterButtons[c] = new LetterButton(c, this.findViewById(letterButtonIds[c]));
+			Button button = this.findViewById(letterButtonIds[c]);
+			letterButtons[c] = new LetterButton(c, button);
 			idToLetterButton.put(letterButtonIds[c], letterButtons[c]);
+			button.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
+
+				@Override
+				public void onGlobalLayout() {
+					button.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+					// Calculate text size based on button height
+					int buttonHeight = button.getHeight();
+					float textSize = buttonHeight * 0.2f;
+					button.setTextSize(textSize);
+				}
+			});
 		}
 
 		gameState = new ViewModelProvider(this).get(GameState.class);

@@ -23,59 +23,67 @@
 
             <Button
                 android:id="@+id/button01"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
 
             <Button
                 android:id="@+id/button02"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
 
             <Button
                 android:id="@+id/button03"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
 
             <Button
                 android:id="@+id/button04"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
         </TableRow>
 
         <TableRow
@@ -86,59 +94,67 @@
 
             <Button
                 android:id="@+id/button11"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
 
             <Button
                 android:id="@+id/button12"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
 
             <Button
                 android:id="@+id/button13"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
 
             <Button
                 android:id="@+id/button14"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
         </TableRow>
 
         <TableRow
@@ -149,59 +165,67 @@
 
             <Button
                 android:id="@+id/button21"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
 
             <Button
                 android:id="@+id/button22"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
 
             <Button
                 android:id="@+id/button23"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
 
             <Button
                 android:id="@+id/button24"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
         </TableRow>
 
         <TableRow
@@ -212,59 +236,67 @@
 
             <Button
                 android:id="@+id/button31"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
 
             <Button
                 android:id="@+id/button32"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
 
             <Button
                 android:id="@+id/button33"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="2dp"
+                android:paddingBottom="4dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
 
             <Button
                 android:id="@+id/button34"
-                style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:background="@drawable/letter_button_background_selector"
+                android:fontFamily="@font/arco"
+                android:gravity="top|center_horizontal"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
                 android:onClick="letterClick"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
                 android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                android:textColor="@color/letter_button_text_color" />
         </TableRow>
     </TableLayout>
 
