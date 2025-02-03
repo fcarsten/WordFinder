@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Disabled state -->
-    <item android:state_enabled="false"  android:drawable="@drawable/letter_button_disabled" /> <!-- Gray color for disabled state -->
+    <item android:state_enabled="false"  android:drawable="@drawable/keyboard_pressed" /> <!-- Gray color for disabled state -->
     <!-- Enabled state -->
-    <item android:drawable="@drawable/letter_button" /> <!-- Black color for default (enabled) state -->
+    <item android:drawable="@drawable/keyboard_normal" /> <!-- Black color for default (enabled) state -->
 </selector>

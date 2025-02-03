@@ -27,9 +27,9 @@ class LetterButton {
 
 	void setEnabled(boolean b) {
 		if(b) {
-			button.setGravity(Gravity.CENTER_HORIZONTAL| Gravity.TOP);
+			button.setPadding(0, 15, 0, 20);
 		} else {
-			button.setGravity(Gravity.CENTER_HORIZONTAL| Gravity.BOTTOM);
+			button.setPadding(0, 25, 0, 25);
 		}
 		button.setEnabled(b);		
 	}
