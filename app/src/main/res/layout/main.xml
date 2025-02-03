@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <TableLayout
         android:id="@+id/tableLayout1"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
         android:minWidth="195dp"
@@ -18,7 +18,7 @@
         <TableRow
             android:id="@+id/tableRow1"
             style="?android:attr/buttonBarStyle"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
@@ -45,7 +45,7 @@
 
         <TableRow
             android:id="@+id/tableRow2"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
@@ -72,7 +72,7 @@
 
         <TableRow
             android:id="@+id/tableRow3"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
@@ -99,7 +99,7 @@
 
         <TableRow
             android:id="@+id/tableRow4"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
@@ -126,7 +126,7 @@
     </TableLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
         android:baselineAligned="false"
@@ -135,7 +135,7 @@
         <ListView
             android:id="@+id/playerResultsList"
             android:layout_width="0dp"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/computerResultsLayout"
             app:layout_constraintStart_toStartOf="parent" />
@@ -143,7 +143,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/computerResultsLayout"
             android:layout_width="0dp"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -151,7 +151,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/showAllRow"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
@@ -167,7 +167,7 @@
 
             <ListView
                 android:id="@+id/computerResultsList"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -177,7 +177,7 @@
 
     <TableRow
         android:id="@+id/buttonRow"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="bottom"
         android:minHeight="48dp">
