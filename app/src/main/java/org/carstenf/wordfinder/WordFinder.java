@@ -135,6 +135,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 			if(text!=null) displayToast(text, Toast.LENGTH_SHORT);
 		});
 
+		gameState.getWordLookupResult().setValue(null);
 		gameState.getWordLookupResult().observe(this, (WordInfo wordInfo) -> {
 			if(wordInfo==null) return;
 
