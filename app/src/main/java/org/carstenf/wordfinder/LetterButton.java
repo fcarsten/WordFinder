@@ -27,7 +27,7 @@ class LetterButton {
 	private boolean pressed = false;
 	void setEnabled(boolean b) {
 		pressed = b;
-		button.setPressed(b);
+		button.setPressed(!b);
 	}
 
 	boolean isEnabled() {
