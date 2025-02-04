@@ -6,6 +6,10 @@
  */
 package org.carstenf.wordfinder;
 
+import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +25,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -29,6 +34,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListView;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,7 +110,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		this.computerResultListView = findViewById(R.id.computerResultsList);
 
 		this.countDownView = findViewById(R.id.chronometer1);
-		this.countDownView.setVisibility(View.INVISIBLE);
+		this.countDownView.setVisibility(INVISIBLE);
 
 		scoreTextView = findViewById(R.id.scoreTextView);
 		for (int c = 0; c < 16; c++) {
@@ -182,6 +189,8 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 			themeArray.recycle();
 		}
 
+		addGestureHandler(findViewById(R.id.letterGridView));
+
 		labelDices();
 
 		updateDiceState(-1);
@@ -190,6 +199,116 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		updateScore();
 	}
 
+	private void addGestureHandler(TableLayout tableLayout) {
+		// Iterate through all buttons in the TableLayout
+
+		for (int i = 0; i < tableLayout.getChildCount(); i++) {
+			View child = tableLayout.getChildAt(i);
+			if (child instanceof TableRow) {
+				TableRow row = (TableRow) child;
+				for (int j = 0; j < row.getChildCount(); j++) {
+					View view = row.getChildAt(j);
+					if (view instanceof Button) {
+						Button button = (Button) view;
+
+						// Attach the OnTouchListener to each button
+						button.setOnTouchListener(new View.OnTouchListener() {
+							private Button firstButtonPressed;
+							private Button lastButtonPressed = null;
+
+							@Override
+							public boolean onTouch(View v, MotionEvent event) {
+								int action = event.getAction();
+								int x = (int) event.getX();
+								int y = (int) event.getY();
+
+								// Convert the touch coordinates to screen coordinates
+								int[] location = new int[2];
+								v.getLocationOnScreen(location);
+								x += location[0];
+								y += location[1];
+
+								// Find the button at the current touch position
+								Button button = findButtonAtPosition(tableLayout, x, y, action);
+
+								if (button != null) {
+									switch (action) {
+										case MotionEvent.ACTION_DOWN:
+											firstButtonPressed = button;
+										case MotionEvent.ACTION_MOVE:
+											if (button != lastButtonPressed) {
+												if (button.hasOnClickListeners()) {
+													button.callOnClick();
+												}
+												lastButtonPressed = button;
+											}
+											break;
+										case MotionEvent.ACTION_UP:
+											Log.d(TAG, "Button up");
+											if(firstButtonPressed != lastButtonPressed)
+												okClick(null);
+											lastButtonPressed = null;
+											break;
+									}
+								}
+
+								return true;
+							}
+						});
+					}
+				}
+			}
+		}
+	}
+
+	// Helper method to find the button at a specific position
+	private Button findButtonAtPosition(TableLayout tableLayout, int x, int y, int action) {
+		float touchAreaPercent = 0;
+
+		switch (action) {
+			case MotionEvent.ACTION_DOWN:
+			case MotionEvent.ACTION_UP:
+				touchAreaPercent = 1;
+				break;
+
+			case MotionEvent.ACTION_MOVE:
+				touchAreaPercent = 0.6f;
+				break;
+		}
+
+		for (int i = 0; i < tableLayout.getChildCount(); i++) {
+			View child = tableLayout.getChildAt(i);
+			if (child instanceof TableRow) {
+				TableRow row = (TableRow) child;
+				for (int j = 0; j < row.getChildCount(); j++) {
+					View view = row.getChildAt(j);
+					if (view instanceof Button) {
+						Button button = (Button) view;
+						int[] location = new int[2];
+						button.getLocationOnScreen(location);
+						int buttonLeft = location[0];
+						int buttonTop = location[1];
+
+						int buttonWidth = button.getWidth();
+						int buttonHeight = button.getHeight();
+
+                        int buttonRight = buttonLeft + buttonWidth;
+						int buttonBottom = buttonTop + buttonHeight;
+
+						float deltaWidth = buttonWidth * (1 - touchAreaPercent)/2;
+						float deltaHeight = buttonHeight * (1 - touchAreaPercent)/2;
+
+						// Check if the touch position is within the button's bounds
+						if (x >= buttonLeft+deltaWidth && x <= buttonRight-deltaWidth &&
+								y >= buttonTop+deltaHeight && y <= buttonBottom- deltaHeight) {
+							return button;
+						}
+					}
+				}
+			}
+		}
+		return null;
+	}
 	private void wordDefinitionLookup(AdapterView<?> parent, int position) {
 		Result selectedItem = (Result) parent.getItemAtPosition(position);
 
@@ -251,7 +370,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 		getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
         if(preferencesChanged){
-            this.countDownView.setVisibility(View.INVISIBLE);
+            this.countDownView.setVisibility(INVISIBLE);
             getPrefs();
             shuffle();
             preferencesChanged = false;
@@ -343,8 +462,8 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		if(isFinishing()) return;
 
 		if (time >= 0) {
-			if (this.countDownView.getVisibility() != View.VISIBLE)
-				this.countDownView.setVisibility(View.VISIBLE);
+			if (this.countDownView.getVisibility() != VISIBLE)
+				this.countDownView.setVisibility(VISIBLE);
 			long h = time / 60;
 			long m = time % 60;
 			String ms = String.valueOf(m);
@@ -355,7 +474,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 				showTimeIsUpDialog();
 			}
 		} else {
-			this.countDownView.setVisibility(View.INVISIBLE);
+			this.countDownView.setVisibility(INVISIBLE);
 		}
 	}
 
@@ -443,7 +562,10 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	public void letterClick(@NonNull View view) {
 		LetterButton pressedButton = idToLetterButton.get(view.getId());
+
         assert pressedButton != null;
+		if(! pressedButton.isEnabled()) return;
+
         int move = pressedButton.getPos();
 		gameState.play(move);
 
@@ -515,15 +637,21 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	}
 
 	private void updateOkButton() {
-		okButton.setText(gameState.getCurrentGuess().replaceAll("Q", "Q(u)"));
-		okButton.setContentDescription("Current guess: "+(gameState.getCurrentGuess().isBlank()? "empty" : gameState.getCurrentGuess()) );
-		int minLength = gameState.isAllow3LetterWords() ? 3 : 4;
-		boolean enabled = gameState.getCurrentGuess().length() >= minLength;
-		if(enabled) {
-            okButton.setTextColor(guessButtonEnabledTextColour);
-        } else {
-            okButton.setTextColor(Color.parseColor("#FFA0A0"));
-        }
+		String currentGuess = gameState.getCurrentGuess().replaceAll("Q", "Q(u)");
+		okButton.setText(currentGuess);
+		if(currentGuess.isEmpty()) {
+			okButton.setVisibility(INVISIBLE);
+		} else {
+			okButton.setVisibility(VISIBLE);
+			okButton.setContentDescription("Current guess: " + (gameState.getCurrentGuess().isBlank() ? "empty" : gameState.getCurrentGuess()));
+			int minLength = gameState.isAllow3LetterWords() ? 3 : 4;
+			boolean enabled = gameState.getCurrentGuess().length() >= minLength;
+			if (enabled) {
+				okButton.setTextColor(guessButtonEnabledTextColour);
+			} else {
+				okButton.setTextColor(Color.parseColor("#FFA0A0"));
+			}
+		}
 	}
 
 	@SuppressLint("SetTextI18n")
@@ -537,11 +665,11 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		this.showComputerResultsFlag = show;
 
 		if (show) {
-			showAllRow.setVisibility(View.GONE);
-			computerResultListView.setVisibility(View.VISIBLE);
+			showAllRow.setVisibility(GONE);
+			computerResultListView.setVisibility(VISIBLE);
 		} else {
-			showAllRow.setVisibility(View.VISIBLE);
-			computerResultListView.setVisibility(View.INVISIBLE);
+			showAllRow.setVisibility(VISIBLE);
+			computerResultListView.setVisibility(INVISIBLE);
 		}
 	}
 

@@ -27,7 +27,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TableLayout
-            android:id="@+id/tableLayout"
+            android:id="@+id/letterGridView"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -6,7 +6,6 @@
  */
 package org.carstenf.wordfinder;
 
-import android.view.Gravity;
 import android.widget.Button;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,13 +24,14 @@ class LetterButton {
 		button.setText(string);
 	}
 
+	private boolean pressed = false;
 	void setEnabled(boolean b) {
-		if(b) {
-			button.setPadding(0, 15, 0, 20);
-		} else {
-			button.setPadding(0, 25, 0, 25);
-		}
-		button.setEnabled(b);		
+		pressed = b;
+		button.setPressed(b);
+	}
+
+	boolean isEnabled() {
+		return pressed;
 	}
 
 	int getPos() {
