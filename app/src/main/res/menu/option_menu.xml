@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_item_info"
         android:enabled="true"
-        android:icon="@drawable/ic_menu_info_details"
+        android:icon="@drawable/help_circle_outline"
         android:title="@string/info"
-        android:visible="true" />
+        android:visible="true"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_item_prefs"
         android:layout_height="wrap_content"
         android:enabled="true"
-        android:icon="@drawable/ic_menu_preferences"
+        android:icon="@drawable/cog"
         android:title="@string/prefs"
-        android:visible="true" />
+        android:visible="true"
+        app:showAsAction="ifRoom"/>
 </menu>

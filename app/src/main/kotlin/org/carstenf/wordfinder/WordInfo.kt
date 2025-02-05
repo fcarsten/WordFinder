@@ -2,8 +2,9 @@ package org.carstenf.wordfinder
 
 class WordInfo(
     val word: String,
-    val language: String,
+    private val language: String,
     var wordDefinition: String?,
+    @Suppress("unused")
     var referenceUrl: String?
 ) {
     // Ensure that 'word' and 'language' are never null

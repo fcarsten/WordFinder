@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <TableLayout
-        android:id="@+id/tableLayout1"
-        android:layout_width="fill_parent"
+        android:id="@+id/letterGridView"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
         android:minWidth="195dp"
@@ -17,259 +17,116 @@
 
         <TableRow
             android:id="@+id/tableRow1"
-            android:layout_width="fill_parent"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
             <Button
                 android:id="@+id/button01"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+            />
 
             <Button
                 android:id="@+id/button02"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
 
             <Button
                 android:id="@+id/button03"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
 
             <Button
                 android:id="@+id/button04"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow2"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
             <Button
                 android:id="@+id/button11"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+            />
 
             <Button
                 android:id="@+id/button12"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+             />
 
             <Button
                 android:id="@+id/button13"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
 
             <Button
                 android:id="@+id/button14"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow3"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
             <Button
                 android:id="@+id/button21"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
 
             <Button
                 android:id="@+id/button22"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
 
             <Button
                 android:id="@+id/button23"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
 
             <Button
                 android:id="@+id/button24"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow4"
-            android:layout_width="fill_parent"
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1">
 
             <Button
                 android:id="@+id/button31"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
 
             <Button
                 android:id="@+id/button32"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
 
             <Button
                 android:id="@+id/button33"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
 
             <Button
                 android:id="@+id/button34"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:layout_weight="1"
-                android:minWidth="48dp"
-                android:minHeight="48dp"
-                android:onClick="letterClick"
-                android:text="@string/qu"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:autoSizeTextType="uniform" />
+                style="@style/KeyBoardButtonStyle"
+                />
         </TableRow>
     </TableLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
         android:baselineAligned="false"
@@ -278,7 +135,7 @@
         <ListView
             android:id="@+id/playerResultsList"
             android:layout_width="0dp"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/computerResultsLayout"
             app:layout_constraintStart_toStartOf="parent" />
@@ -286,7 +143,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/computerResultsLayout"
             android:layout_width="0dp"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -294,7 +151,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/showAllRow"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
@@ -310,7 +167,7 @@
 
             <ListView
                 android:id="@+id/computerResultsList"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent" />
@@ -320,15 +177,17 @@
 
     <TableRow
         android:id="@+id/buttonRow"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="bottom">
+        android:gravity="bottom"
+        android:minHeight="48dp">
 
         <Button
             android:id="@+id/okButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:contentDescription="@string/press_to_submit_current_word"
+            android:minHeight="48dp"
             android:onClick="okClick"
             android:text=""
             android:textSize="18sp"
@@ -343,7 +202,7 @@
         <TextView
             android:id="@+id/chronometer1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="@string/_00_00"
             android:textSize="18sp" />
 
@@ -355,7 +214,7 @@
         <TextView
             android:id="@+id/scoreTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:paddingLeft="10dp"
             android:paddingEnd="10dp"
             android:paddingRight="10dp"
@@ -367,6 +226,7 @@
             android:id="@+id/shuffleButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:onClick="shuffleClick"
             android:text="@string/shuffle"
             android:textSize="18sp"

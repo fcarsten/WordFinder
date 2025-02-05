@@ -24,8 +24,14 @@ class LetterButton {
 		button.setText(string);
 	}
 
+	private boolean pressed = false;
 	void setEnabled(boolean b) {
-		button.setEnabled(b);		
+		pressed = b;
+		button.setPressed(!b);
+	}
+
+	boolean isEnabled() {
+		return pressed;
 	}
 
 	int getPos() {

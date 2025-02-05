@@ -34,7 +34,7 @@ public class GameState extends ViewModel {
 	}
 	final private char[] board = new char[16];
 
-	WordInfoCache wordInfoCache = new WordInfoCache();
+	final WordInfoCache wordInfoCache = new WordInfoCache();
 
 	//
 	// English letter frequencies: http://en.wikipedia.org/wiki/Letter_frequency
@@ -106,7 +106,7 @@ public class GameState extends ViewModel {
 		return countDownTimerCurrentValue;
 	}
 
-	final private MutableLiveData<Long> countDownTimerCurrentValue = new MutableLiveData<>(0L);
+	final private MutableLiveData<Long> countDownTimerCurrentValue = new MutableLiveData<>(-1L);
 
 	public MutableLiveData<WordInfo> getWordLookupResult() {
 		return wordLookupResult;

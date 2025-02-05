@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "org.carstenf.wordfinder"
-        minSdkVersion 23
+        minSdkVersion 22
         targetSdkVersion 35
     }
 
