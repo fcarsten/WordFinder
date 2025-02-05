@@ -88,7 +88,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	@Override
 	public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
+		super.onSaveInstanceState(outState);
 		outState.putBoolean(SHOW_COMPUTER_RESULTS_FLAG, showComputerResultsFlag);
     }
 
@@ -199,7 +199,8 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		updateScore();
 	}
 
-	private void addGestureHandler(TableLayout tableLayout) {
+	@SuppressLint("ClickableViewAccessibility")
+    private void addGestureHandler(TableLayout tableLayout) {
 		// Iterate through all buttons in the TableLayout
 
 		for (int i = 0; i < tableLayout.getChildCount(); i++) {
@@ -354,7 +355,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 
 	@Override
     public void onResume() {
-        super.onResume();
+		super.onResume();
 
 		if (!gameState.hasGameStarted()) {
 			if(gameState.getCountDownTime()>=0)
@@ -560,10 +561,11 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 			R.id.button23, R.id.button24, R.id.button31, R.id.button32,
 			R.id.button33, R.id.button34 };
 
-	public void letterClick(@NonNull View view) {
+	/** @noinspection unused*/
+    public void letterClick(@NonNull View view) {
 		LetterButton pressedButton = idToLetterButton.get(view.getId());
 
-        assert pressedButton != null;
+		assert pressedButton != null;
 		if(! pressedButton.isEnabled()) return;
 
         int move = pressedButton.getPos();
@@ -649,7 +651,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 			if (enabled) {
 				okButton.setTextColor(guessButtonEnabledTextColour);
 			} else {
-				okButton.setTextColor(Color.parseColor("#FFA0A0"));
+				okButton.setTextColor(Color.parseColor("#FAC6C6"));
 			}
 		}
 	}

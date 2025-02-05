@@ -185,7 +185,7 @@
         <Button
             android:id="@+id/okButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:contentDescription="@string/press_to_submit_current_word"
             android:minHeight="48dp"
             android:onClick="okClick"
