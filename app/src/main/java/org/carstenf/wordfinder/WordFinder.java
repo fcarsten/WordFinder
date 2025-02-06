@@ -106,7 +106,6 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 			getOnBackInvokedDispatcher().registerOnBackInvokedCallback(
 					OnBackInvokedDispatcher.PRIORITY_DEFAULT, () -> {
@@ -379,6 +378,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 	@Override
     public void onResume() {
 		super.onResume();
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 		if (!gameState.hasGameStarted()) {
 			if(gameState.getCountDownTime()>=0)
@@ -410,6 +410,7 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
     public void onPause() {
         super.onPause();
         getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     private boolean preferencesChanged = false;

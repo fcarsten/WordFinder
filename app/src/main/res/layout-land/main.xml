@@ -5,7 +5,9 @@
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:splitMotionEvents="false"
+    android:windowEnableSplitTouch="false">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -26,7 +28,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TableLayout
+        <org.carstenf.wordfinder.BackGestureBlockingTableLayout
             android:id="@+id/letterGridView"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
@@ -145,7 +147,7 @@
                     style="@style/KeyBoardButtonStyle"
                     />
             </TableRow>
-        </TableLayout>
+        </org.carstenf.wordfinder.BackGestureBlockingTableLayout>
 
         <LinearLayout
             android:id="@+id/linearLayout5"
