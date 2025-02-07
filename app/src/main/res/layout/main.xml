@@ -158,9 +158,9 @@
                 app:layout_constraintEnd_toEndOf="parent">
 
                 <Button
+                    android:id="@+id/showAllButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:onClick="solveClick"
                     android:text="@string/show_all"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -190,7 +190,6 @@
             android:layout_height="match_parent"
             android:contentDescription="@string/press_to_submit_current_word"
             android:minHeight="48dp"
-            android:onClick="okClick"
             android:text=""
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -229,7 +228,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:onClick="shuffleClick"
             android:text="@string/shuffle"
             android:textSize="18sp"
             android:textStyle="bold" />

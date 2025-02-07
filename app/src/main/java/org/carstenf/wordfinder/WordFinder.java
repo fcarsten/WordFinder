@@ -125,8 +125,12 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
 		}
 
 		this.okButton = findViewById(R.id.okButton);
+		this.okButton.setOnClickListener(this::okClick);
 
 		this.showAllRow = findViewById(R.id.showAllRow);
+		this.findViewById(R.id.showAllButton).setOnClickListener(this::solveClick);
+
+		this.findViewById(R.id.shuffleButton).setOnClickListener(this::shuffleClick);
 
 		ListView playerResultListView = findViewById(R.id.playerResultsList);
 		this.computerResultListView = findViewById(R.id.computerResultsList);
@@ -401,17 +405,17 @@ public class WordFinder extends AppCompatActivity implements OnSharedPreferenceC
         }
     }
 
-    private SharedPreferences getSharedPreferences() {
+	private SharedPreferences getSharedPreferences() {
 		return PreferenceManager
 				.getDefaultSharedPreferences(getBaseContext());
-    }
+	}
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+	@Override
+	public void onPause() {
+		super.onPause();
+		getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
+	}
 
     private boolean preferencesChanged = false;
 

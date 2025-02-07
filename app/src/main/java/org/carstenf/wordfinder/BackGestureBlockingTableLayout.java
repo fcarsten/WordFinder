@@ -18,8 +18,8 @@ public class BackGestureBlockingTableLayout extends TableLayout {
     public BackGestureBlockingTableLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-    Rect exclusionRect = new Rect();
-    List<Rect> exclusionRects = Collections.singletonList(exclusionRect);
+    final Rect exclusionRect = new Rect();
+    final List<Rect> exclusionRects = Collections.singletonList(exclusionRect);
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
