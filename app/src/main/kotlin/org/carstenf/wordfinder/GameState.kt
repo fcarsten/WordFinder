@@ -21,17 +21,12 @@ class GameState : ViewModel() {
 
     private val wordInfoCache: WordInfoCache = WordInfoCache()
 
-    @JvmField
 	val computerResultList: MutableLiveData<ArrayList<Result>?> = MutableLiveData(ArrayList())
-    @JvmField
 	val playerResultList: ArrayList<Result> = ArrayList()
 
-    @JvmField
 	val countDownTimerCurrentValue: MutableLiveData<Long> = MutableLiveData(-1L)
 
-    @JvmField
 	val wordLookupResult: MutableLiveData<WordInfo?> = MutableLiveData(null)
-    @JvmField
 	val wordLookupError: MutableLiveData<String?> = MutableLiveData(null)
 
     fun getBoard(move: Int): Char {
@@ -235,7 +230,6 @@ class GameState : ViewModel() {
 
     private var countDownTimer: CountDownTimer? = null
 
-    @JvmField
 	var countDownTime: Long = -1
 
     private var timeUp : Boolean = false

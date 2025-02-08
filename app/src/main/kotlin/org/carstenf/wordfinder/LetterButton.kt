@@ -8,7 +8,7 @@ package org.carstenf.wordfinder
 
 import android.widget.Button
 
-internal class LetterButton(@JvmField val pos: Int, private val button: Button) {
+internal class LetterButton(val pos: Int, private val button: Button) {
     fun setText(string: String?) {
         button.text = string
     }

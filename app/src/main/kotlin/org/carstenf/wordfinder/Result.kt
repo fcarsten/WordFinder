@@ -10,7 +10,7 @@ package org.carstenf.wordfinder
 /**
  * @author carsten.friedrich@gmail.com
  */
-class Result(@JvmField val result: String) {
+class Result(val result: String) {
     override fun toString(): String {
         return result
     }
