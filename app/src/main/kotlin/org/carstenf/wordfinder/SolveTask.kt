@@ -49,7 +49,7 @@ class SolveTask(private val gameState: GameState) {
     }
 
     private fun solve1(prefix: String) {
-        val wordList = gameState.dictionary?.getAllWords(prefix, gameState.dictionaryName) ?: return
+        val wordList = gameState.dictionary.getAllWords(prefix, gameState.dictionaryName) ?: return
 
         for (word in wordList) {
             val minLength = if (gameState.isAllow3LetterWords) 3 else 4

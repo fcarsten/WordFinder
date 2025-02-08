@@ -4,7 +4,6 @@
     <string name="info">Info</string>
     <string name="prefs">Preferences</string>
     <string name="set_preferences">Preferences</string>
-    <string name="qu" translatable="false">Qu</string>
     <string name="_00_00" translatable="false">00:00</string>
     <string name="shuffle">Shuffle</string>
     <string name="show_all">Show All</string>

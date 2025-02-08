@@ -7,6 +7,7 @@
 package org.carstenf.wordfinder
 
 import android.database.sqlite.SQLiteQueryBuilder
+import android.util.Log
 import java.util.Locale
 
 class Dictionary internal constructor(wordFinder: WordFinder) {
@@ -14,7 +15,12 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
     private val builder: SQLiteQueryBuilder
 
-    fun lookup(word: String, db: String): String? {
+    fun lookup(word: String, db: String?): String? {
+        if(db==null) {
+            Log.e(WordFinder.TAG, "Dictionary name null")
+            return null
+        }
+
         var s = word
         s = s.trim { it <= ' ' }.uppercase(Locale.getDefault())
 
@@ -86,7 +92,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
         return result
     }
 
-    companion object {
+    internal companion object {
         private const val DB_ASSET_PATH = "dicts"
         private val TEXT_COLUMN = arrayOf("text")
     }

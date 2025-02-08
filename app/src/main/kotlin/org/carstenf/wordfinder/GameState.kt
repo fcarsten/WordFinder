@@ -13,8 +13,8 @@ import java.util.Arrays
 import java.util.Locale
 
 class GameState : ViewModel() {
-    @JvmField
-	var dictionary: Dictionary? = null
+	lateinit var dictionary: Dictionary
+
     private var autoAddPrefixalWords = false
 
     private val board = CharArray(16)
@@ -116,15 +116,13 @@ class GameState : ViewModel() {
     }
 
     fun stopSolving() {
-        if (solver != null) {
-            solver!!.cancel()
-            solver = null
-        }
+        solver?.cancel()
+        solver = null
     }
 
     fun startSolving() {
         solver = SolveTask(this)
-        solver!!.execute()
+        solver?.execute()
     }
 
     fun isAvailable(i: Int): Boolean {
@@ -142,6 +140,7 @@ class GameState : ViewModel() {
 
     var lastMove: Int = -1
         private set
+
     var isAllow3LetterWords: Boolean = true
         set(flag) {
             field = flag
@@ -170,8 +169,9 @@ class GameState : ViewModel() {
                 }
             }
         }
+
     private var scoreAlg = ScoreAlgorithm.COUNT
-    @JvmField
+
 	var dictionaryName: String? = null
 
     fun play(move: Int) {
@@ -218,7 +218,7 @@ class GameState : ViewModel() {
                     .equals(guess, ignoreCase = true)
             ) return PlayerGuessState.ALREADY_FOUND
         }
-        if (dictionary!!.lookup(guess, dictionaryName!!) == null) {
+        if (dictionary.lookup(guess, dictionaryName) == null) {
             return PlayerGuessState.NOT_IN_DICTIONARY
         }
 
