@@ -19,7 +19,7 @@ class GameState : ViewModel() {
 
     private val board = CharArray(16)
 
-    val wordInfoCache: WordInfoCache = WordInfoCache()
+    private val wordInfoCache: WordInfoCache = WordInfoCache()
 
     @JvmField
 	val computerResultList: MutableLiveData<ArrayList<Result>?> = MutableLiveData(ArrayList())
@@ -170,13 +170,13 @@ class GameState : ViewModel() {
                 }
             }
         }
-    private var scoreAlg = SCORE_ALG.COUNT
+    private var scoreAlg = ScoreAlgorithm.COUNT
     @JvmField
 	var dictionaryName: String? = null
 
     fun play(move: Int) {
         lastMove = move
-        currentGuess = currentGuess + board[move]
+        currentGuess += board[move]
         playerTaken[move] = true
     }
 
@@ -202,24 +202,24 @@ class GameState : ViewModel() {
         autoAddPrefixalWords = autoAddPrefixPref
     }
 
-    enum class PLAYER_GUESS_STATE {
+    enum class PlayerGuessState {
         TOO_SHORT,
         ALREADY_FOUND,
         NOT_IN_DICTIONARY
     }
 
-    fun validatePlayerGuess(guess: String): PLAYER_GUESS_STATE? {
+    fun validatePlayerGuess(guess: String): PlayerGuessState? {
         val minLength = if (isAllow3LetterWords) 3 else 4
 
-        if (guess.length < minLength) return PLAYER_GUESS_STATE.TOO_SHORT
+        if (guess.length < minLength) return PlayerGuessState.TOO_SHORT
 
         for (result in playerResultList) {
             if (result.toString()
                     .equals(guess, ignoreCase = true)
-            ) return PLAYER_GUESS_STATE.ALREADY_FOUND
+            ) return PlayerGuessState.ALREADY_FOUND
         }
         if (dictionary!!.lookup(guess, dictionaryName!!) == null) {
-            return PLAYER_GUESS_STATE.NOT_IN_DICTIONARY
+            return PlayerGuessState.NOT_IN_DICTIONARY
         }
 
         return null
@@ -227,9 +227,9 @@ class GameState : ViewModel() {
 
     fun setScoringAlgorithm(string: String?) {
         if ("count".equals(string, ignoreCase = true)) {
-            this.scoreAlg = SCORE_ALG.COUNT
+            this.scoreAlg = ScoreAlgorithm.COUNT
         } else {
-            this.scoreAlg = SCORE_ALG.VALUE
+            this.scoreAlg = ScoreAlgorithm.VALUE
         }
     }
 
@@ -264,8 +264,8 @@ class GameState : ViewModel() {
 
         var res = 0
         when (this.scoreAlg) {
-            SCORE_ALG.COUNT -> res = list.size
-            SCORE_ALG.VALUE -> for (result in list) {
+            ScoreAlgorithm.COUNT -> res = list.size
+            ScoreAlgorithm.VALUE -> for (result in list) {
                 res += when (result.toString().length) {
                     3, 4 -> 1
                     5 -> 2
@@ -285,7 +285,7 @@ class GameState : ViewModel() {
         return board[0].code != 0
     }
 
-    internal enum class SCORE_ALG {
+    internal enum class ScoreAlgorithm {
         COUNT, VALUE
     }
 

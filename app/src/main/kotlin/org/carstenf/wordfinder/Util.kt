@@ -18,6 +18,5 @@ object Util {
             connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
         return capabilities != null &&
                 capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-        return false
     }
 }

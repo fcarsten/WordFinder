@@ -3,8 +3,6 @@ package org.carstenf.wordfinder
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.SpannableStringBuilder
-import android.text.Spanned
-import android.widget.EditText
 import androidx.preference.PreferenceFragmentCompat
 import com.takisoft.preferencex.EditTextPreference
 

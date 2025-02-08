@@ -14,8 +14,8 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
     private val builder: SQLiteQueryBuilder
 
-    fun lookup(s: String, db: String): String? {
-        var s = s
+    fun lookup(word: String, db: String): String? {
+        var s = word
         s = s.trim { it <= ' ' }.uppercase(Locale.getDefault())
 
         val helper = mDatabaseOpenHelperMap[db.trim { it <= ' ' }
@@ -23,7 +23,6 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
         if (helper == null) return null
 
         helper.readableDatabase.use { sqlite ->
-            if (sqlite == null) return null
             builder.query(
                 sqlite,
                 TEXT_COLUMN, "text = ?",
@@ -42,7 +41,6 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
     /**
      * Constructor
      *
-     * @param wordFinder
      * The Context within which to work, used to create the DB
      */
     init {
@@ -54,7 +52,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
                     file.trim { it <= ' ' }.uppercase(Locale.getDefault()).replace(".MP3", "")
                 mDatabaseOpenHelperMap[dbName] = AssetDbOpenHelper(
                     wordFinder, dbName,
-                    DB_ASSET_PATH + "/" + file
+                    "$DB_ASSET_PATH/$file"
                 )
             }
         }

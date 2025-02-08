@@ -11,8 +11,8 @@ class BackGestureBlockingTableLayout : TableLayout {
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
 
-    val exclusionRect: Rect = Rect()
-    val exclusionRects: List<Rect> = listOf(exclusionRect)
+    private val exclusionRect: Rect = Rect()
+    private val exclusionRects: List<Rect> = listOf(exclusionRect)
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         super.onLayout(changed, l, t, r, b)
