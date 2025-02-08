@@ -34,14 +34,16 @@
     <string name="PrefTimeLimit">Countdown time (mm:ss)</string>
     <string name="OK">OK</string>
     <string name="InfoText"><![CDATA[
-<H1>Word Finder vX.X</H1>&copy; <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a>
-<br/><br/>License: <a href=\"http://www.gnu.org/licenses/gpl.html\">GPLv3</a><BR/>
-Acknowledgements:
+<H1>Word Finder vX.X</H1>&copy; 2025 <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a>
+<br/><br/>License: <a href=\"http://www.gnu.org/licenses/gpl.html\">GPLv3</a><BR/><BR/>
+Acknowledgements:<BR/>
 <BR/>Alan Beale for the <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">English dictionaries</a>
 <BR/>Joerg Tinner for the <a href=\"https://sites.google.com/site/joergtinner/\">German dictionary</a>
+<BR/>Tobias Friedrich for the app icon design
+<BR/>Rafael Olivo Díaz and Denis Ignatov for the <a href=\"https://font.download/font/arco\">Letter tile font</a>
+<BR/>Letter tile background based on work by Rhos (@RhosGFX on Twitter)
 <BR/><a href=\"https://dictionaryapi.dev/\">Free Dictionary API</a> for English word definitions
 <BR/><a href=\"https://de.wiktionary.org/\">Wiktionary API</a> for German word definitions
-<BR/>Tobias Friedrich for the app icon design
 ]]></string>
     <string name="WordGuessTooShort">is too short</string>
     <string name="WordAlreadyFound">has already been found</string>

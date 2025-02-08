@@ -28,13 +28,16 @@
     <string name="PrefScoringSummary">Wertungsmethode  auswählen</string>
     <string name="PrefTimeLimit">Zeitlimit (mm:ss)</string>
     <string name="OK">OK</string>
-    <string name="InfoText"><![CDATA[<H1>Word Finder vX.X</H1>&copy; <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a> <br/>
-    <br/>Lizenz: <a href=\"http://www.gnu.de/documents/gpl.de.html\">GPLv3</a><BR/> Danksagungen:
+    <string name="InfoText"><![CDATA[<H1>Word Finder vX.X</H1>&copy; 2025 <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a> <br/>
+    <br/>Lizenz: <a href=\"http://www.gnu.de/documents/gpl.de.html\">GPLv3</a><BR/><BR/> Danksagungen:<BR/>
     <BR/>Alan Beale für die <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">Englischen Wörterbücher</a>
     <BR/>Joerg Tinner für das <a href=\"https://sites.google.com/site/joergtinner/\">Deutsche Wörterbuch</a>
+    <BR/>Rafael Olivo Díaz and Denis Ignatov für den Buchstaben <a href=\"https://font.download/font/arco\">Zeichensatz</a>
+    <BR/>Buchstaben Hintergrund basiert auf Arbeiten von Rhos (@RhosGFX on Twitter)
     <BR/>Englische Wortdefinitionen von <a href=\"https://dictionaryapi.dev/\">Free Dictionary API</a>
     <BR/>Deutsche Wortdefinitionen von <a href=\"https://de.wiktionary.org/\">Wiktionary API</a>
-    <BR/>Tobias Friedrich für das App Icon Design]]></string>
+    <BR/>Tobias Friedrich für das App Icon Design]]>
+    </string>
     <string name="WordGuessTooShort">" ist zu kurz"</string>
     <string name="WordAlreadyFound">" wurde schon gefunden"</string>
     <string name="WordNotInDictionary">" ist nicht im Wörterbuch"</string>
