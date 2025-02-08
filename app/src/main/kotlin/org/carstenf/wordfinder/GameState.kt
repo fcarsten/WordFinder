@@ -241,7 +241,7 @@ class GameState : ViewModel() {
     private var timeUp : Boolean = false
 
     fun startCountDown() {
-        if (countDownTimer != null) countDownTimer!!.cancel()
+        countDownTimer?.cancel()
 
         if (countDownTime < 0) return
 

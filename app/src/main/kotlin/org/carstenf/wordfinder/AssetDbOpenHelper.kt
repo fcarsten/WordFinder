@@ -14,10 +14,10 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 
-internal class AssetDbOpenHelper(
+class AssetDbOpenHelper(
     context: Context, dbName: String,
     dbFileName: String
-) {
+) : AutoCloseable {
     private val dbHelperDelegate: SQLiteOpenHelper =
         object : SQLiteOpenHelper(context, dbName, null, 1) {
             override fun onCreate(db: SQLiteDatabase) {
@@ -114,7 +114,7 @@ internal class AssetDbOpenHelper(
     }
 
     @Synchronized
-    fun close() {
+    override fun close() {
         synchronized(createDbLock) {
             dbHelperDelegate.close()
         }

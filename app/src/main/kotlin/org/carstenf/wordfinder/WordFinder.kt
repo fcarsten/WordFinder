@@ -14,7 +14,9 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.os.VibrationEffect
 import android.os.Vibrator
+import android.os.VibratorManager
 import android.util.Log
 import android.util.SparseArray
 import android.view.Gravity
@@ -141,7 +143,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         }
 
         gameState!!.wordLookupError.observe(this) { text: String? ->
-            if (text != null) displayToast(text, Toast.LENGTH_SHORT)
+            if (text != null) displayToast(text)
         }
 
         gameState!!.wordLookupResult.value = null
@@ -149,7 +151,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             if(wordInfo==null) return@Observer
 
             if (wordInfo.wordDefinition.isNullOrBlank()) {
-                displayToast("Definition not found for: " + wordInfo.word, Toast.LENGTH_SHORT)
+                displayToast("Definition not found for: " + wordInfo.word)
             } else {
                 displayWordDefinition(wordInfo.wordDefinition!!)
             }
@@ -350,7 +352,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             if (wordInfo != null) {
                 val wordDefinition = wordInfo.wordDefinition
                 if (wordDefinition.isNullOrBlank()) {
-                    displayToast("Definition not found for: $selectedWord", Toast.LENGTH_SHORT)
+                    displayToast("Definition not found for: $selectedWord")
                 } else {
                     displayWordDefinition(wordDefinition)
                 }
@@ -475,7 +477,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         dialog.show()
     }
 
-    private fun showConfirmStartGameDialog(doShuffle: Boolean) {
+    private fun showConfirmStartGameDialog(@Suppress("SameParameterValue") doShuffle: Boolean) {
         val builder = AlertDialog.Builder(this@WordFinder)
         builder.setMessage(R.string.start_game_diag_msg)
             .setTitle(R.string.start_game_diag_title)
@@ -629,8 +631,16 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 val toast = Toast.makeText(context, "\"$guess\" $text", Toast.LENGTH_SHORT)
                 toast.show()
 
-                val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
-                vibrator.vibrate(100)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    val vibratorManager = getSystemService(VIBRATOR_MANAGER_SERVICE) as VibratorManager
+                    vibratorManager.defaultVibrator.vibrate(VibrationEffect.createOneShot(100, VibrationEffect.EFFECT_TICK))
+                } else {
+                    @Suppress("DEPRECATION")
+                    val vibrator = getSystemService(VIBRATOR_SERVICE) as Vibrator
+                    @Suppress("DEPRECATION")
+                    vibrator.vibrate(100)
+                }
+
             }
         }
 
@@ -729,8 +739,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         startActivity(settingsActivity)
     }
 
-    private fun displayToast(text: String?, length: Int) {
-        runOnUiThread { Toast.makeText(this, text, length).show() }
+    private fun displayToast(text: String?) {
+        runOnUiThread { Toast.makeText(this, text, Toast.LENGTH_SHORT).show() }
     }
 
     private fun displayWordDefinition(definitionStr: String) {
