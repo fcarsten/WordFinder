@@ -676,9 +676,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             val minLength = if (gameState.isAllow3LetterWords) 3 else 4
             val enabled = gameState.currentGuess.length >= minLength
             if (enabled) {
-                okButton.setTextColor(guessButtonEnabledTextColour)
+                okButton.setTextColor(Color.parseColor("#000000"))
             } else {
-                okButton.setTextColor(Color.parseColor("#FAC6C6"))
+                okButton.setTextColor(Color.parseColor("#FA1616"))
             }
         }
     }
@@ -720,6 +720,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             }
             R.id.menu_item_prefs -> {
                 showPreferences()
+                return true
+            }
+            R.id.menu_item_shuffle -> {
+                shuffleClick();
                 return true
             }
             else -> {

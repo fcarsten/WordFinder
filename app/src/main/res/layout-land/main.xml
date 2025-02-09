@@ -22,11 +22,15 @@
 
         <ListView
             android:id="@+id/playerResultsList"
-            android:layout_width="120dp"
+            android:layout_width="180sp"
             android:layout_height="fill_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/listview_border"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            />
 
         <org.carstenf.wordfinder.BackGestureBlockingTableLayout
             android:id="@+id/letterGridView"
@@ -35,7 +39,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/linearLayout5"
             app:layout_constraintStart_toEndOf="@+id/playerResultsList"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/listview_border"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            >
 
             <TableRow
                 android:id="@+id/tableRow1"
@@ -151,7 +159,7 @@
 
         <LinearLayout
             android:id="@+id/linearLayout5"
-            android:layout_width="120dp"
+            android:layout_width="180sp"
             android:layout_height="fill_parent"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -163,6 +171,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/curtains"
+                    app:srcCompat="@drawable/curtains"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:scaleType="fitXY"
+                    android:background="@drawable/listview_border"
+                    android:divider="@android:color/darker_gray"
+                    android:dividerHeight="1dp"
+                    />
+
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
@@ -171,18 +196,27 @@
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/imageView"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
 
                     <Button
                         android:id="@+id/showAllButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/show_all" />
+                        android:background="#F0FFFFFF"
+                        android:shadowColor="#A8A8A8"
+                        android:shadowDx="5"
+                        android:shadowDy="5"
+                        android:shadowRadius="5"
+                        android:text="@string/show_all"
+                        android:textColor="#000000"
+
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintWidth_percent=".5" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -192,7 +226,11 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:minHeight="6dp"
-                android:visibility="invisible" />
+                android:visibility="invisible"
+                android:background="@drawable/listview_border"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="1dp"
+                />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -205,12 +243,27 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        android:background="@drawable/listview_border"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:minHeight="64dp"
+        >
 
         <Button
             android:id="@+id/okButton"
+            android:background="@drawable/key_pressed"
+            android:fontFamily="@font/arco"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/press_to_submit_current_word"
+            android:includeFontPadding="false"
+            android:lines="1"
+            android:maxLines="1"
+            android:minHeight="48dp"
+            android:minLines="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:text=""
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -218,16 +271,27 @@
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            />
 
         <TextView
             android:id="@+id/chronometer1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/_00_00"
-            android:textSize="18sp" />
+            android:layout_weight="1"
+            android:textSize="40sp" />
+        <Button
+            android:id="@+id/shuffleButton"
+            android:layout_width="64dp"
+            android:layout_height="match_parent"
+            android:minHeight="48dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@drawable/roling_dice_border"
+            />
 
         <Space
             android:layout_width="wrap_content"
@@ -237,19 +301,13 @@
         <TextView
             android:id="@+id/scoreTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="0/0"
-            android:textSize="18sp"
+            android:textSize="40sp"
             tools:ignore="HardcodedText" />
 
-        <Button
-            android:id="@+id/shuffleButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/shuffle"
-            android:textSize="18sp"
-            android:textStyle="bold" />
     </TableRow>
 </androidx.constraintlayout.widget.ConstraintLayout>
