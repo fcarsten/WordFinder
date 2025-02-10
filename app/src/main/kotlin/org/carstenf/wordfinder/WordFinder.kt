@@ -700,7 +700,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             }
         } else {
             showAllRow.visibility = View.VISIBLE
-            computerResultListView.visibility = View.GONE
+            //computerResultListView.visibility = View.GONE
         }
     }
 

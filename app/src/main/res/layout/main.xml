@@ -151,7 +151,7 @@
             android:dividerHeight="1dp"
             />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <FrameLayout
             android:id="@+id/computerResultsLayout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -159,6 +159,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/playerResultsList">
+
+            <ListView
+                android:id="@+id/computerResultsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/listview_border"
+                android:divider="@android:color/darker_gray"
+                app:layout_constraintEnd_toEndOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/showAllRow"
@@ -205,16 +213,8 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ListView
-                android:id="@+id/computerResultsList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="invisible"
-                android:background="@drawable/listview_border"
-                android:divider="@android:color/darker_gray"
-                app:layout_constraintEnd_toEndOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TableRow

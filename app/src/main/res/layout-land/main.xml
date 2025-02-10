@@ -161,11 +161,10 @@
             </TableRow>
         </org.carstenf.wordfinder.BackGestureBlockingTableLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/linearLayout5"
             android:minWidth="180sp"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/letterGridView"
@@ -173,6 +172,16 @@
             app:layout_constraintHorizontal_weight="0.2"
             android:layout_width="0dp"
             >
+
+            <ListView
+                android:id="@+id/computerResultsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="6dp"
+                android:background="@drawable/listview_border"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="1dp"
+                />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/showAllRow"
@@ -231,19 +240,8 @@
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ListView
-                android:id="@+id/computerResultsList"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:minHeight="6dp"
-                android:visibility="invisible"
-                android:background="@drawable/listview_border"
-                android:divider="@android:color/darker_gray"
-                android:dividerHeight="1dp"
-                />
 
-        </LinearLayout>
+        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TableRow
