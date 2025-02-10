@@ -22,14 +22,17 @@
 
         <ListView
             android:id="@+id/playerResultsList"
-            android:layout_width="180sp"
+            android:layout_width="0dp"
             android:layout_height="fill_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:background="@drawable/listview_border"
             android:divider="@android:color/darker_gray"
             android:dividerHeight="1dp"
+            android:minWidth="180sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/letterGridView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_weight="0.2"
             />
 
         <org.carstenf.wordfinder.BackGestureBlockingTableLayout
@@ -43,6 +46,7 @@
             android:background="@drawable/listview_border"
             android:divider="@android:color/darker_gray"
             android:dividerHeight="1dp"
+            app:layout_constraintHorizontal_weight="0.6"
             >
 
             <TableRow
@@ -159,12 +163,16 @@
 
         <LinearLayout
             android:id="@+id/linearLayout5"
-            android:layout_width="180sp"
+            android:minWidth="180sp"
             android:layout_height="fill_parent"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toEndOf="@+id/letterGridView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_weight="0.2"
+            android:layout_width="0dp"
+            >
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/showAllRow"
@@ -189,7 +197,7 @@
                     />
 
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
@@ -211,7 +219,7 @@
                         android:shadowRadius="5"
                         android:text="@string/show_all"
                         android:textColor="#000000"
-
+                        android:textAlignment="center"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -307,7 +315,8 @@
             android:paddingRight="10dp"
             android:text="0/0"
             android:textSize="40sp"
-            tools:ignore="HardcodedText" />
+            android:gravity="center_vertical|right"
+            tools:ignore="HardcodedText,RtlHardcoded" />
 
     </TableRow>
 </androidx.constraintlayout.widget.ConstraintLayout>
