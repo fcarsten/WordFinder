@@ -178,7 +178,8 @@
                     android:shadowDy="5"
                     android:shadowRadius="5"
                     android:text="@string/show_all"
-
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -263,16 +264,6 @@
             android:layout_height="wrap_content"
             android:minWidth="20dp" />
 
-        <Button
-            android:id="@+id/shuffleButton"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:minHeight="48dp"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:background="@drawable/roling_dice_border"
-            />
-        <!--        android:text="@string/shuffle"-->
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -288,5 +279,18 @@
             android:text="0/0"
             android:textSize="18sp"
             tools:ignore="HardcodedText" />
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="20dp" />
+        <Button
+            android:id="@+id/shuffleButton"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:minHeight="48dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@drawable/roling_dice_border"
+            />
     </TableRow>
 </LinearLayout>
