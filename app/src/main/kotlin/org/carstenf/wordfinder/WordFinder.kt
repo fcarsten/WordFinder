@@ -48,7 +48,6 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
 import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
-import org.carstenf.wordfinder.Util.isNetworkAvailable
 import java.io.IOException
 import java.util.Locale
 
@@ -78,7 +77,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     public override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        showComputerResults(savedInstanceState.getBoolean(SHOW_COMPUTER_RESULTS_FLAG, false))
+        showComputerResults(savedInstanceState.getBoolean(SHOW_COMPUTER_RESULTS_FLAG, false), false)
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -545,7 +544,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun shuffle() {
-        showComputerResults(false)
+        showComputerResults(false, false)
 
         gameState.stopSolving()
 
@@ -689,20 +688,24 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             ("${gameState.playerScore} / ${gameState.computerScore}")
     }
 
-    private fun showComputerResults(show: Boolean) {
+    private fun showComputerResults(show: Boolean, animate: Boolean) {
         this.showComputerResultsFlag = show
 
         if (show) {
-            showAllRow.visibility = View.GONE
-            computerResultListView.visibility = View.VISIBLE
+            if(animate) {
+                slideUpAndHide(showAllRow, computerResultListView)
+            } else {
+                computerResultListView.visibility = View.VISIBLE
+                showAllRow.visibility = View.GONE
+            }
         } else {
             showAllRow.visibility = View.VISIBLE
-            computerResultListView.visibility = View.INVISIBLE
+            computerResultListView.visibility = View.GONE
         }
     }
 
     private fun solveClick() {
-        showComputerResults(true)
+        showComputerResults(true, true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -723,7 +726,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 return true
             }
             R.id.menu_item_shuffle -> {
-                shuffleClick();
+                shuffleClick()
                 return true
             }
             else -> {
