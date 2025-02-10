@@ -15,7 +15,13 @@ English dictionaries from Alan Beale at http://wordlist.sourceforge.net/12dicts-
 German dictionary from Joerg Tinner at https://sites.google.com/site/joergtinner
 Letter tile font by Rafael Olivo Díaz and Denis Ignatov  https://font.download/font/arco
 Letter tile background based on work by Rhos (@RhosGFX on Twitter) https://rhosgfx.itch.io/vector-keyboard-controls
+Rolling dice cup icon by Delapouite https://game-icons.net/1x1/delapouite/rolling-dice-cup.html
+Cog icon by Google https://pictogrammers.com/library/mdi/icon/cog/
+Info icon by Google https://pictogrammers.com/library/mdi/icon/help-circle-outline/
+
 App Icon design by Tobias Friedrich
+
+Curtain Graphic by Gen AI
 
 English word definition lookup using https://dictionaryapi.dev/
 German word definition lookup using https://de.wiktionary.org/
