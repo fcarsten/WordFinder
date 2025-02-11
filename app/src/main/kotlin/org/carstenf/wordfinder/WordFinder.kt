@@ -544,7 +544,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun shuffle() {
-        showComputerResults(false, false)
+        showComputerResults(show = false, animate = false)
 
         gameState.stopSolving()
 
@@ -700,12 +700,11 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             }
         } else {
             showAllRow.visibility = View.VISIBLE
-            //computerResultListView.visibility = View.GONE
         }
     }
 
     private fun solveClick() {
-        showComputerResults(true, true)
+        showComputerResults(show = true, animate = true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

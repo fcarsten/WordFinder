@@ -274,7 +274,7 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text=""
-            android:textSize="18sp"
+            android:textSize="35sp"
             android:textStyle="bold" />
 
         <Space
