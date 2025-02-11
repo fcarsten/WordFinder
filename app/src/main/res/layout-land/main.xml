@@ -278,8 +278,8 @@
             android:textStyle="bold" />
 
         <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             />
 
@@ -290,7 +290,6 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/_00_00"
-            android:layout_weight="1"
             android:textSize="40sp" />
 
         <Space
@@ -302,7 +301,6 @@
             android:id="@+id/scoreTextView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="0/0"

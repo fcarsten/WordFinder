@@ -4,7 +4,7 @@
     <item
         android:id="@+id/menu_item_shuffle"
         android:enabled="true"
-        android:icon="@drawable/rolling_dice_cup"
+        android:icon="@drawable/shuffle_button_icon"
         android:title="@string/shuffle"
         android:visible="true"
         app:showAsAction="ifRoom" />

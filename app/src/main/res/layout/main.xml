@@ -217,80 +217,88 @@
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TableRow
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/buttonRow"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="bottom"
         android:minHeight="48dp"
         android:background="@drawable/listview_border"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
-        >
+        android:isScrollContainer="true"
+        android:padding="4dp">
 
+        <!-- Barrier to ensure button doesn't overlap right-side elements -->
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/rightBarrier"
+            app:barrierDirection="start"
+            app:constraint_referenced_ids="chronometer1,scoreTextView,shuffleButton"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"/>
+
+        <!-- OK Button (resizes dynamically but doesn’t overlap other views) -->
         <Button
             android:id="@+id/okButton"
             android:background="@drawable/key_wide"
-            android:fontFamily="@font/arco"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:contentDescription="@string/press_to_submit_current_word"
-            android:includeFontPadding="false"
-            android:lines="1"
-            android:maxLines="1"
-            android:minHeight="48dp"
-            android:minLines="1"
+            android:ellipsize="start"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:text=""
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:singleLine="true"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/rightBarrier"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_chainStyle="spread_inside"
+            />
 
-        <Space
-            android:layout_width="113dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            tools:layout_width="wrap_content" />
-
+<!--        <Space-->
+<!--            android:id="@+id/space"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            app:layout_constraintHorizontal_weight="1"-->
+<!--            app:layout_constraintEnd_toStartOf="@id/rightBarrier"-->
+<!--            app:layout_constraintStart_toEndOf="@id/okButton"-->
+<!--            />-->
+        <!-- Chronometer -->
         <TextView
             android:id="@+id/chronometer1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:text="@string/_00_00"
-            android:textSize="18sp" />
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/scoreTextView"
+            app:layout_constraintStart_toEndOf="@id/rightBarrier"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="20dp" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="20dp" />
-
+        <!-- Score Text -->
         <TextView
             android:id="@+id/scoreTextView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:paddingLeft="10dp"
-            android:paddingEnd="10dp"
             android:paddingRight="10dp"
             android:text="0/0"
-            android:textSize="18sp"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/shuffleButton"
+            app:layout_constraintStart_toEndOf="@id/chronometer1"
+            app:layout_constraintTop_toTopOf="parent"
             tools:ignore="HardcodedText" />
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="20dp" />
+
+        <!-- Shuffle Button -->
         <Button
             android:id="@+id/shuffleButton"
             android:layout_width="48dp"
-            android:layout_height="match_parent"
+            android:layout_height="48dp"
             android:minHeight="48dp"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:background="@drawable/roling_dice_border"
-            />
-    </TableRow>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/scoreTextView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
