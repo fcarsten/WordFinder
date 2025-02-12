@@ -480,9 +480,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 View.VISIBLE
             val h = time / 60
             val m = time % 60
-            var ms = m.toString()
-            if (ms.length == 1) ms = "0$ms"
-            countDownView.text = "$h:$ms"
+            val ms = "%02d:%02d".format(h, m)
+            countDownView.text = ms
             if (time == 0L) {
                 showTimeIsUpDialog()
             }

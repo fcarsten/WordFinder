@@ -232,8 +232,6 @@ class GameState : ViewModel() {
 
 	var countDownTime: Long = -1
 
-    private var timeUp : Boolean = false
-
     fun startCountDown() {
         countDownTimer?.cancel()
 
@@ -247,8 +245,6 @@ class GameState : ViewModel() {
             }
 
             override fun onFinish() {
-                timeUp = true
-                countDownTimerCurrentValue.postValue(-1L)
             }
         }.start()
     }
