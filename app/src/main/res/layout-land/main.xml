@@ -244,7 +244,7 @@
         </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TableRow
+    <LinearLayout
         android:id="@+id/buttonRow"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -256,7 +256,7 @@
         android:background="@drawable/listview_border"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"
-        android:minHeight="64dp"
+        android:minHeight="48dp"
         >
 
         <Button
@@ -274,12 +274,13 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text=""
-            android:textSize="35sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:minHeight="48dp"
             android:layout_weight="1"
             />
 
@@ -290,11 +291,14 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/_00_00"
-            android:textSize="40sp" />
+            android:gravity="center_vertical|right"
+            android:minHeight="48dp"
+            android:textSize="32sp" />
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:minWidth="20dp" />
 
         <TextView
@@ -304,17 +308,19 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="0/0"
-            android:textSize="40sp"
+            android:textSize="32sp"
+            android:minHeight="48dp"
             android:gravity="center_vertical|right"
             tools:ignore="HardcodedText,RtlHardcoded" />
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:minWidth="20dp" />
 
         <Button
             android:id="@+id/shuffleButton"
-            android:layout_width="64dp"
+            android:layout_width="48dp"
             android:layout_height="match_parent"
             android:contentDescription="@string/shuffle"
             android:minHeight="48dp"
@@ -324,5 +330,5 @@
             />
 
 
-    </TableRow>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
