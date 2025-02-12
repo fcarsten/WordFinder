@@ -114,7 +114,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         val playerResultListView = findViewById<ListView>(R.id.playerResultsList)
 
-        countDownView.visibility = View.INVISIBLE
+        countDownView.visibility = View.GONE
 
         try {
             gameState.dictionary = Dictionary(this)
@@ -377,7 +377,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         if (preferencesChanged) {
-            countDownView.visibility = View.INVISIBLE
+            countDownView.visibility = View.GONE
             prefs
             shuffle()
             preferencesChanged = false
@@ -486,14 +486,18 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 showTimeIsUpDialog()
             }
         } else {
-            countDownView.visibility = View.INVISIBLE
+            countDownView.visibility = View.GONE
         }
     }
 
     private fun parseTime(timeStr: String): Long {
         if (timeStr.contains(":")) {
             val c = timeStr.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            return 1000 * (c[0].toInt() * 60L + c[1].toInt())
+            var res = c[0].toInt() *60L
+            if(c.size>1) {
+                res +=  c[1].toInt()
+            }
+            return 1000 * res
         } else {
             return timeStr.toInt() * 1000L
         }

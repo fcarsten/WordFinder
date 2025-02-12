@@ -9,11 +9,25 @@
     android:splitMotionEvents="false"
     android:windowEnableSplitTouch="false">
 
+    <!-- Chronometer -->
+    <TextView
+        android:id="@+id/chronometer1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/listview_border"
+        android:gravity="center"
+        android:text="@string/_00_00"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/scoreTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <org.carstenf.wordfinder.BackGestureBlockingTableLayout
         android:id="@+id/letterGridView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="4"
         android:minWidth="195dp"
         android:minHeight="195dp"
         android:background="@drawable/listview_border"
@@ -248,26 +262,12 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/buttonRow"
-            android:layout_width="0dp"
-            android:layout_weight="0.6"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
             android:isScrollContainer="true"
             android:padding="4dp">
 
-            <!-- Chronometer -->
-            <TextView
-                android:id="@+id/chronometer1"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@drawable/listview_border"
-                android:gravity="center"
-                android:text="@string/_00_00"
-                android:textSize="24sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/scoreTextView"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Score Text -->
             <TextView
@@ -282,7 +282,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/shuffleButton"
-                app:layout_constraintStart_toEndOf="@id/chronometer1"
+                app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="HardcodedText" />
 
             <!-- Shuffle Button -->

@@ -17,7 +17,7 @@ class WordFinderSettingsFragment : PreferenceFragmentCompat() {
             filters.add(InputFilter { source, start, end, dest, dstart, dend ->
                 val builder = SpannableStringBuilder(dest)
                 builder.replace(dstart, dend, source, start, end)
-                if (builder.toString().matches(Regex("[0-9]+(:([0-5]|[0-5][0-9]))?"))) {
+                if (builder.toString().matches(Regex("[0-9]+(:([0-5]|[0-5][0-9])?)?"))) {
                     null
                 } else {
                     ""
