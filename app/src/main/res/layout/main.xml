@@ -180,6 +180,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/listview_border"
                 android:divider="@android:color/darker_gray"
+                android:dividerHeight="1dp"
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -240,18 +241,19 @@
             android:layout_width="0dp"
             android:layout_weight="0.4"
             android:layout_height="match_parent">
+
             <Button
                 android:id="@+id/okButton"
-                android:background="@drawable/key_wide"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="@drawable/key_wide"
+                android:contentDescription="@string/OK"
                 android:ellipsize="start"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
                 android:singleLine="true"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
             <Space
                 android:layout_width="0dp"
@@ -290,13 +292,14 @@
                 android:id="@+id/shuffleButton"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
+                android:background="@drawable/roling_dice_border"
+                android:contentDescription="@string/shuffle"
                 android:minHeight="48dp"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:background="@drawable/roling_dice_border"
                 app:layout_constraintEnd_toEndOf="@id/row_end_buffer"
                 app:layout_constraintStart_toEndOf="@id/scoreTextView"
-                />
+                tools:layout_editor_absoluteY="4dp" />
             <Space
                 android:id="@+id/row_end_buffer"
                 android:layout_width="3dp"
