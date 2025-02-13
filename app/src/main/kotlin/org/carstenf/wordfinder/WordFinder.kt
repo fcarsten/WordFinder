@@ -48,7 +48,6 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
 import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
-import org.carstenf.wordfinder.Util.isNetworkAvailable
 import java.io.IOException
 import java.util.Locale
 
@@ -78,7 +77,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     public override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        showComputerResults(savedInstanceState.getBoolean(SHOW_COMPUTER_RESULTS_FLAG, false))
+        showComputerResults(savedInstanceState.getBoolean(SHOW_COMPUTER_RESULTS_FLAG, false), false)
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -115,7 +114,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         val playerResultListView = findViewById<ListView>(R.id.playerResultsList)
 
-        countDownView.visibility = View.INVISIBLE
+        countDownView.visibility = View.GONE
 
         try {
             gameState.dictionary = Dictionary(this)
@@ -378,7 +377,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         if (preferencesChanged) {
-            countDownView.visibility = View.INVISIBLE
+            countDownView.visibility = View.GONE
             prefs
             shuffle()
             preferencesChanged = false
@@ -481,21 +480,24 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 View.VISIBLE
             val h = time / 60
             val m = time % 60
-            var ms = m.toString()
-            if (ms.length == 1) ms = "0$ms"
-            countDownView.text = "$h:$ms"
+            val ms = "%02d:%02d".format(h, m)
+            countDownView.text = ms
             if (time == 0L) {
                 showTimeIsUpDialog()
             }
         } else {
-            countDownView.visibility = View.INVISIBLE
+            countDownView.visibility = View.GONE
         }
     }
 
     private fun parseTime(timeStr: String): Long {
         if (timeStr.contains(":")) {
             val c = timeStr.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            return 1000 * (c[0].toInt() * 60L + c[1].toInt())
+            var res = c[0].toInt() *60L
+            if(c.size>1) {
+                res +=  c[1].toInt()
+            }
+            return 1000 * res
         } else {
             return timeStr.toInt() * 1000L
         }
@@ -545,7 +547,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun shuffle() {
-        showComputerResults(false)
+        showComputerResults(show = false, animate = false)
 
         gameState.stopSolving()
 
@@ -676,9 +678,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             val minLength = if (gameState.isAllow3LetterWords) 3 else 4
             val enabled = gameState.currentGuess.length >= minLength
             if (enabled) {
-                okButton.setTextColor(guessButtonEnabledTextColour)
+                okButton.setTextColor(Color.parseColor("#000000"))
             } else {
-                okButton.setTextColor(Color.parseColor("#FAC6C6"))
+                okButton.setTextColor(Color.parseColor("#FA1616"))
             }
         }
     }
@@ -686,23 +688,26 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     @SuppressLint("SetTextI18n")
     private fun updateScore() {
         scoreTextView.text =
-            ("${gameState.playerScore} / ${gameState.computerScore}")
+            ("${gameState.playerScore}/${gameState.computerScore}")
     }
 
-    private fun showComputerResults(show: Boolean) {
+    private fun showComputerResults(show: Boolean, animate: Boolean) {
         this.showComputerResultsFlag = show
 
         if (show) {
-            showAllRow.visibility = View.GONE
-            computerResultListView.visibility = View.VISIBLE
+            if(animate) {
+                slideUpAndHide(showAllRow, computerResultListView)
+            } else {
+                computerResultListView.visibility = View.VISIBLE
+                showAllRow.visibility = View.GONE
+            }
         } else {
             showAllRow.visibility = View.VISIBLE
-            computerResultListView.visibility = View.INVISIBLE
         }
     }
 
     private fun solveClick() {
-        showComputerResults(true)
+        showComputerResults(show = true, animate = true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -720,6 +725,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             }
             R.id.menu_item_prefs -> {
                 showPreferences()
+                return true
+            }
+            R.id.menu_item_shuffle -> {
+                shuffleClick()
                 return true
             }
             else -> {

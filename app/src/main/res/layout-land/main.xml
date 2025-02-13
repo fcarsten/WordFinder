@@ -22,11 +22,18 @@
 
         <ListView
             android:id="@+id/playerResultsList"
-            android:layout_width="120dp"
+            android:layout_width="0dp"
             android:layout_height="fill_parent"
+            android:background="@drawable/listview_border"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            android:minWidth="180sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/letterGridView"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_weight="0.2"
+            />
 
         <org.carstenf.wordfinder.BackGestureBlockingTableLayout
             android:id="@+id/letterGridView"
@@ -35,7 +42,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/linearLayout5"
             app:layout_constraintStart_toEndOf="@+id/playerResultsList"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@drawable/listview_border"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            app:layout_constraintHorizontal_weight="0.6"
+            >
 
             <TableRow
                 android:id="@+id/tableRow1"
@@ -149,55 +161,90 @@
             </TableRow>
         </org.carstenf.wordfinder.BackGestureBlockingTableLayout>
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/linearLayout5"
-            android:layout_width="120dp"
-            android:layout_height="fill_parent"
-            android:orientation="vertical"
+            android:minWidth="180sp"
+            android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintStart_toEndOf="@+id/letterGridView"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintHorizontal_weight="0.2"
+            android:layout_width="0dp"
+            >
+
+            <ListView
+                android:id="@+id/computerResultsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="6dp"
+                android:background="@drawable/listview_border"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="1dp"
+                />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/showAllRow"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/listview_border"
+                    android:contentDescription="@string/curtains"
+                    android:divider="@android:color/darker_gray"
+                    android:dividerHeight="1dp"
+                    android:scaleType="fitXY"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:srcCompat="@drawable/curtains" />
+
                 <LinearLayout
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
                     android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/imageView"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
 
                     <Button
                         android:id="@+id/showAllButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/show_all" />
+                        android:background="#F0FFFFFF"
+                        android:shadowColor="#A8A8A8"
+                        android:shadowDx="5"
+                        android:shadowDy="5"
+                        android:shadowRadius="5"
+                        android:text="@string/show_all"
+                        android:textColor="#000000"
+                        android:textAlignment="center"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintWidth_percent=".5" />
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ListView
-                android:id="@+id/computerResultsList"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:minHeight="6dp"
-                android:visibility="invisible" />
 
-        </LinearLayout>
+        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TableRow
+    <LinearLayout
         android:id="@+id/buttonRow"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -205,51 +252,83 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4">
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        android:background="@drawable/listview_border"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        android:minHeight="48dp"
+        >
 
         <Button
             android:id="@+id/okButton"
+            android:background="@drawable/key_wide"
+            android:fontFamily="@font/arco"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/press_to_submit_current_word"
+            android:includeFontPadding="false"
+            android:lines="1"
+            android:maxLines="1"
+            android:minHeight="48dp"
+            android:minLines="1"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
             android:text=""
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:minHeight="48dp"
+            android:layout_weight="1"
+            />
 
         <TextView
             android:id="@+id/chronometer1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/_00_00"
-            android:textSize="18sp" />
+            android:gravity="center_vertical|right"
+            android:minHeight="48dp"
+            android:textSize="32sp" />
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:minWidth="20dp" />
 
         <TextView
             android:id="@+id/scoreTextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="0/0"
-            android:textSize="18sp"
-            tools:ignore="HardcodedText" />
+            android:textSize="32sp"
+            android:minHeight="48dp"
+            android:gravity="center_vertical|right"
+            tools:ignore="HardcodedText,RtlHardcoded" />
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:minWidth="20dp" />
 
         <Button
             android:id="@+id/shuffleButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/shuffle"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/shuffle"
+            android:minHeight="48dp"
             android:textSize="18sp"
-            android:textStyle="bold" />
-    </TableRow>
+            android:textStyle="bold"
+            android:background="@drawable/roling_dice_border"
+            />
+
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

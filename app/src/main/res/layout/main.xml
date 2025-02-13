@@ -9,13 +9,31 @@
     android:splitMotionEvents="false"
     android:windowEnableSplitTouch="false">
 
+    <!-- Chronometer -->
+    <TextView
+        android:id="@+id/chronometer1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/listview_border"
+        android:gravity="center"
+        android:text="@string/_00_00"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/scoreTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <org.carstenf.wordfinder.BackGestureBlockingTableLayout
         android:id="@+id/letterGridView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="4"
         android:minWidth="195dp"
-        android:minHeight="195dp">
+        android:minHeight="195dp"
+        android:background="@drawable/listview_border"
+        android:divider="@android:color/darker_gray"
+        android:dividerHeight="1dp"
+        >
 
         <TableRow
             android:id="@+id/tableRow1"
@@ -138,11 +156,16 @@
             android:id="@+id/playerResultsList"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:outlineProvider="paddedBounds"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/computerResultsLayout"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/listview_border"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp"
+            />
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <FrameLayout
             android:id="@+id/computerResultsLayout"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -151,85 +174,145 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/playerResultsList">
 
+            <ListView
+                android:id="@+id/computerResultsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/listview_border"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="1dp"
+                app:layout_constraintEnd_toEndOf="parent" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/showAllRow"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
+
                 <Button
                     android:id="@+id/showAllButton"
+                    android:background="#F0FFFFFF"
+                    android:textColor="#000000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:shadowColor="#A8A8A8"
+                    android:shadowDx="5"
+                    android:shadowDy="5"
+                    android:shadowRadius="5"
                     android:text="@string/show_all"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:outlineProvider="paddedBounds"
+                    app:layout_constraintWidth_percent=".5" />
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/curtains"
+                    app:srcCompat="@drawable/curtains"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:scaleType="fitXY"
+                    android:background="@drawable/listview_border"
+                    android:divider="@android:color/darker_gray"
+                    android:outlineProvider="paddedBounds"
+                    />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <ListView
-                android:id="@+id/computerResultsList"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="invisible"
-                app:layout_constraintEnd_toEndOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </FrameLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TableRow
-        android:id="@+id/buttonRow"
+    <LinearLayout
         android:layout_width="match_parent"
+        android:background="@drawable/listview_border"
         android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:minHeight="48dp">
+        android:baselineAligned="false">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="0.4"
+            android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/okButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/press_to_submit_current_word"
-            android:minHeight="48dp"
-            android:text=""
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            <Button
+                android:id="@+id/okButton"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/key_wide"
+                android:contentDescription="@string/OK"
+                android:ellipsize="start"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:singleLine="true"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-        <Space
-            android:layout_width="113dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            tools:layout_width="wrap_content" />
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                />
 
-        <TextView
-            android:id="@+id/chronometer1"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="@string/_00_00"
-            android:textSize="18sp" />
+        </LinearLayout>
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:minWidth="20dp" />
-
-        <TextView
-            android:id="@+id/scoreTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:paddingLeft="10dp"
-            android:paddingEnd="10dp"
-            android:paddingRight="10dp"
-            android:text="0/0"
-            android:textSize="18sp"
-            tools:ignore="HardcodedText" />
-
-        <Button
-            android:id="@+id/shuffleButton"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/buttonRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minHeight="48dp"
-            android:text="@string/shuffle"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </TableRow>
+            android:isScrollContainer="true"
+            android:padding="4dp">
+
+
+            <!-- Score Text -->
+            <TextView
+                android:id="@+id/scoreTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:text="0/0"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/shuffleButton"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:ignore="HardcodedText" />
+
+            <!-- Shuffle Button -->
+            <Button
+                android:id="@+id/shuffleButton"
+                android:layout_width="48dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/roling_dice_border"
+                android:contentDescription="@string/shuffle"
+                android:minHeight="48dp"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@id/row_end_buffer"
+                app:layout_constraintStart_toEndOf="@id/scoreTextView"
+                tools:layout_editor_absoluteY="4dp" />
+            <Space
+                android:id="@+id/row_end_buffer"
+                android:layout_width="3dp"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/shuffleButton"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+
+
 </LinearLayout>
