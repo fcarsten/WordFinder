@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.graphics.Color
+import android.graphics.Insets
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
@@ -27,6 +28,7 @@ import android.view.View
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
@@ -80,6 +82,17 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         showComputerResults(savedInstanceState.getBoolean(SHOW_COMPUTER_RESULTS_FLAG, false), false)
     }
 
+    fun isGestureNavigationEnabled(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val insets = window.decorView.rootWindowInsets ?: return false
+            val gestureInsets: Insets = insets.getInsets(WindowInsets.Type.systemGestures())
+
+            // If left or right insets are greater than zero, gesture navigation is enabled
+            return (gestureInsets.left ?: 0) > 0 || (gestureInsets.right ?: 0) > 0
+        }
+        return false // Assume older versions use 3-button navigation
+    }
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -89,15 +102,26 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             onBackInvokedDispatcher.registerOnBackInvokedCallback(
                 OnBackInvokedDispatcher.PRIORITY_DEFAULT
             ) {
-                Log.d(TAG, "Ignore Tiramisu Back")
+                val hasNavigationBar = !isGestureNavigationEnabled()
+                Log.d(TAG, "Navigation Bar: $hasNavigationBar")
+                if(hasNavigationBar) {
+                    moveTaskToBack(true)
+                } else {
+                    Log.d(TAG, "Ignore Tiramisu Back")
+                }
             }
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    Log.d(TAG, "Ignore Q Back")
-                    // Do nothing (blocks the back gesture)
+                    val hasNavigationBar = !isGestureNavigationEnabled()
+                    Log.d(TAG, "Navigation Bar: $hasNavigationBar")
+                    if(hasNavigationBar) {
+                        moveTaskToBack(true)
+                    } else {
+                        Log.d(TAG, "Ignore Q Back")
+                    }
                 }
             })
         }
