@@ -88,7 +88,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             val gestureInsets: Insets = insets.getInsets(WindowInsets.Type.systemGestures())
 
             // If left or right insets are greater than zero, gesture navigation is enabled
-            return (gestureInsets.left ?: 0) > 0 || (gestureInsets.right ?: 0) > 0
+            return gestureInsets.left > 0 || gestureInsets.right > 0
         }
         return false // Assume older versions use 3-button navigation
     }
