@@ -10,9 +10,10 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import org.apache.commons.compress.archivers.sevenz.SevenZFile
+import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.io.OutputStream
 
 class AssetDbOpenHelper(
     context: Context, dbName: String,
@@ -89,28 +90,52 @@ class AssetDbOpenHelper(
         context: Context, dbName: String,
         dbFileName: String
     ) {
+        val dbPath = context.getDatabasePath(dbName).path
+
         Log.d(WordFinder.TAG, "Copying DB")
 
-        // Open your local db as the input stream
-        val myInput = context.assets.open(dbFileName)
+        try {
+            // Open the compressed database from the assets subfolder
+            val inputStream = context.assets.open(dbFileName)
 
-        // Open the empty db as the output stream
-        val myOutput: OutputStream = FileOutputStream(
-            context.getDatabasePath(dbName), false
-        )
+            val tempFile = File.createTempFile("temp_db", ".7z", context.cacheDir)
+            tempFile.deleteOnExit()
 
-        // transfer bytes from the input file to the output file
-        val buffer = ByteArray(4 * 1024)
-        var length: Int
-        while ((myInput.read(buffer).also { length = it }) > 0) {
-            myOutput.write(buffer, 0, length)
+            // Copy the 7z file to a temporary file
+            val outputStream = FileOutputStream(tempFile)
+            inputStream.copyTo(outputStream)
+            outputStream.close()
+            inputStream.close()
+
+            // Decompress the 7z file
+            val sevenZFile = SevenZFile(tempFile)
+            val entries = sevenZFile.entries
+            Log.d(WordFinder.TAG, "Number of entries in 7z file: ${entries}")
+            var entry = sevenZFile.nextEntry
+            while (entry != null) {
+                if (!entry.isDirectory) {
+                    // Write the decompressed database to internal storage
+                    val dbOutputStream = FileOutputStream(dbPath)
+                    val buffer = ByteArray(8192)
+                    var length: Int
+                    while (sevenZFile.read(buffer).also { length = it } > 0) {
+                        dbOutputStream.write(buffer, 0, length)
+                    }
+                    dbOutputStream.flush()
+                    dbOutputStream.close()
+                    Log.d(WordFinder.TAG, "Database decompressed and copied to internal storage")
+                    break
+                }
+                entry = sevenZFile.nextEntry
+            }
+
+            sevenZFile.close()
+            tempFile.delete()
+            Log.d(WordFinder.TAG, "Finished copying DB")
+        } catch (e: IOException) {
+            Log.e(WordFinder.TAG, "Error copying and decompressing database", e)
         }
 
-        // Close the streams
-        myOutput.flush()
-        myOutput.close()
-        myInput.close()
-        Log.d(WordFinder.TAG, "Finished copying DB")
     }
 
     @Synchronized

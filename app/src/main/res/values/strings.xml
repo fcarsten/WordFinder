@@ -32,13 +32,13 @@
     <string name="WordGuessTooShort">is too short</string>
     <string name="WordAlreadyFound">has already been found</string>
     <string name="WordNotInDictionary">is not in the dictionary</string>
-    <string name="default_dict">2of4brinf</string>
+    <string name="default_dict">int_english</string>
     <string name="InfoText"><![CDATA[
 <H1>Word Finder vX.X</H1>&copy; 2025 <a href=\"mailto:Carsten.Friedrich@gmail.com?Subject=About%20Word%20Finder\">Carsten Friedrich</a>
 <br/><br/>License: <a href=\"http://www.gnu.org/licenses/gpl.html\">GPLv3</a><BR/><BR/>
 Acknowledgements:<BR/>
 <BR/>Alan Beale for the <a href=\"http://wordlist.sourceforge.net/12dicts-readme.html\">English dictionaries</a>
-<BR/>Joerg Tinner for the <a href=\"https://sites.google.com/site/joergtinner/\">German dictionary</a>
+<BR/>Gero Illing for the <a href=\"https://sourceforge.net/projects/scrabbledict/files/\">German dictionary</a>
 <BR/>Tobias Friedrich for the app icon design
 <BR/>Rafael Olivo Díaz and Denis Ignatov for the <a href=\"https://font.download/font/arco\">Letter tile font</a>
 <BR/>Letter tile background based on work by Rhos (@RhosGFX on Twitter)
