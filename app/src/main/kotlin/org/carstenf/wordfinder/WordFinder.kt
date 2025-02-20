@@ -398,7 +398,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     private fun getWordDefinitionLookupService(dictionaryName: String): WordDefinitionLookupService? {
         return when (dictionaryName.lowercase(Locale.getDefault())) {
-            "2of4brinf", "2of12inf" -> EnglishWordDefinitionLookupService()
+            "int_english", "2of12inf" -> EnglishWordDefinitionLookupService()
             "german" -> GermanWordDefinitionLookupService()
             else -> null
         }
