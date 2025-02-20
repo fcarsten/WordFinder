@@ -55,7 +55,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
         if (fileArray != null) {
             for (file in fileArray) {
                 val dbName =
-                    file.trim { it <= ' ' }.uppercase(Locale.getDefault()).replace(".MP3", "")
+                    file.trim { it <= ' ' }.uppercase(Locale.getDefault()).replace(".DB.7Z", "")
                 mDatabaseOpenHelperMap[dbName] = AssetDbOpenHelper(
                     wordFinder, dbName,
                     "$DB_ASSET_PATH/$file"

@@ -7,7 +7,7 @@
 	</string-array>
 	<string-array name="databases_values">
 		<item>2of12inf</item>
-		<item>2of4brinf</item>
+		<item>int_english</item>
 		<item>german</item>
 	</string-array>
 	<string-array name="scoring_algs_entries">

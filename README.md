@@ -11,13 +11,13 @@ https://www.gnu.org/copyleft/gpl.html
 
 Acknowledgements & Credits:
 
-English dictionaries from Alan Beale at http://wordlist.sourceforge.net/12dicts-readme.html 
-German dictionary from Joerg Tinner at https://sites.google.com/site/joergtinner
-Letter tile font by Rafael Olivo Díaz and Denis Ignatov  https://font.download/font/arco
-Letter tile background based on work by Rhos (@RhosGFX on Twitter) https://rhosgfx.itch.io/vector-keyboard-controls
-Rolling dice cup icon by Delapouite https://game-icons.net/1x1/delapouite/rolling-dice-cup.html
-Cog icon by Google https://pictogrammers.com/library/mdi/icon/cog/
-Info icon by Google https://pictogrammers.com/library/mdi/icon/help-circle-outline/
+English dictionaries from Alan Beale at http://wordlist.sourceforge.net/12dicts-readme.html (License https://github.com/en-wl/wordlist?tab=License-1-ov-file#) 
+German dictionary from Gero Illing at https://sourceforge.net/projects/scrabbledict/files/  (GPL)
+Letter tile font by Rafael Olivo Díaz and Denis Ignatov  https://font.download/font/arco (SIL Open Font License (OFL))
+Letter tile background based on work by Rhos (@RhosGFX on Twitter) https://rhosgfx.itch.io/vector-keyboard-controls (Creative Commons CC0)
+Rolling dice cup icon by Delapouite https://game-icons.net/1x1/delapouite/rolling-dice-cup.html (CC BY 3.0)
+Cog icon by Google https://pictogrammers.com/library/mdi/icon/cog/ (License https://pictogrammers.com/docs/general/license/)
+Info icon by Google https://pictogrammers.com/library/mdi/icon/help-circle-outline/ (License https://pictogrammers.com/docs/general/license/)
 
 App Icon design by Tobias Friedrich
 

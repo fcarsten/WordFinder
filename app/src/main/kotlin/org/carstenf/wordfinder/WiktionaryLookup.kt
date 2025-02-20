@@ -102,6 +102,7 @@ class WiktionaryLookup {
         val lines = responseText.split("\n")
         val meanings = mutableListOf<String>()
         var isMeaningSection = false
+        var isMerkmaleSection = false
 
         for (line in lines) {
             if (line.startsWith("Bedeutungen:")) {
@@ -117,6 +118,16 @@ class WiktionaryLookup {
                     break
                 }
             }
+
+            if(isMerkmaleSection) {
+                meanings.add(line)
+                isMerkmaleSection = false // Can't tell end of section reliably so only taking the first line
+            }
+
+            if(line.startsWith("Grammatische Merkmale:")) {
+                isMerkmaleSection = true
+            }
+
         }
 
         return meanings.joinToString("\n") // Combine meanings into a single string
