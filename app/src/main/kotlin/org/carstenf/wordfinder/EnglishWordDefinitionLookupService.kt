@@ -11,16 +11,16 @@ import org.json.JSONArray
 import java.io.IOException
 
 class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
-    override fun lookupWordDefinition(gameState: GameState, word: String) {
+    override fun lookupWordDefinition(gameState: GameState, task: WordLookupTask) {
         val request: Request = Builder()
-            .url(DICTIONARYAPI_URL + word)
+            .url(DICTIONARYAPI_URL + task.word)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("API Response", e.message, e)
                 gameState.processWordLookupError(
-                    word,
+                    task,
                     language,
                     "Error looking up word: " + e.message
                 )
@@ -32,8 +32,8 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
                     val responseBody = response.body
                     if (responseBody == null) {
                         gameState.processWordLookupError(
-                            word, language,
-                            "Definition lookup for $word failed with empty response."
+                            task, language,
+                            "Definition lookup for "+task.word +" failed with empty response."
                         )
                         return
                     }
@@ -53,24 +53,25 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
 
                         val definition = definitionObj.getString("definition")
 
-                        val definitionStr = "$word ($partOfSpeech): $definition"
+                        val definitionStr = task.word +"($partOfSpeech): $definition"
 
                         gameState.processWordLookupResult(
+                            task,
                             WordInfo(
-                                word,
+                                task.word,
                                 language, definitionStr, null
                             )
                         )
                     } catch (e: Exception) {
                         gameState.processWordLookupError(
-                            word, language,
-                            "Error looking up " + word + ": " + e.message
+                            task, language,
+                            "Error looking up " + task.word + ": " + e.message
                         )
                     }
                 } else {
                     gameState.processWordLookupError(
-                        word, language,
-                        "Definition not found for: $word"
+                        task, language,
+                        "Definition not found for: "+ task.word
                     )
                 }
             }

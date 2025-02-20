@@ -45,5 +45,5 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel:2.8.7"     // For Java
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"    // Optional, if using Lifecycle Extensions
     implementation "androidx.activity:activity-ktx:1.10.0"             // For Activity scope
-    implementation "androidx.fragment:fragment-ktx:1.8.5"             // For Fragment scope
+    implementation "androidx.fragment:fragment-ktx:1.8.6"             // For Fragment scope
 }

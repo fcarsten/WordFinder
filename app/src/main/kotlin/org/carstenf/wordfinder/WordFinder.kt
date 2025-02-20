@@ -52,11 +52,16 @@ import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
 import java.io.IOException
 import java.util.Locale
+import java.util.concurrent.atomic.AtomicLong
 
 class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val playerResultList by lazy {
-        ArrayAdapter(this, R.layout.list_item, gameState.playerResultList)
+        ArrayAdapter(this, R.layout.list_item, R.id.resultText, gameState.playerResultList)
     }
+
+    private val wordLookupTaskMap by lazy { HashMap<Long, View>() }
+
+    private val wordLookupTaskCounter = AtomicLong(0)
 
     private val computerResultListView by lazy<ListView> { findViewById(R.id.computerResultsList) }
 
@@ -146,14 +151,19 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             throw RuntimeException("Could not create Dictionaries: " + e.message, e)
         }
 
-        gameState.wordLookupError.observe(this) { text: String? ->
-            if (text != null) displayToast(text)
+        gameState.wordLookupError.observe(this) { error: Pair<WordLookupTask, String?>? ->
+            val progressBarView = wordLookupTaskMap[error?.first?.lookupTaskCounter]
+            progressBarView?.visibility = View.GONE
+            if (error?.second != null) displayToast(error.second)
         }
 
         gameState.wordLookupResult.value = null
-        gameState.wordLookupResult.observe(this, Observer { wordInfo: WordInfo? ->
+        gameState.wordLookupResult.observe(this, Observer { result: Pair<WordLookupTask, WordInfo?>? ->
+            val progressBarView = wordLookupTaskMap[result?.first?.lookupTaskCounter]
+            progressBarView?.visibility = View.GONE
 
-            if(wordInfo==null) return@Observer
+            val wordInfo = result?.second ?: return@Observer
+
             val wordDefinition = wordInfo.wordDefinition
 
             if (wordDefinition.isNullOrBlank()) {
@@ -166,16 +176,17 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         playerResultListView.adapter = playerResultList
 
         playerResultListView.onItemClickListener =
-            OnItemClickListener { parent: AdapterView<*>, _: View?, position: Int, _: Long ->
+            OnItemClickListener { parent: AdapterView<*>, view: View?, position: Int, _: Long ->
                 wordDefinitionLookup(
                     parent,
+                    view,
                     position
                 )
             }
 
         val computerResultList = gameState.computerResultList
 
-        val computerResultListAdapter = ArrayAdapter<Result>(this, R.layout.list_item)
+        val computerResultListAdapter = ArrayAdapter<Result>(this, R.layout.list_item, R.id.resultText)
 
         computerResultList.observe(
             this
@@ -188,9 +199,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         computerResultListView.setAdapter(computerResultListAdapter)
 
-        computerResultListView.setOnItemClickListener { parent: AdapterView<*>, _: View?, position: Int, _: Long ->
+        computerResultListView.setOnItemClickListener { parent: AdapterView<*>, view: View?, position: Int, _: Long ->
             wordDefinitionLookup(
                 parent,
+                view,
                 position
             )
         }
@@ -332,8 +344,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         return null
     }
 
-    private fun wordDefinitionLookup(parent: AdapterView<*>, position: Int) {
+    private fun wordDefinitionLookup(parent: AdapterView<*>, view: View?, position: Int) {
         val selectedItem = parent.getItemAtPosition(position) as Result
+
+        val progressBarView = view?.findViewById<View>(R.id.row_progress)
 
         val selectedWord = selectedItem.result
 
@@ -364,7 +378,13 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                         this,
                         "Looking up definition for $selectedItem", Toast.LENGTH_SHORT
                     ).show()
-                    lookupService.lookupWordDefinition(gameState, selectedWord)
+
+                    val lookupTaskCounter = wordLookupTaskCounter.incrementAndGet()
+                    if(progressBarView!=null) {
+                        wordLookupTaskMap[lookupTaskCounter] = progressBarView
+                        progressBarView.visibility = View.VISIBLE
+                    }
+                    lookupService.lookupWordDefinition(gameState, WordLookupTask(lookupTaskCounter, selectedWord))
                 } else {
                     Toast.makeText(
                         this,

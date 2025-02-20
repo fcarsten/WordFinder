@@ -3,8 +3,8 @@ package org.carstenf.wordfinder
 import java.util.Locale
 
 class GermanWordDefinitionLookupService : WordDefinitionLookupService {
-    override fun lookupWordDefinition(gameState: GameState, word: String) {
-        val lowercaseWord = word.lowercase(Locale.getDefault())
+    override fun lookupWordDefinition(gameState: GameState, task: WordLookupTask) {
+        val lowercaseWord = task.word.lowercase(Locale.getDefault())
         val capitalizedWord =
             lowercaseWord[0].uppercaseChar().toString() + lowercaseWord.substring(1)
         val searchTerm = "$capitalizedWord|$lowercaseWord"
@@ -13,17 +13,18 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
         wiktionaryLookup.getMeaningAsync(searchTerm) { meaning: String? ->
             if (!meaning.isNullOrBlank()) {
                 gameState.processWordLookupResult(
+                    task,
                     WordInfo(
-                        word,
+                        task.word,
                         language,
-                        "$word:\n$meaning",
+                        task.word+":\n$meaning",
                         null
                     )
                 )
             } else {
                 gameState.processWordLookupError(
-                    word, language,
-                    "Definition not found for: $word"
+                    task, language,
+                    "Definition not found for: "+ task.word
                 )
             }
         }

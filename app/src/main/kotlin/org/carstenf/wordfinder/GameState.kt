@@ -26,8 +26,8 @@ class GameState : ViewModel() {
 
 	val countDownTimerCurrentValue: MutableLiveData<Long> = MutableLiveData(-1L)
 
-	val wordLookupResult: MutableLiveData<WordInfo?> = MutableLiveData(null)
-	val wordLookupError: MutableLiveData<String?> = MutableLiveData(null)
+	val wordLookupResult: MutableLiveData<Pair<WordLookupTask, WordInfo?>> = MutableLiveData(null)
+	val wordLookupError: MutableLiveData<Pair<WordLookupTask, String?>> = MutableLiveData(null)
 
     fun getBoard(move: Int): Char {
         return board[move]
@@ -179,14 +179,14 @@ class GameState : ViewModel() {
         return wordInfoCache.get(word, language)
     }
 
-    fun processWordLookupError(word: String, language: String, error: String?) {
-        wordInfoCache.put(WordInfo(word, language, null, null))
-        wordLookupError.postValue(error)
+    fun processWordLookupError(task: WordLookupTask, language: String, error: String?) {
+        wordInfoCache.put(WordInfo(task.word, language, null, null))
+        wordLookupError.postValue(Pair(task, error))
     }
 
-    fun processWordLookupResult(wordInfo: WordInfo) {
+    fun processWordLookupResult(task: WordLookupTask, wordInfo: WordInfo) {
         wordInfoCache.put(wordInfo)
-        wordLookupResult.postValue(wordInfo)
+        wordLookupResult.postValue(Pair(task, wordInfo))
     }
 
     fun autoAddPrefixalWords(): Boolean {
