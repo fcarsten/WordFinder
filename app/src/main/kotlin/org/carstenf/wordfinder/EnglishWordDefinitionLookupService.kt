@@ -33,7 +33,7 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
                     if (responseBody == null) {
                         gameState.processWordLookupError(
                             task, language,
-                            "Definition lookup for "+task.word +" failed with empty response."
+                            "Definition lookup for ${task.word} failed with empty response."
                         )
                         return
                     }
@@ -53,7 +53,7 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
 
                         val definition = definitionObj.getString("definition")
 
-                        val definitionStr = task.word +"($partOfSpeech): $definition"
+                        val definitionStr = "${task.word} ($partOfSpeech): $definition"
 
                         gameState.processWordLookupResult(
                             task,
@@ -65,13 +65,13 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
                     } catch (e: Exception) {
                         gameState.processWordLookupError(
                             task, language,
-                            "Error looking up " + task.word + ": " + e.message
+                            "Error looking up ${task.word}: ${e.message}"
                         )
                     }
                 } else {
                     gameState.processWordLookupError(
                         task, language,
-                        "Definition not found for: "+ task.word
+                        "Definition not found for: ${task.word}"
                     )
                 }
             }

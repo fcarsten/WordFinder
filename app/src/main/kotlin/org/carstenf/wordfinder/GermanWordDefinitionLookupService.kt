@@ -17,14 +17,14 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
                     WordInfo(
                         task.word,
                         language,
-                        task.word+":\n$meaning",
+                        "${task.word}:\n$meaning",
                         null
                     )
                 )
             } else {
                 gameState.processWordLookupError(
                     task, language,
-                    "Definition not found for: "+ task.word
+                    "Definition not found for: ${task.word}"
                 )
             }
         }

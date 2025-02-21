@@ -110,7 +110,7 @@ class AssetDbOpenHelper(
             // Decompress the 7z file
             val sevenZFile = SevenZFile(tempFile)
             val entries = sevenZFile.entries
-            Log.d(WordFinder.TAG, "Number of entries in 7z file: ${entries}")
+            Log.d(WordFinder.TAG, "Number of entries in 7z file: $entries")
             var entry = sevenZFile.nextEntry
             while (entry != null) {
                 if (!entry.isDirectory) {

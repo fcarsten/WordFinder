@@ -44,6 +44,7 @@ import android.window.OnBackInvokedDispatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
@@ -150,26 +151,29 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         } catch (e: IOException) {
             throw RuntimeException("Could not create Dictionaries: " + e.message, e)
         }
-
         gameState.wordLookupError.observe(this) { error: Pair<WordLookupTask, String?>? ->
-            val progressBarView = wordLookupTaskMap[error?.first?.lookupTaskCounter]
-            progressBarView?.visibility = View.GONE
-            if (error?.second != null) displayToast(error.second)
+            if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                val progressBarView = wordLookupTaskMap[error?.first?.lookupTaskCounter]
+                progressBarView?.visibility = View.GONE
+                if (error?.second != null) displayToast(error.second)
+            }
         }
 
         gameState.wordLookupResult.value = null
         gameState.wordLookupResult.observe(this, Observer { result: Pair<WordLookupTask, WordInfo?>? ->
-            val progressBarView = wordLookupTaskMap[result?.first?.lookupTaskCounter]
-            progressBarView?.visibility = View.GONE
+            if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
+                val progressBarView = wordLookupTaskMap[result?.first?.lookupTaskCounter]
+                progressBarView?.visibility = View.GONE
 
-            val wordInfo = result?.second ?: return@Observer
+                val wordInfo = result?.second ?: return@Observer
 
-            val wordDefinition = wordInfo.wordDefinition
+                val wordDefinition = wordInfo.wordDefinition
 
-            if (wordDefinition.isNullOrBlank()) {
-                displayToast("Definition not found for: " + wordInfo.word)
-            } else {
-                displayWordDefinition(wordDefinition)
+                if (wordDefinition.isNullOrBlank()) {
+                    displayToast(getString(R.string.definition_not_found_for) + " ${wordInfo.word}")
+                } else {
+                    displayWordDefinition(wordDefinition)
+                }
             }
         })
 
@@ -368,17 +372,12 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             if (wordInfo != null) {
                 val wordDefinition = wordInfo.wordDefinition
                 if (wordDefinition.isNullOrBlank()) {
-                    displayToast("Definition not found for: $selectedWord")
+                    displayToast(getString(R.string.definition_not_found_for)  + " $selectedWord")
                 } else {
                     displayWordDefinition(wordDefinition)
                 }
             } else {
                 if (isNetworkAvailable(applicationContext)) {
-                    Toast.makeText(
-                        this,
-                        "Looking up definition for $selectedItem", Toast.LENGTH_SHORT
-                    ).show()
-
                     val lookupTaskCounter = wordLookupTaskCounter.incrementAndGet()
                     if(progressBarView!=null) {
                         wordLookupTaskMap[lookupTaskCounter] = progressBarView
@@ -805,7 +804,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 textView.maxLines = 10
             } else {
                 Log.e(
-                    "Util",
+                    TAG,
                     "TextView not found in Snackbar view to adjust number of lines"
                 )
             }

@@ -59,4 +59,5 @@ Acknowledgements:<BR/>
     <string name="PrefAutoAddPrefixalWordsSummary">Check to automatically add prefixal words E.g. \"cats\" will also add \"cat\"</string>
     <string name="press_to_submit_current_word">Press to submit current word guess</string>
     <string name="curtains">Curtains as background</string>
+    <string name="definition_not_found_for">"Definition not found for: "</string>
 </resources>
