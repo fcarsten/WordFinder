@@ -70,13 +70,13 @@ class InfoDialogFragment : DialogFragment() {
     override fun onStart() {
         super.onStart()
         dialog?.window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.85).toInt(),
+            (resources.displayMetrics.widthPixels * 0.95).toInt(),
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
     }
 
     companion object {
-        private const val TAG = "InfoDialogFragment"
+        private const val TAG = "WordFinder InfoDialog"
 
         fun showInfo(fragmentManager: androidx.fragment.app.FragmentManager) {
             val dialogFragment = InfoDialogFragment()
