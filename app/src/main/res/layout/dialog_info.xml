@@ -2,9 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/md_theme_background"
+    android:translationZ="8dp"
+    android:background="@drawable/listview_border"
     android:padding="8dp">
 
     <androidx.viewpager2.widget.ViewPager2
@@ -12,13 +13,15 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/md_theme_background"
+        android:background="@drawable/listview_border"
+        android:translationZ="8dp"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:translationZ="8dp"
         android:gravity="center">
 
         <androidx.appcompat.widget.AppCompatButton
@@ -29,6 +32,8 @@
             android:enabled="false"
             android:minWidth="48dp"
             android:minHeight="48dp"
+            android:translationZ="8dp"
+            android:background="@drawable/listview_border"
             tools:ignore="HardcodedText" />
 
         <androidx.appcompat.widget.AppCompatButton
@@ -38,6 +43,8 @@
             android:text="&gt;&gt;"
             android:minWidth="48dp"
             android:minHeight="48dp"
+            android:translationZ="8dp"
+            android:background="@drawable/listview_border"
             tools:ignore="HardcodedText" />
 
         <Space
@@ -52,6 +59,8 @@
             android:minWidth="48dp"
             android:minHeight="48dp"
             android:text="X"
+            android:translationZ="8dp"
+            android:background="@drawable/listview_border"
             tools:ignore="HardcodedText" />
     </LinearLayout>
 
