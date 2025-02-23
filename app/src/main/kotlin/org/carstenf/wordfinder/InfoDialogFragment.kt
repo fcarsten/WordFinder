@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -96,6 +97,10 @@ class InfoDialogFragment : DialogFragment() {
             override fun onPageSelected(position: Int) {
                 prevButton.isEnabled = position > 0
                 nextButton.isEnabled = position < pages.size - 1
+//                val scrollView = viewPager.findViewById<ScrollView>(R.id.info_scrollview)
+//                scrollView.post {
+//                    scrollView.smoothScrollBy(0, 50) // Subtle nudge down
+//                }
             }
         })
 
