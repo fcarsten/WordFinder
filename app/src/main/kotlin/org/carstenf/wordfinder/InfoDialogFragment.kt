@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
-import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -37,7 +36,7 @@ class InfoDialogFragment : DialogFragment() {
             "Error loading HTML content: ${e.message}"
         }
     }
-    var dialogView : View? = null
+    private var dialogView : View? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
@@ -178,7 +177,7 @@ class InfoPagerAdapter(private val pages: List<PageData>) :
     }
 }
 
-class DialogImageHandler(val page: PageData, val textView: TextView): Html.ImageGetter {
+class DialogImageHandler(private val page: PageData, private val textView: TextView): Html.ImageGetter {
 
     override fun getDrawable(source: String?): Drawable? {
         return try {

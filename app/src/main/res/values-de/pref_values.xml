@@ -3,6 +3,6 @@
     <string name="WordCount">Wortanzahl</string>
     <string name="WordValue">Wortwerte</string>
     <string name="AmericanEnglish">Amerikanisches Englisch</string>
-    <string name="BritishEnglish">Britisches Englisch</string>
+    <string name="IntEnglish">Internationales Englisch</string>
     <string name="Deutsch">Deutsch</string>
 </resources>
