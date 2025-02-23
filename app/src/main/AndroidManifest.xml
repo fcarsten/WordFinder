@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="15"
-	android:versionName="4.02"
+    android:versionCode="16"
+	android:versionName="4.03"
     android:installLocation="auto"
 	>
 
