@@ -15,6 +15,8 @@ import android.graphics.Color
 import android.graphics.Insets
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -792,10 +794,27 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         runOnUiThread { Toast.makeText(this, text, Toast.LENGTH_SHORT).show() }
     }
 
+    fun countWords(input: String): Int {
+        if (input.isBlank()) return 0 // Return 0 if the string is empty or contains only whitespace
+
+        // Split the string by whitespace and filter out any empty strings (caused by multiple spaces)
+        val words = input.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
+
+        return words.size
+    }
+
     private fun displayWordDefinition(definitionStr: String) {
         runOnUiThread {
+            val numWords = countWords(definitionStr)
+            val displayTime = 3 + (numWords * 60.0)/200
+
             val view = findViewById<View>(android.R.id.content)
-            val snackbar = Snackbar.make(view, definitionStr, Snackbar.LENGTH_LONG)
+            val snackbar = Snackbar.make(view, definitionStr, Snackbar.LENGTH_INDEFINITE)
+            snackbar.setAction("Ok") {
+                // Dismiss the Snackbar when the action button is clicked
+                snackbar.dismiss()
+            }
+
             val snackbarView = snackbar.view
 
             val textView =
@@ -818,6 +837,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             layoutParams.gravity = Gravity.CENTER // Adjust gravity if needed
             snackbarView.layoutParams = layoutParams
             snackbar.show()
+
+            Handler(Looper.getMainLooper()).postDelayed({
+                snackbar.dismiss()
+            }, (displayTime*1000L).toLong())
         }
     }
 

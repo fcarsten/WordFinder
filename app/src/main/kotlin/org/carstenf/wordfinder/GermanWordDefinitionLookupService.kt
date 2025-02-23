@@ -3,11 +3,25 @@ package org.carstenf.wordfinder
 import java.util.Locale
 
 class GermanWordDefinitionLookupService : WordDefinitionLookupService {
+    private fun replaceWithUmlauts(input: String): String {
+        return input
+            .replace("ae", "ä")
+            .replace("ue", "ü")
+            .replace("oe", "ö")
+    }
+
+    private fun replaceWithSz(input: String): String {
+        return input
+            .replace("ss", "ß")
+    }
+
     override fun lookupWordDefinition(gameState: GameState, task: WordLookupTask) {
         val lowercaseWord = task.word.lowercase(Locale.getDefault())
         val capitalizedWord =
             lowercaseWord[0].uppercaseChar().toString() + lowercaseWord.substring(1)
-        val searchTerm = "$capitalizedWord|$lowercaseWord"
+        var searchTerm = "$capitalizedWord|$lowercaseWord"
+        searchTerm = searchTerm+"|"+ replaceWithUmlauts(searchTerm)
+        searchTerm = searchTerm+"|"+ replaceWithSz(searchTerm)
 
         val wiktionaryLookup = WiktionaryLookup()
         wiktionaryLookup.getMeaningAsync(searchTerm) { meaning: String? ->
