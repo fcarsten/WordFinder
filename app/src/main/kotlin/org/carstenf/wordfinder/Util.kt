@@ -12,6 +12,7 @@ import android.view.View
 
 fun slideUpAndHide(toHide: View, toReveal: View) {
     val animator = ObjectAnimator.ofFloat(toHide, "translationY", 0f, -toHide.height.toFloat())
+    toReveal.visibility = View.VISIBLE
     animator.duration = 200 // Animation duration in milliseconds
     animator.start()
 
