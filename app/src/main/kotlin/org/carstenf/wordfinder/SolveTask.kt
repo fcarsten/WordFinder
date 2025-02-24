@@ -36,8 +36,15 @@ class SolveTask(private val gameState: GameState) {
     private fun findAnyWord(move: Int, taken: BooleanArray, depth: Int, res: String, prefixes: HashSet<String>) {
         taken[move] = true
         if (depth == 0) {
-//            Log.i(WordFinder.TAG, res + gameState.getBoard(move))
-            prefixes.add(res + gameState.getBoard(move))
+            val prefix = res + gameState.getBoard(move)
+            prefixes.add(prefix)
+            if(prefix[0] == 'Q' && prefix[1] != 'U') {
+                prefixes.add(""+prefix[0]+'U'+prefix[1])
+            }
+
+            if(prefix[1] == 'Q' && prefix[2] != 'U') {
+                prefixes.add(""+prefix[0]+prefix[1]+'U')
+            }
         } else {
             for (next in WordFinder.MOVES[move]) {
                 if (!taken[next]) {
