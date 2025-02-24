@@ -23,6 +23,7 @@ import android.os.VibratorManager
 import android.util.Log
 import android.util.SparseArray
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
@@ -192,7 +193,32 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         val computerResultList = gameState.computerResultList
 
-        val computerResultListAdapter = ArrayAdapter<Result>(this, R.layout.list_item, R.id.resultText)
+        val computerResultListAdapter = object : ArrayAdapter<Result>(this, R.layout.list_item, R.id.resultText) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = convertView ?: LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false)
+
+                val result = getItem(position)
+
+                // Set the text
+                view.findViewById<TextView>(android.R.id.text1).text = result?.result
+
+                // Change the background color if the item is highlighted
+                if( result != null) {
+                    if (result.isHighlighted) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                            view.setBackgroundColor(context.getColor(R.color.md_theme_secondaryContainer))
+                        } else {
+                            @Suppress("DEPRECATION")
+                            view.setBackgroundColor(context.resources.getColor(R.color.md_theme_secondaryContainer))
+                        }
+                    } else {
+                        view.setBackgroundColor(Color.TRANSPARENT) // Reset to default
+                    }
+                }
+
+                return view
+            }
+        }
 
         computerResultList.observe(
             this
@@ -652,7 +678,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         var guess = gameState.currentGuess
 
         if (gameState.validatePlayerGuess(guess) == null) {
-            playerResultList.insert(Result(guess), 0)
+            insertPlayerResult(guess)
             if (gameState.autoAddPrefixalWords()) {
                 testAndAddPrefixWords(guess)
             }
@@ -660,7 +686,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             guess = guess.replace("Q".toRegex(), "QU")
             val validationResult = gameState.validatePlayerGuess(guess)
             if (validationResult == null) {
-                playerResultList.insert(Result(guess), 0)
+                insertPlayerResult(guess)
                 if (gameState.autoAddPrefixalWords()) {
                     testAndAddPrefixWords(guess)
                 }
@@ -694,13 +720,45 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         updateOkButton()
     }
 
+
+    private fun highlightFirstMatchingItem(searchText: String) {
+        // Get the adapter from the ListView
+        val adapter = computerResultListView.adapter as? ArrayAdapter<*>
+
+        // Check if the adapter is not null and has items
+        if (adapter != null && adapter.count > 0) {
+            // Iterate through the items in the adapter
+            for (i in 0 until adapter.count) {
+                val result = adapter.getItem(i) as Result
+
+                // Check if the result's text matches the search text
+                if (result.result == searchText) {
+                    // Modify the Result object to indicate it should be highlighted
+                    result.isHighlighted = true
+
+                    // Notify the adapter that the data has changed
+                    adapter.notifyDataSetChanged()
+
+                    // Break the loop after finding the first match
+                    break
+                }
+            }
+        }
+    }
+
+    private fun insertPlayerResult(guess: String) {
+        playerResultList.insert(Result(guess), 0)
+        highlightFirstMatchingItem(guess)
+
+    }
+
     private fun testAndAddPrefixWords(word: String) {
         var localWord = word
         while (localWord.isNotEmpty()) {
             localWord = localWord.substring(0, localWord.length - 1) // Remove the last character
             val result = gameState.validatePlayerGuess(localWord)
             if (result == null) {
-                playerResultList.insert(Result(localWord), 0)
+                insertPlayerResult(localWord)
             } else {
                 when (result) {
                     PlayerGuessState.ALREADY_FOUND, PlayerGuessState.NOT_IN_DICTIONARY -> continue

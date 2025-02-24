@@ -11,6 +11,8 @@ package org.carstenf.wordfinder
  * @author carsten.friedrich@gmail.com
  */
 class Result(val result: String) {
+    var isHighlighted: Boolean = false
+
     override fun toString(): String {
         return result
     }
