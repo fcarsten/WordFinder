@@ -8,6 +8,8 @@ package org.carstenf.wordfinder
 
 import android.database.sqlite.SQLiteQueryBuilder
 import android.util.Log
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.util.Locale
 
 class Dictionary internal constructor(wordFinder: WordFinder) {
@@ -15,31 +17,33 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
     private val builder: SQLiteQueryBuilder
 
-    fun lookup(word: String, db: String?): String? {
-        if(db==null) {
-            Log.e(WordFinder.TAG, "Dictionary name null")
-            return null
-        }
+    suspend fun lookup(word: String, db: String?): String? {
+        return dbMutex.withLock {
+            if (db == null) {
+                Log.e(WordFinder.TAG, "Dictionary name null")
+                return null
+            }
 
-        var s = word
-        s = s.trim { it <= ' ' }.uppercase(Locale.getDefault())
+            var s = word
+            s = s.trim { it <= ' ' }.uppercase(Locale.getDefault())
 
-        val helper = mDatabaseOpenHelperMap[db.trim { it <= ' ' }
-            .uppercase(Locale.getDefault())]
-        if (helper == null) return null
+            val helper = mDatabaseOpenHelperMap[db.trim { it <= ' ' }
+                .uppercase(Locale.getDefault())]
+            if (helper == null) return null
 
-        helper.readableDatabase.use { sqlite ->
-            builder.query(
-                sqlite,
-                TEXT_COLUMN, "text = ?",
-                arrayOf(s), null, null, null
-            ).use { cursor ->
-                if (cursor == null) {
-                    return null
-                } else if (!cursor.moveToFirst()) {
-                    return null
+            helper.getOrCreateDataBase().use { sqlite ->
+                builder.query(
+                    sqlite,
+                    TEXT_COLUMN, "text = ?",
+                    arrayOf(s), null, null, null
+                ).use { cursor ->
+                    if (cursor == null) {
+                        return null
+                    } else if (!cursor.moveToFirst()) {
+                        return null
+                    }
+                    cursor.getString(0)
                 }
-                return cursor.getString(0)
             }
         }
     }
@@ -57,7 +61,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
                 val dbName =
                     file.trim { it <= ' ' }.uppercase(Locale.getDefault()).replace(".DB.7Z", "")
                 mDatabaseOpenHelperMap[dbName] = AssetDbOpenHelper(
-                    wordFinder, dbName,
+                    wordFinder.applicationContext, dbName,
                     "$DB_ASSET_PATH/$file"
                 )
             }
@@ -66,30 +70,34 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
         builder.tables = "words"
     }
 
-    fun getAllWords(prefix: String, db: String?): Collection<String>? {
-        if(db == null) return null
-        val result: MutableCollection<String> = ArrayList()
-        val dbHelper = mDatabaseOpenHelperMap[db.trim { it <= ' ' }
-            .uppercase(Locale.getDefault())]
-        if (dbHelper == null) return null
+    private val dbMutex = Mutex()
 
-        dbHelper.readableDatabase.use { sqlite ->
-            builder.query(
-                sqlite,
-                TEXT_COLUMN, "prefix = ?",
-                arrayOf(prefix), null, null, null
-            ).use { cursor ->
-                if (cursor == null) {
-                    return null
-                } else if (!cursor.moveToFirst()) {
-                    return null
+    suspend fun getAllWords(prefix: String, db: String?): Collection<String>? {
+        return dbMutex.withLock {
+            if (db == null) return null
+            val result: MutableCollection<String> = ArrayList()
+            val dbHelper = mDatabaseOpenHelperMap[db.trim { it <= ' ' }
+                .uppercase(Locale.getDefault())]
+            if (dbHelper == null) return null
+
+            dbHelper.getOrCreateDataBase().use { sqlite ->
+                builder.query(
+                    sqlite,
+                    TEXT_COLUMN, "prefix = ?",
+                    arrayOf(prefix), null, null, null
+                ).use { cursor ->
+                    if (cursor == null) {
+                        return null
+                    } else if (!cursor.moveToFirst()) {
+                        return null
+                    }
+                    do {
+                        result.add(cursor.getString(0))
+                    } while (cursor.moveToNext())
                 }
-                do {
-                    result.add(cursor.getString(0))
-                } while (cursor.moveToNext())
             }
+            result
         }
-        return result
     }
 
     internal companion object {

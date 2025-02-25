@@ -10,15 +10,18 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
 class AssetDbOpenHelper(
-    context: Context, dbName: String,
-    dbFileName: String
-) : AutoCloseable {
+    val context: Context, val dbName: String,
+    val dbFileName: String
+) {
+
     private val dbHelperDelegate: SQLiteOpenHelper =
         object : SQLiteOpenHelper(context, dbName, null, 1) {
             override fun onCreate(db: SQLiteDatabase) {
@@ -33,39 +36,25 @@ class AssetDbOpenHelper(
             }
         }
 
-    private val createDbLock = Any()
-
-    init {
-        (Thread({
-            synchronized(createDbLock) {
-                Log.i(WordFinder.TAG, "Started creating db")
-                try {
-                    createDataBase(context, dbName, dbFileName)
-                } catch (e: IOException) {
-                    Log.e(WordFinder.TAG, e.message, e)
-                }
-                Log.i(WordFinder.TAG, "Finished creating db")
-            }
-        }, "DB Installer")).start()
-    }
+    private val createDbMutex = Mutex()
 
     /**
      * Creates a empty database on the system and rewrites it with your own
      * database.
      */
-    @Throws(IOException::class)
-    private fun createDataBase(
-        context: Context, dbName: String,
-        dbFileName: String
-    ) {
-        val dbExist = checkDataBaseExists(context, dbName)
+    suspend fun getOrCreateDataBase(): SQLiteDatabase? {
+        createDbMutex.withLock {
 
-        if (!dbExist) {
-            Log.d(WordFinder.TAG, "Creating DB")
-            dbHelperDelegate.readableDatabase
-            dbHelperDelegate.close()
-            copyDataBase(context, dbName, dbFileName)
-            Log.d(WordFinder.TAG, "Finished creating DB")
+            val dbExist = checkDataBaseExists(context, dbName)
+
+            if (!dbExist) {
+                Log.d(WordFinder.TAG, "Creating DB")
+                dbHelperDelegate.readableDatabase
+                dbHelperDelegate.close()
+                copyDataBase(context, dbName, dbFileName)
+                Log.d(WordFinder.TAG, "Finished creating DB")
+            }
+            return dbHelperDelegate.readableDatabase
         }
     }
 
@@ -137,18 +126,13 @@ class AssetDbOpenHelper(
         }
 
     }
+//
+//    override fun close() {
+//        runBlocking {
+//            createDbMutex.withLock {
+//                dbHelperDelegate.close()
+//            }
+//        }
+//    }
 
-    @Synchronized
-    override fun close() {
-        synchronized(createDbLock) {
-            dbHelperDelegate.close()
-        }
-    }
-
-    val readableDatabase: SQLiteDatabase
-        get() {
-            synchronized(createDbLock) {
-                return dbHelperDelegate.readableDatabase
-            }
-        }
 }

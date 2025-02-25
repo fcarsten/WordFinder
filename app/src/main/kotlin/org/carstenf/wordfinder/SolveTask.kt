@@ -21,7 +21,7 @@ class SolveTask(private val gameState: GameState) {
         scope.cancel()
     }
 
-    private fun solve2() {
+    private suspend fun solve2() {
         val prefixes = HashSet<String>()
         val taken = BooleanArray(16)
         for (i in 0 until 16) {
@@ -55,7 +55,7 @@ class SolveTask(private val gameState: GameState) {
         taken[move] = false
     }
 
-    private fun solve1(prefix: String) {
+    private suspend fun solve1(prefix: String) {
         val wordList = gameState.dictionary.getAllWords(prefix, gameState.dictionaryName) ?: return
 
         for (word in wordList) {

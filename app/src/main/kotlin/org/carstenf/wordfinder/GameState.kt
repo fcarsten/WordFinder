@@ -203,7 +203,7 @@ class GameState : ViewModel() {
         NOT_IN_DICTIONARY
     }
 
-    fun validatePlayerGuess(guess: String): PlayerGuessState? {
+    suspend fun validatePlayerGuess(guess: String): PlayerGuessState? {
         val minLength = if (isAllow3LetterWords) 3 else 4
 
         if (guess.length < minLength) return PlayerGuessState.TOO_SHORT
