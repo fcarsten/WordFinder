@@ -1,6 +1,7 @@
 package org.carstenf.wordfinder
 
 import android.app.Dialog
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -191,17 +192,20 @@ class DialogImageHandler(private val page: PageData, private val textView: TextV
             val originalWidth = drawable.intrinsicWidth
             val originalHeight = drawable.intrinsicHeight
 
-//            val textViewWidth = textView.width // Get the width of the TextView
-            val desiredWidth = originalWidth * 4
+            val screenWidth = Resources.getSystem().displayMetrics.widthPixels // Get the width of the TextView
+            var desiredWidth = originalWidth * 4
+
+            if(desiredWidth> screenWidth*0.8)
+                desiredWidth = (screenWidth*0.8).toInt()
 
             // Calculate the height to maintain the aspect ratio
-            val desiredHeight = originalHeight * 4
+            val desiredHeight = originalHeight * ( desiredWidth*1.0 / originalWidth)
 
             drawable.setBounds(
                 0,
                 0,
                 desiredWidth,
-                desiredHeight
+                desiredHeight.toInt()
             )
             drawable
         } catch (e: Exception) {
