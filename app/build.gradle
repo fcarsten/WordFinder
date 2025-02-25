@@ -46,6 +46,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"    // Optional, if using Lifecycle Extensions
     implementation "androidx.activity:activity-ktx:1.10.0"             // For Activity scope
     implementation "androidx.fragment:fragment-ktx:1.8.6"             // For Fragment scope
-    implementation 'org.apache.commons:commons-compress:1.23.0'
+    //noinspection GradleDependency
+    implementation 'org.apache.commons:commons-compress:1.12' // Old version of library required
+                                                                // newer ones don't work on Android Lollipop (Java 6)
     implementation 'org.tukaani:xz:1.5'
 }
