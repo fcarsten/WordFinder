@@ -15,7 +15,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
     private val builder: SQLiteQueryBuilder
 
-    fun lookup(word: String, db: String?): String? {
+    suspend fun lookup(word: String, db: String?): String? {
         if(db==null) {
             Log.e(WordFinder.TAG, "Dictionary name null")
             return null
@@ -28,7 +28,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
             .uppercase(Locale.getDefault())]
         if (helper == null) return null
 
-        helper.readableDatabase.use { sqlite ->
+        helper.getOrCreateDataBase().use { sqlite ->
             builder.query(
                 sqlite,
                 TEXT_COLUMN, "text = ?",
@@ -57,7 +57,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
                 val dbName =
                     file.trim { it <= ' ' }.uppercase(Locale.getDefault()).replace(".DB.7Z", "")
                 mDatabaseOpenHelperMap[dbName] = AssetDbOpenHelper(
-                    wordFinder, dbName,
+                    wordFinder.applicationContext, dbName,
                     "$DB_ASSET_PATH/$file"
                 )
             }
@@ -66,14 +66,14 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
         builder.tables = "words"
     }
 
-    fun getAllWords(prefix: String, db: String?): Collection<String>? {
+    suspend fun getAllWords(prefix: String, db: String?): Collection<String>? {
         if(db == null) return null
         val result: MutableCollection<String> = ArrayList()
         val dbHelper = mDatabaseOpenHelperMap[db.trim { it <= ' ' }
             .uppercase(Locale.getDefault())]
         if (dbHelper == null) return null
 
-        dbHelper.readableDatabase.use { sqlite ->
+        dbHelper.getOrCreateDataBase().use { sqlite ->
             builder.query(
                 sqlite,
                 TEXT_COLUMN, "prefix = ?",

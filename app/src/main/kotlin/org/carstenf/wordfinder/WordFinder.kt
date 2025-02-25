@@ -50,8 +50,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
 import java.io.IOException
@@ -135,7 +137,11 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             })
         }
 
-        okButton.setOnClickListener { this.okClick() }
+        okButton.setOnClickListener {
+            lifecycleScope.launch {
+                okClick()
+            }
+        }
 
         findViewById<View>(R.id.showAllButton).setOnClickListener {
             this.solveClick()
@@ -316,7 +322,11 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
                                         MotionEvent.ACTION_UP -> {
                                             Log.d(TAG, "Button up")
-                                            if (firstButtonPressed !== lastButtonPressed) okClick()
+
+                                            if (firstButtonPressed !== lastButtonPressed)
+                                                lifecycleScope.launch {
+                                                    okClick()
+                                                }
                                             lastButtonPressed = null
                                         }
                                     }
@@ -674,7 +684,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         updateDiceState(move)
     }
 
-    fun okClick() {
+    suspend fun okClick() {
         var guess = gameState.currentGuess
 
         if (gameState.validatePlayerGuess(guess) == null) {
@@ -752,7 +762,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     }
 
-    private fun testAndAddPrefixWords(word: String) {
+    private suspend fun testAndAddPrefixWords(word: String) {
         var localWord = word
         while (localWord.isNotEmpty()) {
             localWord = localWord.substring(0, localWord.length - 1) // Remove the last character
