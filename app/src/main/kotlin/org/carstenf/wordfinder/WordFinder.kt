@@ -201,12 +201,12 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         val computerResultListAdapter = object : ArrayAdapter<Result>(this, R.layout.list_item, R.id.resultText) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val view = convertView ?: LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false)
+                val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
 
                 val result = getItem(position)
 
                 // Set the text
-                view.findViewById<TextView>(android.R.id.text1).text = result?.result
+                view.findViewById<TextView>(R.id.resultText).text = result?.result
 
                 // Change the background color if the item is highlighted
                 if( result != null) {
