@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -14,25 +15,30 @@
         android:id="@+id/chronometer1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="0"
         android:background="@drawable/listview_border"
         android:gravity="center"
         android:text="@string/_00_00"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/scoreTextView"
+        app:layout_constraintBottom_toTopOf="@id/letterGridView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
 
     <org.carstenf.wordfinder.BackGestureBlockingTableLayout
         android:id="@+id/letterGridView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
-        android:minWidth="195dp"
-        android:minHeight="195dp"
         android:background="@drawable/listview_border"
-        android:divider="@android:color/darker_gray"
-        android:dividerHeight="1dp"
+        android:minHeight="200dp"
+        android:layout_weight="2"
+        app:layout_constraintVertical_weight="2"
+        app:layout_constraintBottom_toTopOf="@id/resultLists"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chronometer1"
         >
 
         <TableRow
@@ -40,134 +46,131 @@
             style="?android:attr/buttonBarStyle"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            >
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button01"
-                style="@style/KeyBoardButtonStyle"
-            />
+                style="@style/KeyBoardButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button02"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button03"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button04"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            >
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button11"
-                style="@style/KeyBoardButtonStyle"
-            />
+                style="@style/KeyBoardButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button12"
-                style="@style/KeyBoardButtonStyle"
-             />
+                style="@style/KeyBoardButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button13"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button14"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow3"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            >
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button21"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button22"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button23"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button24"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow4"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            >
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button31"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button32"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button33"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button34"
-                style="@style/KeyBoardButtonStyle"
-                />
+                style="@style/KeyBoardButtonStyle" />
         </TableRow>
     </org.carstenf.wordfinder.BackGestureBlockingTableLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/resultLists"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
         android:baselineAligned="false"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        app:layout_constraintVertical_weight="1.5"
+        android:minHeight="200dp"
+        app:layout_constraintBottom_toTopOf="@id/bottomButtonRow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/letterGridView"
+        >
 
         <ListView
             android:id="@+id/playerResultsList"
             android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:outlineProvider="paddedBounds"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/computerResultsLayout"
-            app:layout_constraintStart_toStartOf="parent"
             android:background="@drawable/listview_border"
             android:divider="@android:color/darker_gray"
             android:dividerHeight="1dp"
-            />
+            android:outlineProvider="paddedBounds"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/computerResultsLayout"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <FrameLayout
             android:id="@+id/computerResultsLayout"
             android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -192,39 +195,38 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/showAllButton"
-                    android:background="#F0FFFFFF"
-                    android:textColor="#000000"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="#F0FFFFFF"
+                    android:outlineProvider="paddedBounds"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:shadowColor="#A8A8A8"
                     android:shadowDx="5"
                     android:shadowDy="5"
                     android:shadowRadius="5"
                     android:text="@string/show_all"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
+                    android:textColor="#000000"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:outlineProvider="paddedBounds"
                     app:layout_constraintWidth_percent=".5" />
 
                 <ImageView
                     android:id="@+id/imageView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/listview_border"
                     android:contentDescription="@string/curtains"
-                    app:srcCompat="@drawable/curtains"
+                    android:divider="@android:color/darker_gray"
+                    android:outlineProvider="paddedBounds"
+                    android:scaleType="fitXY"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:scaleType="fitXY"
-                    android:background="@drawable/listview_border"
-                    android:divider="@android:color/darker_gray"
-                    android:outlineProvider="paddedBounds"
-                    />
+                    app:srcCompat="@drawable/curtains" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -233,14 +235,24 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
+        android:id="@+id/bottomButtonRow"
         android:layout_width="match_parent"
-        android:background="@drawable/listview_border"
         android:layout_height="wrap_content"
-        android:baselineAligned="false">
+        android:layout_weight="0"
+        android:background="@drawable/listview_border"
+        android:baselineAligned="false"
+        android:minHeight="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/resultLists"
+
+        >
+
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="0.4"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_weight="0.4">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/okButton"
@@ -257,8 +269,7 @@
 
             <Space
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                />
+                android:layout_height="match_parent" />
 
         </LinearLayout>
 
@@ -266,8 +277,8 @@
             android:id="@+id/buttonRow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:minHeight="48dp"
             android:isScrollContainer="true"
+            android:minHeight="48dp"
             android:padding="4dp">
 
 
@@ -282,9 +293,9 @@
                 android:text="0/0"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/shuffleButton"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 tools:ignore="HardcodedText" />
 
             <!-- Shuffle Button -->
@@ -295,28 +306,25 @@
                 android:background="@drawable/roling_dice_border"
                 android:backgroundTint="@null"
                 android:contentDescription="@string/shuffle"
+                android:elevation="0dp"
                 android:minHeight="48dp"
+                android:stateListAnimator="@null"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="@id/row_end_buffer"
-                app:layout_constraintStart_toEndOf="@id/scoreTextView"
-                tools:layout_editor_absoluteY="4dp"
-                android:stateListAnimator="@null"
-                android:elevation="0dp"
-                />
+                app:layout_constraintStart_toEndOf="@id/scoreTextView" />
+
             <Space
                 android:id="@+id/row_end_buffer"
                 android:layout_width="3dp"
                 android:layout_height="match_parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/shuffleButton"
-                />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 
 
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
