@@ -446,7 +446,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         if (!gameState.hasGameStarted()) {
-            if (gameState.countDownTime >= 0) showConfirmStartGameDialog(true)
+            if (gameState.countDownTime >= 0) {
+                showConfirmStartGameDialog()
+            }
             else {
                 shuffle()
             }
@@ -536,14 +538,14 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         dialog.show()
     }
 
-    private fun showConfirmStartGameDialog(@Suppress("SameParameterValue") doShuffle: Boolean) {
+    private fun showConfirmStartGameDialog() {
         val builder = AlertDialog.Builder(this@WordFinder)
         builder.setMessage(R.string.start_game_diag_msg)
             .setTitle(R.string.start_game_diag_title)
             .setPositiveButton(
                 R.string.start_game_diag_ok
             ) { _: DialogInterface?, _: Int ->
-                if (doShuffle) shuffle()
+                shuffle()
             }
 
         val dialog = builder.create()
