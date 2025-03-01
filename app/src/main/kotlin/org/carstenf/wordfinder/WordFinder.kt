@@ -484,7 +484,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        gameState.onResume()
+        gameState.onResume() // This will trigger UI update indirectly if game over
     }
 
     public override fun onPostResume() {
@@ -507,8 +507,6 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             else {
                 shuffle()
             }
-        } else if (gameState.gameLifecycleState.value!! >= GameState.GameLifeCycleState.TIMER_FINISHED) {
-            disableGuessing()
         }
     }
 
