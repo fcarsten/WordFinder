@@ -484,21 +484,20 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         gameState.onResume()
+    }
+
+    public override fun onPostResume() {
+        super.onPostResume()
 
         if (preferencesChanged) {
             countDownView.visibility = View.GONE
             prefs
             if(reshuffleRequired) {
-                shuffle()
+                showConfirmSuffleDialog()
                 reshuffleRequired = false
             }
             preferencesChanged = false
         }
-
-    }
-
-    public override fun onPostResume() {
-        super.onPostResume()
 
         if (gameState.gameLifecycleState.value == GameState.GameLifeCycleState.NOT_STARTED) {
             if (gameState.countDownTime >= 0) {
@@ -592,6 +591,22 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             ) { _: DialogInterface?, _: Int -> }
 
         val dialog = builder.create()
+        dialog.show()
+    }
+
+    private fun showConfirmSuffleDialog() {
+        val builder = AlertDialog.Builder(this@WordFinder)
+        builder.setMessage(R.string.shuffle_required_diag_msg)
+            .setTitle(R.string.shuffle_required_diag_title)
+            .setPositiveButton(
+                R.string.shuffle_required_diag_ok
+            ) { _: DialogInterface?, _: Int ->
+                shuffle()
+            }
+
+        val dialog = builder.create()
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
         dialog.show()
     }
 
