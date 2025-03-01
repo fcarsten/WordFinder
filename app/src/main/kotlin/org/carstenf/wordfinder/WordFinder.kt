@@ -788,7 +788,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 }
 
                 val context = applicationContext
-                val toast = Toast.makeText(context, "\"$guess\" $text", Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(context, "\"${guess.replace("QUU", "Q(u)U")}\" $text", Toast.LENGTH_SHORT)
                 toast.show()
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
