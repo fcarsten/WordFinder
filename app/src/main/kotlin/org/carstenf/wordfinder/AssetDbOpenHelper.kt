@@ -19,7 +19,7 @@ import java.io.IOException
 
 class AssetDbOpenHelper(
     val context: Context, val dbName: String,
-    val dbFileName: String
+    private val dbFileName: String
 ) {
 
     private val dbHelperDelegate: SQLiteOpenHelper =

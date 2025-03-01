@@ -71,7 +71,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     private val computerResultListView by lazy<ListView> { findViewById(R.id.computerResultsList) }
 
-    private val gameState by lazy { ViewModelProvider(this)[GameState::class.java] }
+    private val gameState by lazy { ViewModelProvider(this)[GameState::class] }
 
     private val showAllRow by lazy<View> { findViewById(R.id.showAllRow) }
 
@@ -154,6 +154,18 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         val playerResultListView = findViewById<ListView>(R.id.playerResultsList)
 
         countDownView.visibility = View.GONE
+
+        gameState.gameLifecycleState.observe(this) {
+            @Suppress("CascadeIf") // Warning makes no sense as we don't consider all possible values
+            if (it == GameState.GameLifeCycleState.TIMER_FINISHED) {
+                disableGuessing()
+            } else if (it == GameState.GameLifeCycleState.GAME_OVER) {
+                gameState.cancelCountDown()
+                disableGuessing()
+            } else if (it == GameState.GameLifeCycleState.STARTED) {
+                enableGuessing()
+            }
+        }
 
         try {
             gameState.dictionary = Dictionary(this)
@@ -270,6 +282,23 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         updateScore()
     }
 
+    private fun enableGuessing() {
+        for (button in letterButtons) {
+            button.isEnabled = true
+            button.setContentDescription("Unavailable Letter Button")
+        }
+    }
+
+    private fun disableGuessing() {
+        gameState.clearGuess()
+        updateOkButton()
+
+        for (button in letterButtons) {
+            button.isEnabled = false
+            button.setContentDescription("Unavailable Letter Button")
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private fun addGestureHandler(tableLayout: TableLayout) {
         // Iterate through all buttons in the TableLayout
@@ -288,6 +317,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                             private var lastButtonPressed: Button? = null
 
                             override fun onTouch(v: View, event: MotionEvent): Boolean {
+                                if(isGameOver()) return true
+
                                 val action = event.action
                                 var x = event.x.toInt()
                                 var y = event.y.toInt()
@@ -339,6 +370,13 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 }
             }
         }
+    }
+
+    private fun isGameOver(): Boolean {
+        val state = gameState.gameLifecycleState.value
+        return state == GameState.GameLifeCycleState.NOT_STARTED ||
+                state == GameState.GameLifeCycleState.GAME_OVER ||
+                state == GameState.GameLifeCycleState.TIMER_FINISHED
     }
 
     // Helper method to find the button at a specific position
@@ -443,27 +481,34 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     public override fun onResume() {
         super.onResume()
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        if (!gameState.hasGameStarted()) {
+        gameState.onResume()
+    }
+
+    public override fun onPostResume() {
+        super.onPostResume()
+
+        if (preferencesChanged) {
+            countDownView.visibility = View.GONE
+            prefs
+            if(reshuffleRequired) {
+                showConfirmSuffleDialog()
+                reshuffleRequired = false
+            }
+            preferencesChanged = false
+        }
+
+        if (gameState.gameLifecycleState.value == GameState.GameLifeCycleState.NOT_STARTED) {
             if (gameState.countDownTime >= 0) {
                 showConfirmStartGameDialog()
             }
             else {
                 shuffle()
             }
-        } else {
-            if (gameState.isTimeUp) {
-                showTimeIsUpDialog()
-            }
-        }
-
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
-        if (preferencesChanged) {
-            countDownView.visibility = View.GONE
-            prefs
-            shuffle()
-            preferencesChanged = false
+        } else if (gameState.gameLifecycleState.value!! >= GameState.GameLifeCycleState.TIMER_FINISHED) {
+            disableGuessing()
         }
     }
 
@@ -473,16 +518,22 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     public override fun onPause() {
         super.onPause()
+        gameState.onPause()
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     }
 
     private var preferencesChanged = false
+    private var reshuffleRequired = false
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.i(TAG, "Preferences changed for $key")
         preferencesChanged = true
+        if (key == "dict_pref" || key =="threeLetterPref") {
+            reshuffleRequired = true
+        }
     }
+
 
     private val prefs: Unit
         get() {
@@ -496,16 +547,17 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
             gameState.setAutoAddPrefixalWords(
                 prefs
-                    .getBoolean("autoAddPrefixPref", true)
+                    .getBoolean("autoAddPrefixPref", false)
             )
 
-            if (prefs.getBoolean("countdown_pref", false)) {
-                val timeStr = prefs.getString("countdown_time_pref", "02:00")!!
+            if (prefs.getBoolean("countdown_pref", true)) {
+                val timeStr = prefs.getString("countdown_time_pref", "03:00")!!
                 val time = parseTime(timeStr)
                 gameState.countDownTime = time
             } else {
                 gameState.countDownTime = -1
             }
+            updateScore()
         }
 
     private fun showTimeIsUpDialog() {
@@ -516,7 +568,12 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             .setTitle(R.string.time_up_dialog_title)
             .setPositiveButton(
                 R.string.time_up_dialog_ok
-            ) { _: DialogInterface?, _: Int -> gameState.isTimeUp = false }
+            ) { _: DialogInterface?,
+                _: Int ->
+                if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
+                    gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+                }
+            }
 
         val dialog = builder.create()
         dialog.setCanceledOnTouchOutside(false)
@@ -538,6 +595,22 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         dialog.show()
     }
 
+    private fun showConfirmSuffleDialog() {
+        val builder = AlertDialog.Builder(this@WordFinder)
+        builder.setMessage(R.string.shuffle_required_diag_msg)
+            .setTitle(R.string.shuffle_required_diag_title)
+            .setPositiveButton(
+                R.string.shuffle_required_diag_ok
+            ) { _: DialogInterface?, _: Int ->
+                shuffle()
+            }
+
+        val dialog = builder.create()
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.setCancelable(false)
+        dialog.show()
+    }
+
     private fun showConfirmStartGameDialog() {
         val builder = AlertDialog.Builder(this@WordFinder)
         builder.setMessage(R.string.start_game_diag_msg)
@@ -554,8 +627,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         dialog.show()
     }
 
-    @SuppressLint("SetTextI18n")
-    fun updateTimeView(time: Long) {
+    private fun updateTimeView(time: Long) {
         if (isFinishing) return
 
         if (time >= 0) {
@@ -566,6 +638,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             val ms = "%02d:%02d".format(h, m)
             countDownView.text = ms
             if (time == 0L) {
+                if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.TIMER_FINISHED) {
+                    gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.TIMER_FINISHED)
+                }
                 showTimeIsUpDialog()
             }
         } else {
@@ -687,6 +762,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     suspend fun okClick() {
+        if(isGameOver())
+            return
+
         var guess = gameState.currentGuess
 
         if (gameState.validatePlayerGuess(guess) == null) {
@@ -823,6 +901,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun solveClick() {
+        if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
+            gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+        }
         showComputerResults(show = true, animate = true)
     }
 
@@ -836,7 +917,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         when (item.itemId) {
             R.id.menu_item_info -> {
                 val fragmentManager = supportFragmentManager
-                showInfo(fragmentManager)
+                showInfo(fragmentManager, gameState)
                 return true
             }
             R.id.menu_item_prefs -> {
@@ -865,7 +946,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         runOnUiThread { Toast.makeText(this, text, Toast.LENGTH_SHORT).show() }
     }
 
-    fun countWords(input: String): Int {
+    private fun countWords(input: String): Int {
         if (input.isBlank()) return 0 // Return 0 if the string is empty or contains only whitespace
 
         // Split the string by whitespace and filter out any empty strings (caused by multiple spaces)
