@@ -156,6 +156,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         countDownView.visibility = View.GONE
 
         gameState.gameLifecycleState.observe(this) {
+            @Suppress("CascadeIf") // Warning makes no sense as we don't consider all possible values
             if (it == GameState.GameLifeCycleState.TIMER_FINISHED) {
                 disableGuessing()
             } else if (it == GameState.GameLifeCycleState.GAME_OVER) {
