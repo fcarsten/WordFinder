@@ -109,8 +109,6 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         setContentView(R.layout.main)
 
-        prefs // Get Preferences and initialize in game state
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             onBackInvokedDispatcher.registerOnBackInvokedCallback(
                 OnBackInvokedDispatcher.PRIORITY_DEFAULT
@@ -482,15 +480,18 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     public override fun onResume() {
         super.onResume()
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         gameState.onResume()
 
-        sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         if (preferencesChanged) {
             countDownView.visibility = View.GONE
             prefs
-            shuffle()
+            if(reshuffleRequired) {
+                shuffle()
+                reshuffleRequired = false
+            }
             preferencesChanged = false
         }
 
@@ -506,6 +507,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             else {
                 shuffle()
             }
+        } else if (gameState.gameLifecycleState.value!! >= GameState.GameLifeCycleState.TIMER_FINISHED) {
+            disableGuessing()
         }
     }
 
@@ -521,11 +524,16 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private var preferencesChanged = false
+    private var reshuffleRequired = false
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.i(TAG, "Preferences changed for $key")
         preferencesChanged = true
+        if (key == "dict_pref" || key =="threeLetterPref") {
+            reshuffleRequired = true
+        }
     }
+
 
     private val prefs: Unit
         get() {
@@ -549,6 +557,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             } else {
                 gameState.countDownTime = -1
             }
+            updateScore()
         }
 
     private fun showTimeIsUpDialog() {
@@ -560,7 +569,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             .setPositiveButton(
                 R.string.time_up_dialog_ok
             ) { _: DialogInterface?,
-                _: Int -> gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+                _: Int ->
+                if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
+                    gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+                }
             }
 
         val dialog = builder.create()
@@ -610,7 +622,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             val ms = "%02d:%02d".format(h, m)
             countDownView.text = ms
             if (time == 0L) {
-                gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.TIMER_FINISHED)
+                if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.TIMER_FINISHED) {
+                    gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.TIMER_FINISHED)
+                }
                 showTimeIsUpDialog()
             }
         } else {
@@ -871,7 +885,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun solveClick() {
-        gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+        if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
+            gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+        }
         showComputerResults(show = true, animate = true)
     }
 
