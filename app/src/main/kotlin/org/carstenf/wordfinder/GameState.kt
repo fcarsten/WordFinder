@@ -35,13 +35,11 @@ class GameState : ViewModel() {
 
     private val playerTaken = BooleanArray(16)
 
-    var isTimeUp: Boolean = false
-
     private var solver: SolveTask? = null
 
     fun shuffle() {
         clearGuess()
-        isTimeUp = false
+        gameLifecycleState.postValue(GameLifeCycleState.STARTED)
         for (i in 0..15) {
             board[i] = pickRandomLetter()
         }
@@ -203,6 +201,16 @@ class GameState : ViewModel() {
         NOT_IN_DICTIONARY
     }
 
+    val gameLifecycleState: MutableLiveData<GameLifeCycleState> = MutableLiveData(GameLifeCycleState.NOT_STARTED)
+
+    enum class GameLifeCycleState {
+        NOT_STARTED,
+        STARTED,
+        TIMER_STARTED,
+        TIMER_FINISHED,
+        GAME_OVER
+    }
+
     suspend fun validatePlayerGuess(guess: String): PlayerGuessState? {
         val minLength = if (isAllow3LetterWords) 3 else 4
 
@@ -233,13 +241,18 @@ class GameState : ViewModel() {
 	var countDownTime: Long = -1
 
     fun startCountDown() {
+        startCountDown(countDownTime)
+    }
+
+    private fun startCountDown(time: Long) {
         countDownTimer?.cancel()
 
         if (countDownTime < 0) return
 
-        countDownTimerCurrentValue.postValue(countDownTime)
+        gameLifecycleState.postValue(GameLifeCycleState.TIMER_STARTED)
+        countDownTimerCurrentValue.postValue(time)
 
-        countDownTimer = object : CountDownTimer(countDownTime, 1000) {
+        countDownTimer = object : CountDownTimer(time, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 countDownTimerCurrentValue.postValue(millisUntilFinished / 1000)
             }
@@ -268,12 +281,26 @@ class GameState : ViewModel() {
         return res
     }
 
+    fun onPause() {
+        // If game is interrupted while in progress, cancel timer and restart later in on Resume()
+        if(gameLifecycleState.value == GameLifeCycleState.TIMER_STARTED ){
+            countDownTimer?.cancel()
+        }
+    }
+
+    fun onResume() {
+        // If game was interrupted while in progress continue with the left over time.
+        if (gameLifecycleState.value == GameLifeCycleState.TIMER_STARTED) {
+            countDownTimerCurrentValue.value?.let { startCountDown(it*1000L) }
+        }
+    }
+
+    fun cancelCountDown() {
+        countDownTimer?.cancel()
+    }
+
     val playerScore: Int
         get() = getScore(playerResultList)
-
-    fun hasGameStarted(): Boolean {
-        return board[0].code != 0
-    }
 
     internal enum class ScoreAlgorithm {
         COUNT, VALUE

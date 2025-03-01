@@ -16,6 +16,7 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.TAG
 import java.io.InputStream
@@ -108,6 +109,11 @@ class InfoDialogFragment : DialogFragment() {
         return res
     }
 
+    override fun onDetach() {
+        super.onDetach()
+        gameState.onResume()
+    }
+
     override fun onResume() {
         super.onResume()
         val height = (resources.displayMetrics.heightPixels * 0.8).toInt()
@@ -130,12 +136,15 @@ class InfoDialogFragment : DialogFragment() {
             lWindow.setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND)
         }
     }
+    private lateinit var gameState: GameState
 
     companion object {
         const val TAG = "WordFinder InfoDialog"
 
-        fun showInfo(fragmentManager: androidx.fragment.app.FragmentManager) {
+        fun showInfo(fragmentManager: FragmentManager, state: GameState) {
             val dialogFragment = InfoDialogFragment()
+            dialogFragment.gameState = state
+            state.onPause()
             dialogFragment.show(fragmentManager, TAG)
         }
     }

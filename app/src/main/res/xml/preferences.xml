@@ -34,14 +34,14 @@
 
 		<androidx.preference.CheckBoxPreference
 			android:title="@string/PrefTimer"
-			android:defaultValue="false"
+			android:defaultValue="true"
 			android:summary="@string/PrefTimerSummary"
 			android:key="countdown_pref" />
 
 		<com.takisoft.preferencex.EditTextPreference
 			android:summary="@string/PrefTimeLimitSummary"
 			android:inputType="time"
-			android:defaultValue="02:00"
+			android:defaultValue="03:00"
 			android:title="@string/PrefTimeLimit"
 			android:key="countdown_time_pref"
 			android:dependency="countdown_pref" />
