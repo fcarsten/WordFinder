@@ -484,7 +484,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        gameState.onResume()
+        gameState.onResume() // This will trigger UI update indirectly if game over
     }
 
     public override fun onPostResume() {
@@ -507,8 +507,6 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             else {
                 shuffle()
             }
-        } else if (gameState.gameLifecycleState.value!! >= GameState.GameLifeCycleState.TIMER_FINISHED) {
-            disableGuessing()
         }
     }
 
@@ -699,7 +697,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private fun labelDices() {
         for (c in 0..15) {
             val l = gameState.getBoard(c)
-            letterButtons[c].setText((if (l == 'Q') "Qu" else l).toString())
+            letterButtons[c].setText(l.toString())
             letterButtons[c].setContentDescription("Letter $l")
         }
     }
@@ -788,7 +786,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 }
 
                 val context = applicationContext
-                val toast = Toast.makeText(context, "\"$guess\" $text", Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(context, "\"${guess.replace("QUU", "Q(u)U")}\" $text", Toast.LENGTH_SHORT)
                 toast.show()
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -859,7 +857,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun updateOkButton() {
-        val currentGuess = gameState.currentGuess.replace("Q".toRegex(), "Q(u)")
+        val currentGuess = gameState.currentGuess
 
         okButton.text = currentGuess
         if (currentGuess.isEmpty()) {

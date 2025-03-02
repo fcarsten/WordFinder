@@ -256,16 +256,20 @@
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/okButton"
+                android:background="@drawable/key_wide"
+                android:fontFamily="@font/arco_qu"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@drawable/key_wide"
-                android:contentDescription="@string/OK"
+                android:contentDescription="@string/press_to_submit_current_word"
                 android:ellipsize="start"
                 android:paddingLeft="20dp"
                 android:paddingRight="20dp"
+                android:minHeight="48dp"
                 android:singleLine="true"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="24sp"
+                />
 
             <Space
                 android:layout_width="0dp"

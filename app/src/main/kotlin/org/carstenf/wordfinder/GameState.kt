@@ -289,9 +289,13 @@ class GameState : ViewModel() {
     }
 
     fun onResume() {
+        val state = gameLifecycleState.value ?: return
+
         // If game was interrupted while in progress continue with the left over time.
-        if (gameLifecycleState.value == GameLifeCycleState.TIMER_STARTED) {
+        if ( state == GameLifeCycleState.TIMER_STARTED) {
             countDownTimerCurrentValue.value?.let { startCountDown(it*1000L) }
+        } else if (state >= GameLifeCycleState.TIMER_FINISHED) {
+            gameLifecycleState.postValue(state) // Give UI a chance to update as well.
         }
     }
 
