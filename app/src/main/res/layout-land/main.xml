@@ -266,7 +266,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:contentDescription="@string/press_to_submit_current_word"
-            android:includeFontPadding="false"
             android:lines="1"
             android:maxLines="1"
             android:minHeight="48dp"
@@ -274,9 +273,9 @@
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text=""
-            android:textSize="20sp"
             android:textStyle="bold"
-            app:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:textSize="24sp"
             />
 
         <Space

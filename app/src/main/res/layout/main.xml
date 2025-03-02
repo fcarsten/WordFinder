@@ -266,9 +266,9 @@
                 android:paddingRight="20dp"
                 android:minHeight="48dp"
                 android:singleLine="true"
-                android:textSize="20sp"
                 android:textStyle="bold"
-                app:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:textSize="24sp"
                 />
 
             <Space

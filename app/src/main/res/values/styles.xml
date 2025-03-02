@@ -6,7 +6,11 @@
         <item name="android:minWidth">48dp</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:paddingBottom">15dp</item>
-        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingTop">15dp</item>
+        <item name="android:paddingStart">15dp</item>
+        <item name="android:paddingEnd">15dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingRight">15dp</item>
         <item name="android:backgroundTint">@null</item> <!-- Prevent Material default tint -->
         <item name="android:background">@drawable/letter_button_background_selector</item>
         <item name="android:fontFamily">@font/arco_qu</item>
