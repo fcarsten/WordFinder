@@ -697,7 +697,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private fun labelDices() {
         for (c in 0..15) {
             val l = gameState.getBoard(c)
-            letterButtons[c].setText((if (l == 'Q') "Qu" else l).toString())
+            letterButtons[c].setText(l.toString())
             letterButtons[c].setContentDescription("Letter $l")
         }
     }
@@ -857,7 +857,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun updateOkButton() {
-        val currentGuess = gameState.currentGuess.replace("Q".toRegex(), "Q(u)")
+        val currentGuess = gameState.currentGuess
 
         okButton.text = currentGuess
         if (currentGuess.isEmpty()) {
