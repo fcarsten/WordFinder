@@ -15,11 +15,6 @@
         <item name="android:background">@drawable/letter_button_background_selector</item>
         <item name="android:fontFamily">@font/arco_qu</item>
         <item name="android:textColor">@color/letter_button_text_color</item>
-        <item name="android:text">Q</item>
-        <item name="autoSizeTextType">uniform</item>
-        <item name="autoSizeMinTextSize">10sp</item>
-        <item name="autoSizeMaxTextSize">100sp</item>
-        <item name="autoSizeStepGranularity">1sp</item>
     </style>
 </resources>
 
