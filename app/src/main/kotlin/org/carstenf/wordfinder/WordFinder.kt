@@ -886,6 +886,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         this.showComputerResultsFlag = show
 
         if (show) {
+            computerResultListView.setSelection(0)
             if(animate) {
                 slideUpAndHide(showAllRow, computerResultListView)
             } else {
