@@ -7,71 +7,50 @@
 package org.carstenf.wordfinder
 
 import android.annotation.SuppressLint
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.graphics.Color
-import android.graphics.Insets
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
 import android.util.Log
 import android.util.SparseArray
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
-import android.view.MotionEvent
 import android.view.View
-import android.view.View.OnTouchListener
-import android.view.ViewGroup
 import android.view.ViewTreeObserver.OnGlobalLayoutListener
-import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.ListView
-import android.widget.TableLayout
-import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.OnBackPressedCallback
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
 import java.io.IOException
-import java.util.Locale
-import java.util.concurrent.atomic.AtomicLong
 
 class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val playerResultList by lazy {
         ArrayAdapter(this, R.layout.list_item, R.id.resultText, gameState.playerResultList)
     }
 
-    private val wordLookupTaskMap by lazy { HashMap<Long, View>() }
-
-    private val wordLookupTaskCounter = AtomicLong(0)
-
     private val computerResultListView by lazy<ListView> { findViewById(R.id.computerResultsList) }
 
-    private val gameState by lazy { ViewModelProvider(this)[GameState::class] }
+    val gameState by lazy { ViewModelProvider(this)[GameState::class] }
 
     private val showAllRow by lazy<View> { findViewById(R.id.showAllRow) }
 
@@ -84,6 +63,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private var guessButtonEnabledTextColour = 0
     private var showComputerResultsFlag = false
 
+    private val wordDefinitionLookupManager by lazy { WordDefinitionLookupManager(this, gameState) }
+
     public override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         outState.putBoolean(SHOW_COMPUTER_RESULTS_FLAG, showComputerResultsFlag)
@@ -91,17 +72,6 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     public override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         showComputerResults(savedInstanceState.getBoolean(SHOW_COMPUTER_RESULTS_FLAG, false), false)
-    }
-
-    fun isGestureNavigationEnabled(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val insets = window.decorView.rootWindowInsets ?: return false
-            val gestureInsets: Insets = insets.getInsets(WindowInsets.Type.systemGestures())
-
-            // If left or right insets are greater than zero, gesture navigation is enabled
-            return gestureInsets.left > 0 || gestureInsets.right > 0
-        }
-        return false // Assume older versions use 3-button navigation
     }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -113,7 +83,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             onBackInvokedDispatcher.registerOnBackInvokedCallback(
                 OnBackInvokedDispatcher.PRIORITY_DEFAULT
             ) {
-                val hasNavigationBar = !isGestureNavigationEnabled()
+                val hasNavigationBar = !isGestureNavigationEnabled(this@WordFinder)
                 Log.d(TAG, "Navigation Bar: $hasNavigationBar")
                 if(hasNavigationBar) {
                     moveTaskToBack(true)
@@ -126,7 +96,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    val hasNavigationBar = !isGestureNavigationEnabled()
+                    val hasNavigationBar = !isGestureNavigationEnabled(this@WordFinder)
                     Log.d(TAG, "Navigation Bar: $hasNavigationBar")
                     if(hasNavigationBar) {
                         moveTaskToBack(true)
@@ -172,18 +142,18 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         } catch (e: IOException) {
             throw RuntimeException("Could not create Dictionaries: " + e.message, e)
         }
-        gameState.wordLookupError.observe(this) { error: Pair<WordLookupTask, String?>? ->
+        wordDefinitionLookupManager.wordLookupError.observe(this) { error: Pair<WordLookupTask, String?>? ->
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-                val progressBarView = wordLookupTaskMap[error?.first?.lookupTaskCounter]
+                val progressBarView = wordDefinitionLookupManager.wordLookupTaskMap[error?.first?.lookupTaskCounter]
                 progressBarView?.visibility = View.GONE
                 if (error?.second != null) displayToast(error.second)
             }
         }
 
-        gameState.wordLookupResult.value = null
-        gameState.wordLookupResult.observe(this, Observer { result: Pair<WordLookupTask, WordInfo?>? ->
+        wordDefinitionLookupManager.wordLookupResult.value = null
+        wordDefinitionLookupManager.wordLookupResult.observe(this, Observer { result: Pair<WordLookupTask, WordInfo?>? ->
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
-                val progressBarView = wordLookupTaskMap[result?.first?.lookupTaskCounter]
+                val progressBarView = wordDefinitionLookupManager.wordLookupTaskMap[result?.first?.lookupTaskCounter]
                 progressBarView?.visibility = View.GONE
 
                 val wordInfo = result?.second ?: return@Observer
@@ -193,7 +163,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 if (wordDefinition.isNullOrBlank()) {
                     displayToast(getString(R.string.definition_not_found_for) + " ${wordInfo.word}")
                 } else {
-                    displayWordDefinition(wordDefinition)
+                    wordDefinitionLookupManager.displayWordDefinition(wordDefinition)
                 }
             }
         })
@@ -202,41 +172,18 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         playerResultListView.onItemClickListener =
             OnItemClickListener { parent: AdapterView<*>, view: View?, position: Int, _: Long ->
-                wordDefinitionLookup(
-                    parent,
-                    view,
-                    position
+                val selectedItem = parent.getItemAtPosition(position) as Result
+                val progressBarView = view?.findViewById<View>(R.id.row_progress)
+
+                wordDefinitionLookupManager.wordDefinitionLookup(
+                    selectedItem,
+                    progressBarView
                 )
             }
 
         val computerResultList = gameState.computerResultList
 
-        val computerResultListAdapter = object : ArrayAdapter<Result>(this, R.layout.list_item, R.id.resultText) {
-            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.list_item, parent, false)
-
-                val result = getItem(position)
-
-                // Set the text
-                view.findViewById<TextView>(R.id.resultText).text = result?.result
-
-                // Change the background color if the item is highlighted
-                if( result != null) {
-                    if (result.isHighlighted) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            view.setBackgroundColor(context.getColor(R.color.md_theme_secondaryContainer))
-                        } else {
-                            @Suppress("DEPRECATION")
-                            view.setBackgroundColor(context.resources.getColor(R.color.md_theme_secondaryContainer))
-                        }
-                    } else {
-                        view.setBackgroundColor(Color.TRANSPARENT) // Reset to default
-                    }
-                }
-
-                return view
-            }
-        }
+        val computerResultListAdapter = ComputerResultListAdapter(this)
 
         computerResultList.observe(
             this
@@ -250,10 +197,12 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         computerResultListView.setAdapter(computerResultListAdapter)
 
         computerResultListView.setOnItemClickListener { parent: AdapterView<*>, view: View?, position: Int, _: Long ->
-            wordDefinitionLookup(
-                parent,
-                view,
-                position
+            val selectedItem = parent.getItemAtPosition(position) as Result
+            val progressBarView = view?.findViewById<View>(R.id.row_progress)
+
+            wordDefinitionLookupManager.wordDefinitionLookup(
+                selectedItem,
+                progressBarView
             )
         }
 
@@ -272,7 +221,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             themeArray.recycle()
         }
 
-        addGestureHandler(findViewById(R.id.letterGridView))
+        addGestureHandler(this, findViewById(R.id.letterGridView))
 
         labelDices()
 
@@ -299,185 +248,14 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun addGestureHandler(tableLayout: TableLayout) {
-        // Iterate through all buttons in the TableLayout
 
-        for (i in 0 until tableLayout.childCount) {
-            val child = tableLayout.getChildAt(i)
-            if (child is TableRow) {
-                for (j in 0 until child.childCount) {
-                    val view = child.getChildAt(j)
-                    if (view is Button) {
-                        // Attach the OnTouchListener to each button
-                        view.setOnClickListener { letterClick(view) }
-
-                        view.setOnTouchListener(object : OnTouchListener {
-                            private var firstButtonPressed: Button? = null
-                            private var lastButtonPressed: Button? = null
-
-                            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                                if(isGameOver()) return true
-
-                                val action = event.action
-                                var x = event.x.toInt()
-                                var y = event.y.toInt()
-
-                                // Convert the touch coordinates to screen coordinates
-                                val location = IntArray(2)
-                                v.getLocationOnScreen(location)
-                                x += location[0]
-                                y += location[1]
-
-                                // Find the button at the current touch position
-                                val button = findButtonAtPosition(tableLayout, x, y, action)
-
-                                if (button != null) {
-                                    when (action) {
-                                        MotionEvent.ACTION_DOWN -> {
-                                            firstButtonPressed = button
-                                            if (button !== lastButtonPressed) {
-                                                if (button.hasOnClickListeners()) {
-                                                    button.callOnClick()
-                                                }
-                                                lastButtonPressed = button
-                                            }
-                                        }
-
-                                        MotionEvent.ACTION_MOVE -> if (button !== lastButtonPressed) {
-                                            if (button.hasOnClickListeners()) {
-                                                button.callOnClick()
-                                            }
-                                            lastButtonPressed = button
-                                        }
-
-                                        MotionEvent.ACTION_UP -> {
-                                            Log.d(TAG, "Button up")
-
-                                            if (firstButtonPressed !== lastButtonPressed)
-                                                lifecycleScope.launch {
-                                                    okClick()
-                                                }
-                                            lastButtonPressed = null
-                                        }
-                                    }
-                                }
-
-                                return true
-                            }
-                        })
-                    }
-                }
-            }
-        }
-    }
-
-    private fun isGameOver(): Boolean {
+    fun isGameOver(): Boolean {
         val state = gameState.gameLifecycleState.value
         return state == GameState.GameLifeCycleState.NOT_STARTED ||
                 state == GameState.GameLifeCycleState.GAME_OVER ||
                 state == GameState.GameLifeCycleState.TIMER_FINISHED
     }
 
-    // Helper method to find the button at a specific position
-    private fun findButtonAtPosition(
-        tableLayout: TableLayout,
-        x: Int,
-        y: Int,
-        action: Int
-    ): Button? {
-        var touchAreaPercent = 0f
-
-        when (action) {
-            MotionEvent.ACTION_DOWN, MotionEvent.ACTION_UP -> touchAreaPercent = 1f
-            MotionEvent.ACTION_MOVE -> touchAreaPercent = 0.6f
-        }
-
-        for (i in 0 until tableLayout.childCount) {
-            val child = tableLayout.getChildAt(i)
-            if (child is TableRow) {
-                for (j in 0 until child.childCount) {
-                    val view = child.getChildAt(j)
-                    if (view is Button) {
-                        val location = IntArray(2)
-                        view.getLocationOnScreen(location)
-                        val buttonLeft = location[0]
-                        val buttonTop = location[1]
-
-                        val buttonWidth = view.width
-                        val buttonHeight = view.height
-
-                        val buttonRight = buttonLeft + buttonWidth
-                        val buttonBottom = buttonTop + buttonHeight
-
-                        val deltaWidth = buttonWidth * (1 - touchAreaPercent) / 2
-                        val deltaHeight = buttonHeight * (1 - touchAreaPercent) / 2
-
-                        // Check if the touch position is within the button's bounds
-                        if (x >= buttonLeft + deltaWidth && x <= buttonRight - deltaWidth && y >= buttonTop + deltaHeight && y <= buttonBottom - deltaHeight) {
-                            return view
-                        }
-                    }
-                }
-            }
-        }
-        return null
-    }
-
-    private fun wordDefinitionLookup(parent: AdapterView<*>, view: View?, position: Int) {
-        val selectedItem = parent.getItemAtPosition(position) as Result
-
-        val progressBarView = view?.findViewById<View>(R.id.row_progress)
-
-        val selectedWord = selectedItem.result
-
-        val lookupService = getWordDefinitionLookupService(gameState.dictionaryName!!)
-
-        if (lookupService == null) {
-            Toast.makeText(
-                this,
-                R.string.word_definition_lookup_not_supported_for_this_dictionary,
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            val wordInfo = gameState.getWordInfoFromCache(
-                selectedWord,
-                lookupService.language
-            )
-
-            if (wordInfo != null) {
-                val wordDefinition = wordInfo.wordDefinition
-                if (wordDefinition.isNullOrBlank()) {
-                    displayToast(getString(R.string.definition_not_found_for)  + " $selectedWord")
-                } else {
-                    displayWordDefinition(wordDefinition)
-                }
-            } else {
-                if (isNetworkAvailable(applicationContext)) {
-                    val lookupTaskCounter = wordLookupTaskCounter.incrementAndGet()
-                    if(progressBarView!=null) {
-                        wordLookupTaskMap[lookupTaskCounter] = progressBarView
-                        progressBarView.visibility = View.VISIBLE
-                    }
-                    lookupService.lookupWordDefinition(gameState, WordLookupTask(lookupTaskCounter, selectedWord))
-                } else {
-                    Toast.makeText(
-                        this,
-                        R.string.no_internet_connection_available,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            }
-        }
-    }
-
-    private fun getWordDefinitionLookupService(dictionaryName: String): WordDefinitionLookupService? {
-        return when (dictionaryName.lowercase(Locale.getDefault())) {
-            "int_english", "2of12inf" -> EnglishWordDefinitionLookupService()
-            "german" -> GermanWordDefinitionLookupService()
-            else -> null
-        }
-    }
 
     public override fun onResume() {
         super.onResume()
@@ -494,7 +272,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             countDownView.visibility = View.GONE
             prefs
             if(reshuffleRequired) {
-                showConfirmSuffleDialog()
+                showRestartRequiredDialog(this)
                 reshuffleRequired = false
             }
             preferencesChanged = false
@@ -502,7 +280,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         if (gameState.gameLifecycleState.value == GameState.GameLifeCycleState.NOT_STARTED) {
             if (gameState.countDownTime >= 0) {
-                showConfirmStartGameDialog()
+                showConfirmStartGameDialog(this)
             }
             else {
                 shuffle()
@@ -558,72 +336,6 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             updateScore()
         }
 
-    private fun showTimeIsUpDialog() {
-        if (isFinishing) return
-
-        val builder = AlertDialog.Builder(this@WordFinder)
-        builder.setMessage(R.string.time_up_dialog_msg)
-            .setTitle(R.string.time_up_dialog_title)
-            .setPositiveButton(
-                R.string.time_up_dialog_ok
-            ) { _: DialogInterface?,
-                _: Int ->
-                if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
-                    gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
-                }
-            }
-
-        val dialog = builder.create()
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.show()
-    }
-
-    private fun showConfirmShuffleDialog() {
-        val builder = AlertDialog.Builder(this@WordFinder)
-        builder.setMessage(R.string.shuffle_confirm_msg)
-            .setTitle(R.string.shuffle_confirm_title)
-            .setPositiveButton(
-                R.string.shuffle_ok_text
-            ) { _: DialogInterface?, _: Int -> shuffle() }
-            .setNegativeButton(
-                R.string.shuffle_cancle_text
-            ) { _: DialogInterface?, _: Int -> }
-
-        val dialog = builder.create()
-        dialog.show()
-    }
-
-    private fun showConfirmSuffleDialog() {
-        val builder = AlertDialog.Builder(this@WordFinder)
-        builder.setMessage(R.string.shuffle_required_diag_msg)
-            .setTitle(R.string.shuffle_required_diag_title)
-            .setPositiveButton(
-                R.string.shuffle_required_diag_ok
-            ) { _: DialogInterface?, _: Int ->
-                shuffle()
-            }
-
-        val dialog = builder.create()
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setCancelable(false)
-        dialog.show()
-    }
-
-    private fun showConfirmStartGameDialog() {
-        val builder = AlertDialog.Builder(this@WordFinder)
-        builder.setMessage(R.string.start_game_diag_msg)
-            .setTitle(R.string.start_game_diag_title)
-            .setPositiveButton(
-                R.string.start_game_diag_ok
-            ) { _: DialogInterface?, _: Int ->
-                shuffle()
-            }
-
-        val dialog = builder.create()
-        dialog.setCanceledOnTouchOutside(false)
-        dialog.setCancelable(false)
-        dialog.show()
-    }
 
     private fun updateTimeView(time: Long) {
         if (isFinishing) return
@@ -639,7 +351,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.TIMER_FINISHED) {
                     gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.TIMER_FINISHED)
                 }
-                showTimeIsUpDialog()
+                if (!isFinishing)
+                    showTimeIsUpDialog(this)
             }
         } else {
             countDownView.visibility = View.GONE
@@ -702,7 +415,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         }
     }
 
-    private fun shuffle() {
+    fun shuffle() {
         showComputerResults(show = false, animate = false)
 
         gameState.stopSolving()
@@ -722,7 +435,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun shuffleClick() {
-        showConfirmShuffleDialog()
+        showConfirmShuffleDialog(this)
     }
 
     private val letterButtons by lazy {
@@ -747,7 +460,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     private val idToLetterButton = SparseArray<LetterButton?>()
 
-    private fun letterClick(view: View) {
+    fun letterClick(view: View) {
         val pressedButton = checkNotNull(idToLetterButton[view.id])
 
         if (!pressedButton.isEnabled) return
@@ -943,56 +656,6 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     private fun displayToast(text: String?) {
         runOnUiThread { Toast.makeText(this, text, Toast.LENGTH_SHORT).show() }
-    }
-
-    private fun countWords(input: String): Int {
-        if (input.isBlank()) return 0 // Return 0 if the string is empty or contains only whitespace
-
-        // Split the string by whitespace and filter out any empty strings (caused by multiple spaces)
-        val words = input.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
-
-        return words.size
-    }
-
-    private fun displayWordDefinition(definitionStr: String) {
-        runOnUiThread {
-            val numWords = countWords(definitionStr)
-            val displayTime = 3 + (numWords * 60.0)/200
-
-            val view = findViewById<View>(android.R.id.content)
-            val snackbar = Snackbar.make(view, definitionStr, Snackbar.LENGTH_INDEFINITE)
-            snackbar.setAction("Ok") {
-                // Dismiss the Snackbar when the action button is clicked
-                snackbar.dismiss()
-            }
-
-            val snackbarView = snackbar.view
-
-            val textView =
-                snackbarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-            if (textView != null) {
-                textView.maxLines = 10
-            } else {
-                Log.e(
-                    TAG,
-                    "TextView not found in Snackbar view to adjust number of lines"
-                )
-            }
-
-            val params = snackbarView.layoutParams
-            params.width = ViewGroup.LayoutParams.WRAP_CONTENT // Wrap the width to text size
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT // Optional: Wrap height
-            snackbarView.layoutParams = params
-
-            val layoutParams = snackbarView.layoutParams as FrameLayout.LayoutParams
-            layoutParams.gravity = Gravity.CENTER // Adjust gravity if needed
-            snackbarView.layoutParams = layoutParams
-            snackbar.show()
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                snackbar.dismiss()
-            }, (displayTime*1000L).toLong())
-        }
     }
 
     companion object {

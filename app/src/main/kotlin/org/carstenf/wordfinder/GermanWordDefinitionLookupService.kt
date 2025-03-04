@@ -21,7 +21,7 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
             .replace("ss", "ß")
     }
 
-    override fun lookupWordDefinition(gameState: GameState, task: WordLookupTask) {
+    override fun lookupWordDefinition(lookupManager: WordDefinitionLookupManager, task: WordLookupTask) {
         val lowercaseWord = task.word.lowercase(Locale.getDefault())
         val capitalizedWord =
             lowercaseWord[0].uppercaseChar().toString() + lowercaseWord.substring(1)
@@ -32,7 +32,7 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
         val wiktionaryLookup = WiktionaryLookup()
         wiktionaryLookup.getMeaningAsync(searchTerm) { meaning: String? ->
             if (!meaning.isNullOrBlank()) {
-                gameState.processWordLookupResult(
+                lookupManager.processWordLookupResult(
                     task,
                     WordInfo(
                         task.word,
@@ -42,7 +42,7 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
                     )
                 )
             } else {
-                gameState.processWordLookupError(
+                lookupManager.processWordLookupError(
                     task, language,
                     "Definition not found for: ${task.word}"
                 )

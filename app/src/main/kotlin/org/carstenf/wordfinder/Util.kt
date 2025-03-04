@@ -9,11 +9,25 @@ package org.carstenf.wordfinder
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
+import android.graphics.Insets
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.util.Log
+import android.view.MotionEvent
 import android.view.View
+import android.view.View.OnTouchListener
+import android.view.WindowInsets
+import android.widget.Button
+import android.widget.TableLayout
+import android.widget.TableRow
+import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import org.carstenf.wordfinder.WordFinder.Companion.TAG
 
 
 fun slideUpAndHide(toHide: View, toReveal: View) {
@@ -43,3 +57,199 @@ fun isNetworkAvailable(context: Context): Boolean {
     return capabilities != null &&
             capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
+
+fun showTimeIsUpDialog(app: WordFinder) {
+
+    val builder = AlertDialog.Builder(app)
+    builder.setMessage(R.string.time_up_dialog_msg)
+        .setTitle(R.string.time_up_dialog_title)
+        .setPositiveButton(
+            R.string.time_up_dialog_ok
+        ) { _: DialogInterface?,
+            _: Int ->
+            if(app.gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
+                app.gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+            }
+        }
+
+    val dialog = builder.create()
+    dialog.setCanceledOnTouchOutside(false)
+    dialog.show()
+}
+
+fun showConfirmShuffleDialog(app: WordFinder) {
+    val builder = AlertDialog.Builder(app)
+    builder.setMessage(R.string.shuffle_confirm_msg)
+        .setTitle(R.string.shuffle_confirm_title)
+        .setPositiveButton(
+            R.string.shuffle_ok_text
+        ) { _: DialogInterface?, _: Int -> app.shuffle() }
+        .setNegativeButton(
+            R.string.shuffle_cancle_text
+        ) { _: DialogInterface?, _: Int -> }
+
+    val dialog = builder.create()
+    dialog.show()
+}
+
+fun showRestartRequiredDialog(app: WordFinder) {
+    val builder = AlertDialog.Builder(app)
+    builder.setMessage(R.string.shuffle_required_diag_msg)
+        .setTitle(R.string.shuffle_required_diag_title)
+        .setPositiveButton(
+            R.string.shuffle_required_diag_ok
+        ) { _: DialogInterface?, _: Int ->
+            app.shuffle()
+        }
+
+    val dialog = builder.create()
+    dialog.setCanceledOnTouchOutside(false)
+    dialog.setCancelable(false)
+    dialog.show()
+}
+
+fun showConfirmStartGameDialog(app: WordFinder) {
+    val builder = AlertDialog.Builder(app)
+    builder.setMessage(R.string.start_game_diag_msg)
+        .setTitle(R.string.start_game_diag_title)
+        .setPositiveButton(
+            R.string.start_game_diag_ok
+        ) { _: DialogInterface?, _: Int ->
+            app.shuffle()
+        }
+
+    val dialog = builder.create()
+    dialog.setCanceledOnTouchOutside(false)
+    dialog.setCancelable(false)
+    dialog.show()
+}
+
+fun isGestureNavigationEnabled(app: WordFinder): Boolean {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        val insets = app.window.decorView.rootWindowInsets ?: return false
+        val gestureInsets: Insets = insets.getInsets(WindowInsets.Type.systemGestures())
+
+        // If left or right insets are greater than zero, gesture navigation is enabled
+        return gestureInsets.left > 0 || gestureInsets.right > 0
+    }
+    return false // Assume older versions use 3-button navigation
+}
+
+// Helper method to find the button at a specific position
+private fun findButtonAtPosition(
+    tableLayout: TableLayout,
+    x: Int,
+    y: Int,
+    action: Int
+): Button? {
+    var touchAreaPercent = 0f
+
+    when (action) {
+        MotionEvent.ACTION_DOWN, MotionEvent.ACTION_UP -> touchAreaPercent = 1f
+        MotionEvent.ACTION_MOVE -> touchAreaPercent = 0.6f
+    }
+
+    for (i in 0 until tableLayout.childCount) {
+        val child = tableLayout.getChildAt(i)
+        if (child is TableRow) {
+            for (j in 0 until child.childCount) {
+                val view = child.getChildAt(j)
+                if (view is Button) {
+                    val location = IntArray(2)
+                    view.getLocationOnScreen(location)
+                    val buttonLeft = location[0]
+                    val buttonTop = location[1]
+
+                    val buttonWidth = view.width
+                    val buttonHeight = view.height
+
+                    val buttonRight = buttonLeft + buttonWidth
+                    val buttonBottom = buttonTop + buttonHeight
+
+                    val deltaWidth = buttonWidth * (1 - touchAreaPercent) / 2
+                    val deltaHeight = buttonHeight * (1 - touchAreaPercent) / 2
+
+                    // Check if the touch position is within the button's bounds
+                    if (x >= buttonLeft + deltaWidth && x <= buttonRight - deltaWidth && y >= buttonTop + deltaHeight && y <= buttonBottom - deltaHeight) {
+                        return view
+                    }
+                }
+            }
+        }
+    }
+    return null
+}
+
+@SuppressLint("ClickableViewAccessibility")
+fun addGestureHandler(app: WordFinder, tableLayout: TableLayout) {
+    // Iterate through all buttons in the TableLayout
+
+    for (i in 0 until tableLayout.childCount) {
+        val child = tableLayout.getChildAt(i)
+        if (child is TableRow) {
+            for (j in 0 until child.childCount) {
+                val view = child.getChildAt(j)
+                if (view is Button) {
+                    // Attach the OnTouchListener to each button
+                    view.setOnClickListener { app.letterClick(view) }
+
+                    view.setOnTouchListener(object : OnTouchListener {
+                        private var firstButtonPressed: Button? = null
+                        private var lastButtonPressed: Button? = null
+
+                        override fun onTouch(v: View, event: MotionEvent): Boolean {
+                            if(app.isGameOver()) return true
+
+                            val action = event.action
+                            var x = event.x.toInt()
+                            var y = event.y.toInt()
+
+                            // Convert the touch coordinates to screen coordinates
+                            val location = IntArray(2)
+                            v.getLocationOnScreen(location)
+                            x += location[0]
+                            y += location[1]
+
+                            // Find the button at the current touch position
+                            val button = findButtonAtPosition(tableLayout, x, y, action)
+
+                            if (button != null) {
+                                when (action) {
+                                    MotionEvent.ACTION_DOWN -> {
+                                        firstButtonPressed = button
+                                        if (button !== lastButtonPressed) {
+                                            if (button.hasOnClickListeners()) {
+                                                button.callOnClick()
+                                            }
+                                            lastButtonPressed = button
+                                        }
+                                    }
+
+                                    MotionEvent.ACTION_MOVE -> if (button !== lastButtonPressed) {
+                                        if (button.hasOnClickListeners()) {
+                                            button.callOnClick()
+                                        }
+                                        lastButtonPressed = button
+                                    }
+
+                                    MotionEvent.ACTION_UP -> {
+                                        Log.d(TAG, "Button up")
+
+                                        if (firstButtonPressed !== lastButtonPressed)
+                                            app.lifecycleScope.launch {
+                                                app.okClick()
+                                            }
+                                        lastButtonPressed = null
+                                    }
+                                }
+                            }
+
+                            return true
+                        }
+                    })
+                }
+            }
+        }
+    }
+}
+
