@@ -305,10 +305,17 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private var preferencesChanged = false
     private var reshuffleRequired = false
 
+    private val defaultDict by lazy {getString(R.string.default_dict)}
+
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
         Log.i(TAG, "Preferences changed for $key")
         preferencesChanged = true
-        if (key == "dict_pref" || key =="threeLetterPref") {
+        if (key == "dict_pref" &&
+            sharedPreferences.getString("dict_pref", defaultDict) != gameState.dictionaryName) {
+            reshuffleRequired = true
+        }
+        if(key =="threeLetterPref" &&
+            sharedPreferences.getBoolean("threeLetterPref", true) != gameState.isAllow3LetterWords) {
             reshuffleRequired = true
         }
     }
@@ -318,7 +325,6 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         get() {
             val prefs = sharedPreferences
 
-            val defaultDict = getString(R.string.default_dict)
             gameState.dictionaryName = prefs.getString("dict_pref", defaultDict)
             gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count"))
             gameState.isAllow3LetterWords = prefs
