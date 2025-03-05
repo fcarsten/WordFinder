@@ -140,7 +140,7 @@ class WordDefinitionLookupManager(private val app: Activity, private val gameSta
     private fun getWordDefinitionLookupService(dictionaryName: String): WordDefinitionLookupService? {
         return when (dictionaryName.lowercase(Locale.getDefault())) {
             "int_english", "2of12inf" -> EnglishWordDefinitionLookupService()
-            "german" -> GermanWordDefinitionLookupService()
+            "german", "german_simple" -> GermanWordDefinitionLookupService()
             else -> null
         }
     }

@@ -4,11 +4,13 @@
 		<item>@string/AmericanEnglish</item>
 		<item>@string/IntEnglish</item>
 		<item>@string/Deutsch</item>
+		<item>@string/DeutschSimple</item>
 	</string-array>
 	<string-array name="databases_values">
 		<item>2of12inf</item>
 		<item>int_english</item>
 		<item>german</item>
+		<item>german_simple</item>
 	</string-array>
 	<string-array name="scoring_algs_entries">
 		<item>@string/WordCount</item>
@@ -23,4 +25,5 @@
 	<string name="AmericanEnglish">English (US)</string>
 	<string name="IntEnglish">English (Int.)</string>
 	<string name="Deutsch">German</string>
+	<string name="DeutschSimple">German (Simple)</string>
 </resources>
