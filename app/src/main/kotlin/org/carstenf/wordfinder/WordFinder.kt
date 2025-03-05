@@ -265,6 +265,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         gameState.onResume() // This will trigger UI update indirectly if game over
     }
 
+    var showConfirmStartGameDialogVisible= false
+
     public override fun onPostResume() {
         super.onPostResume()
 
@@ -280,7 +282,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         if (gameState.gameLifecycleState.value == GameState.GameLifeCycleState.NOT_STARTED) {
             if (gameState.countDownTime >= 0) {
-                showConfirmStartGameDialog(this)
+                if(!showConfirmStartGameDialogVisible)
+                    showConfirmStartGameDialog(this)
             }
             else {
                 shuffle()

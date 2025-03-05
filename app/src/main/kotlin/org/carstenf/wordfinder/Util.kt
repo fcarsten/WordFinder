@@ -115,12 +115,14 @@ fun showConfirmStartGameDialog(app: WordFinder) {
         .setPositiveButton(
             R.string.start_game_diag_ok
         ) { _: DialogInterface?, _: Int ->
+            app.showConfirmStartGameDialogVisible = false
             app.shuffle()
         }
 
     val dialog = builder.create()
     dialog.setCanceledOnTouchOutside(false)
     dialog.setCancelable(false)
+    app.showConfirmStartGameDialogVisible = true
     dialog.show()
 }
 
