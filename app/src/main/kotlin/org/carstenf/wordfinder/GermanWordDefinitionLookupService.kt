@@ -6,6 +6,7 @@
  */
 package org.carstenf.wordfinder
 
+import java.io.IOException
 import java.util.Locale
 
 class GermanWordDefinitionLookupService : WordDefinitionLookupService {
@@ -21,33 +22,46 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
             .replace("ss", "ß")
     }
 
-    override fun lookupWordDefinition(lookupManager: WordDefinitionLookupManager, task: WordLookupTask) {
+    override fun lookupWordDefinition(
+        lookupManager: WordDefinitionLookupManager,
+        task: WordLookupTask
+    ) {
         val lowercaseWord = task.word.lowercase(Locale.getDefault())
         val capitalizedWord =
             lowercaseWord[0].uppercaseChar().toString() + lowercaseWord.substring(1)
         var searchTerm = "$capitalizedWord|$lowercaseWord"
-        searchTerm = searchTerm+"|"+ replaceWithUmlauts(searchTerm)
-        searchTerm = searchTerm+"|"+ replaceWithSz(searchTerm)
+        searchTerm = searchTerm + "|" + replaceWithUmlauts(searchTerm)
+        searchTerm = searchTerm + "|" + replaceWithSz(searchTerm)
 
         val wiktionaryLookup = WiktionaryLookup()
-        wiktionaryLookup.getMeaningAsync(searchTerm) { meaning: String? ->
-            if (!meaning.isNullOrBlank()) {
-                lookupManager.processWordLookupResult(
-                    task,
-                    WordInfo(
-                        task.word,
-                        language,
-                        "${task.word}:\n$meaning",
-                        null
+        wiktionaryLookup.getMeaningAsync(searchTerm, object : WiktionaryCallback {
+            override fun onResult(meaning: String?) {
+                if (!meaning.isNullOrBlank()) {
+                    lookupManager.processWordLookupResult(
+                        task,
+                        WordInfo(
+                            task.word,
+                            language,
+                            "${task.word}:\n$meaning",
+                            null
+                        )
                     )
-                )
-            } else {
+                } else {
+                    lookupManager.processWordLookupError(
+                        task, language,
+                        "Definition not found for: ${task.word}"
+                    )
+                }
+            }
+
+            override fun onError(e: IOException) {
                 lookupManager.processWordLookupError(
                     task, language,
-                    "Definition not found for: ${task.word}"
+                    "Lookup error for ${task.word}: ${e.message}"
                 )
             }
-        }
+        })
+
     }
 
     override val language: String = "D"
