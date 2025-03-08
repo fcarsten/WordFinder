@@ -5,6 +5,7 @@
 		<item>@string/IntEnglish</item>
 		<item>@string/Deutsch</item>
 		<item>@string/DeutschSimple</item>
+		<item>@string/DeutschWiki</item>
 	</string-array>
 	<string-array name="databases_values">
 		<item>2of12inf</item>
@@ -26,4 +27,5 @@
 	<string name="IntEnglish">English (Int.)</string>
 	<string name="Deutsch">German</string>
 	<string name="DeutschSimple">German (Simple)</string>
+	<string name="DeutschWiki">German (Wiktionary)</string>
 </resources>

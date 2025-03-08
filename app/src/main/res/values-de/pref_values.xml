@@ -6,4 +6,5 @@
     <string name="IntEnglish">Internationales Englisch</string>
     <string name="Deutsch">Deutsch</string>
     <string name="DeutschSimple">Deutsch (Einfach)</string>
+    <string name="DeutschWiki">Deutsch (Wiktionary)</string>
 </resources>

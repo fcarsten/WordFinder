@@ -50,6 +50,7 @@ class GameState : ViewModel() {
         var letterFreqProb = letterFreqProbEnglish
 
         if (dictionaryName.equals("german", ignoreCase = true) ||
+            dictionaryName.equals("german_wiki", ignoreCase = true) ||
             dictionaryName.equals("german_simple", ignoreCase = true)) {
             letterFreqProb = letterFreqProbGerman
         }
