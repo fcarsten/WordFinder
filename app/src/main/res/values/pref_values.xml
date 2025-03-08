@@ -12,6 +12,7 @@
 		<item>int_english</item>
 		<item>german</item>
 		<item>german_simple</item>
+		<item>german_wiki</item>
 	</string-array>
 	<string-array name="scoring_algs_entries">
 		<item>@string/WordCount</item>

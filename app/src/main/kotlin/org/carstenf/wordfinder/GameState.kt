@@ -181,7 +181,8 @@ class GameState : ViewModel() {
     enum class PlayerGuessState {
         TOO_SHORT,
         ALREADY_FOUND,
-        NOT_IN_DICTIONARY
+        NOT_IN_DICTIONARY,
+        GUESS_VALID
     }
 
     val gameLifecycleState: MutableLiveData<GameLifeCycleState> = MutableLiveData(GameLifeCycleState.NOT_STARTED)
@@ -194,21 +195,23 @@ class GameState : ViewModel() {
         GAME_OVER
     }
 
-    suspend fun validatePlayerGuess(guess: String): PlayerGuessState? {
+    data class PlayerGuessResult(val guess: String, val state: PlayerGuessState)
+
+    suspend fun validatePlayerGuess(guess: String): PlayerGuessResult {
         val minLength = if (isAllow3LetterWords) 3 else 4
 
-        if (guess.length < minLength) return PlayerGuessState.TOO_SHORT
+        if (guess.length < minLength) return PlayerGuessResult(guess, PlayerGuessState.TOO_SHORT)
+
+        val displayText = dictionary.lookup(guess, dictionaryName)
+            ?: return PlayerGuessResult(guess,PlayerGuessState.NOT_IN_DICTIONARY)
 
         for (result in playerResultList) {
             if (result.toString()
-                    .equals(guess, ignoreCase = true)
-            ) return PlayerGuessState.ALREADY_FOUND
-        }
-        if (dictionary.lookup(guess, dictionaryName) == null) {
-            return PlayerGuessState.NOT_IN_DICTIONARY
+                    .equals(displayText, ignoreCase = true)
+            ) return PlayerGuessResult(guess,PlayerGuessState.ALREADY_FOUND)
         }
 
-        return null
+        return PlayerGuessResult(displayText, PlayerGuessState.GUESS_VALID)
     }
 
     fun setScoringAlgorithm(string: String?) {

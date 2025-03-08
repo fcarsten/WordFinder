@@ -31,10 +31,15 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
                 .uppercase(Locale.getDefault())]
             if (helper == null) return null
 
+            var col = TEXT_COLUMN
+            if(db == "german_wiki") {
+                col = DISPLAY_TEXT_COLUMN
+            }
+
             helper.getOrCreateDataBase().use { sqlite ->
                 builder.query(
                     sqlite,
-                    TEXT_COLUMN, "text = ?",
+                    arrayOf(col), "text = ?",
                     arrayOf(s), null, null, null
                 ).use { cursor ->
                     if (cursor == null) {
@@ -72,18 +77,26 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
     private val dbMutex = Mutex()
 
-    suspend fun getAllWords(prefix: String, db: String?): Collection<String>? {
+    data class AllWordResult(val text: String, val displayText: String)
+
+    suspend fun getAllWords(prefix: String, db: String?): Collection<AllWordResult>? {
         return dbMutex.withLock {
             if (db == null) return null
-            val result: MutableCollection<String> = ArrayList()
+            val result: MutableCollection<AllWordResult> = ArrayList()
             val dbHelper = mDatabaseOpenHelperMap[db.trim { it <= ' ' }
                 .uppercase(Locale.getDefault())]
             if (dbHelper == null) return null
+            val supportsDisplayText = db == "german_wiki"
+
+            var col = arrayOf(TEXT_COLUMN)
+            if(supportsDisplayText) {
+                col = arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN)
+            }
 
             dbHelper.getOrCreateDataBase().use { sqlite ->
                 builder.query(
                     sqlite,
-                    TEXT_COLUMN, "prefix = ?",
+                    col, "prefix = ?",
                     arrayOf(prefix), null, null, null
                 ).use { cursor ->
                     if (cursor == null) {
@@ -92,7 +105,10 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
                         return null
                     }
                     do {
-                        result.add(cursor.getString(0))
+
+                        val displayText = if(supportsDisplayText) cursor.getString(1) else cursor.getString(0)
+                        val text = cursor.getString(0)
+                        result.add(AllWordResult(text, displayText))
                     } while (cursor.moveToNext())
                 }
             }
@@ -102,6 +118,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
     internal companion object {
         private const val DB_ASSET_PATH = "dicts"
-        private val TEXT_COLUMN = arrayOf("text")
+        private val TEXT_COLUMN = "text"
+        private val DISPLAY_TEXT_COLUMN = "display_text"
     }
 }

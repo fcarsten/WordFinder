@@ -10,7 +10,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.VibrationEffect
@@ -42,6 +41,7 @@ import kotlinx.coroutines.launch
 import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
 import java.io.IOException
+import androidx.core.graphics.toColorInt
 
 class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val playerResultList by lazy {
@@ -487,24 +487,26 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         var guess = gameState.currentGuess
 
-        if (gameState.validatePlayerGuess(guess) == null) {
-            insertPlayerResult(guess)
+        var guessVal = gameState.validatePlayerGuess(guess)
+        if (guessVal.state == PlayerGuessState.GUESS_VALID) {
+            insertPlayerResult(guessVal.guess)
             if (gameState.autoAddPrefixalWords()) {
                 testAndAddPrefixWords(guess)
             }
         } else {
             guess = guess.replace("Q".toRegex(), "QU")
-            val validationResult = gameState.validatePlayerGuess(guess)
-            if (validationResult == null) {
-                insertPlayerResult(guess)
+            guessVal = gameState.validatePlayerGuess(guess)
+            if (guessVal.state == PlayerGuessState.GUESS_VALID) {
+                insertPlayerResult(guessVal.guess)
                 if (gameState.autoAddPrefixalWords()) {
                     testAndAddPrefixWords(guess)
                 }
             } else {
-                val text: String = when (validationResult) {
+                val text: String = when (guessVal.state) {
                     PlayerGuessState.ALREADY_FOUND -> getString(R.string.WordAlreadyFound)
                     PlayerGuessState.NOT_IN_DICTIONARY -> getString(R.string.WordNotInDictionary)
                     PlayerGuessState.TOO_SHORT -> getString(R.string.WordGuessTooShort)
+                    else -> "" // Can't happen due to if above but IDE can't figure it out
                 }
 
                 val context = applicationContext
@@ -566,14 +568,12 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         var localWord = word
         while (localWord.isNotEmpty()) {
             localWord = localWord.substring(0, localWord.length - 1) // Remove the last character
+
             val result = gameState.validatePlayerGuess(localWord)
-            if (result == null) {
-                insertPlayerResult(localWord)
-            } else {
-                when (result) {
-                    PlayerGuessState.ALREADY_FOUND, PlayerGuessState.NOT_IN_DICTIONARY -> continue
-                    PlayerGuessState.TOO_SHORT -> return
-                }
+            when (result.state) {
+                PlayerGuessState.ALREADY_FOUND, PlayerGuessState.NOT_IN_DICTIONARY -> continue
+                PlayerGuessState.TOO_SHORT -> return
+                PlayerGuessState.GUESS_VALID -> insertPlayerResult(result.guess)
             }
         }
     }
@@ -591,9 +591,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             val minLength = if (gameState.isAllow3LetterWords) 3 else 4
             val enabled = gameState.currentGuess.length >= minLength
             if (enabled) {
-                okButton.setTextColor(Color.parseColor("#000000"))
+                okButton.setTextColor("#000000".toColorInt())
             } else {
-                okButton.setTextColor(Color.parseColor("#FA1616"))
+                okButton.setTextColor("#FA1616".toColorInt())
             }
         }
     }
