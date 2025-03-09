@@ -18,7 +18,11 @@ open class ComputerResultListAdapter(context: Context) :
         val result = getItem(position)
 
         // Set the text
-        view.findViewById<TextView>(R.id.resultText).text = result?.result
+        var displayText = result?.result?.displayText
+        if (displayText == null)
+            displayText = "ERROR"
+
+        view.findViewById<TextView>(R.id.resultText).text = displayText
 
         // Change the background color if the item is highlighted
         if (result != null) {

@@ -195,23 +195,23 @@ class GameState : ViewModel() {
         GAME_OVER
     }
 
-    data class PlayerGuessResult(val guess: String, val state: PlayerGuessState)
+    data class PlayerGuessResult(val guess: Dictionary.WordInfoData, val state: PlayerGuessState)
 
     suspend fun validatePlayerGuess(guess: String): PlayerGuessResult {
         val minLength = if (isAllow3LetterWords) 3 else 4
 
-        if (guess.length < minLength) return PlayerGuessResult(guess, PlayerGuessState.TOO_SHORT)
+        if (guess.length < minLength) return PlayerGuessResult(Dictionary.WordInfoData(guess), PlayerGuessState.TOO_SHORT)
 
-        val displayText = dictionary.lookup(guess, dictionaryName)
-            ?: return PlayerGuessResult(guess,PlayerGuessState.NOT_IN_DICTIONARY)
+        val lookupResult = dictionary.lookup(guess, dictionaryName)
+            ?: return PlayerGuessResult(Dictionary.WordInfoData(guess),PlayerGuessState.NOT_IN_DICTIONARY)
 
         for (result in playerResultList) {
             if (result.toString()
-                    .equals(displayText, ignoreCase = true)
-            ) return PlayerGuessResult(guess,PlayerGuessState.ALREADY_FOUND)
+                    .equals(lookupResult.displayText, ignoreCase = true)
+            ) return PlayerGuessResult(Dictionary.WordInfoData(guess),PlayerGuessState.ALREADY_FOUND)
         }
 
-        return PlayerGuessResult(displayText, PlayerGuessState.GUESS_VALID)
+        return PlayerGuessResult(lookupResult, PlayerGuessState.GUESS_VALID)
     }
 
     fun setScoringAlgorithm(string: String?) {

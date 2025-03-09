@@ -68,12 +68,12 @@ class SolveTask(private val gameState: GameState) {
             val minLength = if (gameState.isAllow3LetterWords) 3 else 4
             if (result.text.length >= minLength && gameState.findWord(result.text)) {
                 Log.d(WordFinder.TAG, "Found: $result.text")
-                publishProgress(result.displayText)
+                publishProgress(result)
             }
         }
     }
 
-    private fun publishProgress(word: String) {
+    private fun publishProgress(word: Dictionary.WordInfoData) {
         CoroutineScope(Dispatchers.Main).launch {
             gameState.addComputerResult(Result(word))
         }

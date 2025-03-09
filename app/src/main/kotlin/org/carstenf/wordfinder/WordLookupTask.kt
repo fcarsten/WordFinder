@@ -6,4 +6,4 @@
  */
 package org.carstenf.wordfinder
 
-class WordLookupTask(val lookupTaskCounter: Long, val word: String)
+class WordLookupTask(val lookupTaskCounter: Long, val word: Dictionary.WordInfoData)

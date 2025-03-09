@@ -17,7 +17,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
     private val builder: SQLiteQueryBuilder
 
-    suspend fun lookup(word: String, db: String?): String? {
+    suspend fun lookup(word: String, db: String?): WordInfoData? {
         return dbMutex.withLock {
             if (db == null) {
                 Log.e(WordFinder.TAG, "Dictionary name null")
@@ -36,6 +36,9 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
                 col = DISPLAY_TEXT_COLUMN
             }
 
+            val supportsDisplayText = db == "german_wiki"
+            val supportsLemma = db == "german_wiki"
+
             helper.getOrCreateDataBase().use { sqlite ->
                 builder.query(
                     sqlite,
@@ -47,7 +50,11 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
                     } else if (!cursor.moveToFirst()) {
                         return null
                     }
-                    cursor.getString(0)
+                    val text = cursor.getString(0)
+                    val displayText = if(supportsDisplayText) cursor.getString(1) else text
+                    val lemma = if(supportsLemma) cursor.getString(2) else displayText
+
+                    WordInfoData(text, displayText, lemma)
                 }
             }
         }
@@ -77,20 +84,27 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
     private val dbMutex = Mutex()
 
-    data class AllWordResult(val text: String, val displayText: String)
+    data class WordInfoData(val text: String, val displayText: String , val lemma: String) {
+        constructor(text: String): this(text, text, text)
+    }
 
-    suspend fun getAllWords(prefix: String, db: String?): Collection<AllWordResult>? {
+    suspend fun getAllWords(prefix: String, db: String?): Collection<WordInfoData>? {
         return dbMutex.withLock {
             if (db == null) return null
-            val result: MutableCollection<AllWordResult> = ArrayList()
+            val result: MutableCollection<WordInfoData> = ArrayList()
             val dbHelper = mDatabaseOpenHelperMap[db.trim { it <= ' ' }
                 .uppercase(Locale.getDefault())]
             if (dbHelper == null) return null
             val supportsDisplayText = db == "german_wiki"
+            val supportsLemma = db == "german_wiki"
 
             var col = arrayOf(TEXT_COLUMN)
             if(supportsDisplayText) {
-                col = arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN)
+                if(supportsLemma) {
+                    col = arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN, LEMMA_COLUMN)
+                } else {
+                    col = arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN)
+                }
             }
 
             dbHelper.getOrCreateDataBase().use { sqlite ->
@@ -106,9 +120,10 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
                     }
                     do {
 
-                        val displayText = if(supportsDisplayText) cursor.getString(1) else cursor.getString(0)
                         val text = cursor.getString(0)
-                        result.add(AllWordResult(text, displayText))
+                        val displayText = if(supportsDisplayText) cursor.getString(1) else text
+                        val lemma = if(supportsLemma) cursor.getString(2) else displayText
+                        result.add(WordInfoData(text, displayText, lemma))
                     } while (cursor.moveToNext())
                 }
             }
@@ -120,5 +135,6 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
         private const val DB_ASSET_PATH = "dicts"
         private val TEXT_COLUMN = "text"
         private val DISPLAY_TEXT_COLUMN = "display_text"
+        private val LEMMA_COLUMN = "lemma"
     }
 }

@@ -23,7 +23,7 @@ class WordDefinitionLookupManager(private val app: Activity, private val gameSta
     val wordLookupError: MutableLiveData<Pair<WordLookupTask, String?>> = MutableLiveData(null)
 
     fun processWordLookupError(task: WordLookupTask, language: String, error: String?) {
-        wordInfoCache.put(WordInfo(task.word, language, null, null))
+        wordInfoCache.put(WordInfo(task.word.displayText, language, null, null))
         wordLookupError.postValue(Pair(task, error))
     }
 
@@ -99,7 +99,7 @@ class WordDefinitionLookupManager(private val app: Activity, private val gameSta
             }
         } else {
             val wordInfo = getWordInfoFromCache(
-                selectedWord,
+                selectedWord.displayText,
                 lookupService.language
             )
 

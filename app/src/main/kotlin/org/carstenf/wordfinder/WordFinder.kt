@@ -544,7 +544,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 val result = adapter.getItem(i) as Result
 
                 // Check if the result's text matches the search text
-                if (result.result == searchText) {
+                if (result.result.displayText == searchText) {
                     // Modify the Result object to indicate it should be highlighted
                     result.isHighlighted = true
 
@@ -558,10 +558,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         }
     }
 
-    private fun insertPlayerResult(guess: String) {
+    private fun insertPlayerResult(guess: Dictionary.WordInfoData) {
         playerResultList.insert(Result(guess), 0)
-        highlightFirstMatchingItem(guess)
-
+        highlightFirstMatchingItem(guess.displayText)
     }
 
     private suspend fun testAndAddPrefixWords(word: String) {

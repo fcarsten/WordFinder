@@ -26,12 +26,24 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
         lookupManager: WordDefinitionLookupManager,
         task: WordLookupTask
     ) {
-        val lowercaseWord = task.word.lowercase(Locale.getDefault())
-        val capitalizedWord =
-            lowercaseWord[0].uppercaseChar().toString() + lowercaseWord.substring(1)
-        var searchTerm = "$capitalizedWord|$lowercaseWord"
-        searchTerm = searchTerm + "|" + replaceWithUmlauts(searchTerm)
-        searchTerm = searchTerm + "|" + replaceWithSz(searchTerm)
+        var searchTerm: String
+        var word = task.word.text
+        if(task.word.text != task.word.displayText) {
+            if(task.word.displayText != task.word.lemma){
+                word = task.word.text
+                searchTerm = task.word.lemma
+            } else {
+                word = task.word.displayText
+                searchTerm = task.word.displayText
+            }
+        } else {
+            val lowercaseWord = task.word.displayText.lowercase(Locale.getDefault())
+            val capitalizedWord =
+                lowercaseWord[0].uppercaseChar().toString() + lowercaseWord.substring(1)
+            searchTerm = "$capitalizedWord|$lowercaseWord"
+            searchTerm = searchTerm + "|" + replaceWithUmlauts(searchTerm)
+            searchTerm = searchTerm + "|" + replaceWithSz(searchTerm)
+        }
 
         val wiktionaryLookup = WiktionaryLookup()
         wiktionaryLookup.getMeaningAsync(searchTerm, object : WiktionaryCallback {
@@ -40,9 +52,9 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
                     lookupManager.processWordLookupResult(
                         task,
                         WordInfo(
-                            task.word,
+                            word,
                             language,
-                            "${task.word}:\n$meaning",
+                            "${word}:\n$meaning",
                             null
                         )
                     )

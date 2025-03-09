@@ -64,7 +64,7 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
                         lookupManager.processWordLookupResult(
                             task,
                             WordInfo(
-                                task.word,
+                                task.word.displayText,
                                 language, definitionStr, null
                             )
                         )
