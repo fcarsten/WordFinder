@@ -116,6 +116,7 @@ class WiktionaryLookup {
         val meanings = mutableListOf<String>()
         var isMeaningSection = false
         var isMerkmaleSection = false
+        var preamble = true
 
         for (line in lines) {
             if (line.startsWith("Bedeutungen:")) {
@@ -124,7 +125,11 @@ class WiktionaryLookup {
             }
 
             if (isMeaningSection) {
-                if (line.startsWith("[")) {
+                if (preamble || line.startsWith("[")) { // Sometimes there seems to be
+                    // additional lines before the first "[...." line
+                    //
+                    if(line.startsWith("["))
+                        preamble = false
                     meanings.add(line)
                 } else {
                     // Stop when we encounter a line that does not start with '['

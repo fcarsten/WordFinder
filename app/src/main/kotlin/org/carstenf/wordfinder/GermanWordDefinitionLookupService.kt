@@ -28,12 +28,15 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
     ) {
         var searchTerm: String
         var word = task.word.text
+        var prefix = "$word: "
         if(task.word.text != task.word.displayText) {
             if(task.word.displayText != task.word.lemma){
                 word = task.word.text
+                prefix = "${task.word.displayText} (von ${task.word.lemma}): "
                 searchTerm = task.word.lemma
             } else {
                 word = task.word.displayText
+                prefix = "${task.word.displayText}: "
                 searchTerm = task.word.displayText
             }
         } else {
@@ -54,7 +57,7 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
                         WordInfo(
                             word,
                             language,
-                            "${word}:\n$meaning",
+                            "${prefix}\n$meaning",
                             null
                         )
                     )
