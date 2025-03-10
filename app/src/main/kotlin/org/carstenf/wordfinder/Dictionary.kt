@@ -31,18 +31,22 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
                 .uppercase(Locale.getDefault())]
             if (helper == null) return null
 
-            var col = TEXT_COLUMN
-            if(db == "german_wiki") {
-                col = DISPLAY_TEXT_COLUMN
-            }
-
             val supportsDisplayText = db == "german_wiki"
             val supportsLemma = db == "german_wiki"
+
+            var col = arrayOf(TEXT_COLUMN)
+            if(supportsDisplayText) {
+                if(supportsLemma) {
+                    col = arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN, LEMMA_COLUMN)
+                } else {
+                    col = arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN)
+                }
+            }
 
             helper.getOrCreateDataBase().use { sqlite ->
                 builder.query(
                     sqlite,
-                    arrayOf(col), "text = ?",
+                    col, "text = ?",
                     arrayOf(s), null, null, null
                 ).use { cursor ->
                     if (cursor == null) {
