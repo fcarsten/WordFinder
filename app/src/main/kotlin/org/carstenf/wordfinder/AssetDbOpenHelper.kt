@@ -26,14 +26,14 @@ class AssetDbOpenHelper(
     private val dbHelperDelegate: SQLiteOpenHelper =
         object : SQLiteOpenHelper(context, dbName, null, 1) {
             override fun onCreate(db: SQLiteDatabase) {
-                Log.i(WordFinder.TAG, "db onCreate")
+                Log.i(WordFinder.TAG, "db onCreate for $dbName")
             }
 
             override fun onUpgrade(
                 db: SQLiteDatabase, oldVersion: Int,
                 newVersion: Int
             ) {
-                Log.i(WordFinder.TAG, "db onUpdate")
+                Log.i(WordFinder.TAG, "db onUpdate for $dbName")
             }
         }
 
@@ -50,17 +50,17 @@ class AssetDbOpenHelper(
 
             var dbExist = checkDataBaseExists(context, dbName)
             if(dbExist && storedVersion < DATABASE_VERSION) {
-                Log.d(WordFinder.TAG, "Database update detected, recreating DB")
+                Log.d(WordFinder.TAG, "Database update detected, recreating DB $dbName")
                 context.deleteDatabase(dbName)  // Remove old DB if it exists
                 dbExist = false
             }
 
             if (!dbExist) {
-                Log.d(WordFinder.TAG, "Creating DB")
+                Log.d(WordFinder.TAG, "Creating DB $dbName")
                 dbHelperDelegate.readableDatabase
                 dbHelperDelegate.close()
                 copyDataBase(context, dbName, dbFileName)
-                Log.d(WordFinder.TAG, "Finished creating DB")
+                Log.d(WordFinder.TAG, "Finished creating DB $dbName")
                 // Update stored version
                 prefs.edit(commit = true) { putInt("db_version-$dbName", DATABASE_VERSION) }
             }
@@ -91,7 +91,7 @@ class AssetDbOpenHelper(
     ) {
         val dbPath = context.getDatabasePath(dbName).path
 
-        Log.d(WordFinder.TAG, "Copying DB")
+        Log.d(WordFinder.TAG, "Copying DB $dbName")
 
         try {
             // Open the compressed database from the assets subfolder
@@ -109,7 +109,7 @@ class AssetDbOpenHelper(
             // Decompress the 7z file
             val sevenZFile = SevenZFile(tempFile)
             val entries = sevenZFile.entries
-            Log.d(WordFinder.TAG, "Number of entries in 7z file: $entries")
+            Log.d(WordFinder.TAG, "Number of entries in $dbName 7z file: $entries")
             var entry = sevenZFile.nextEntry
             while (entry != null) {
                 if (!entry.isDirectory) {
@@ -122,7 +122,7 @@ class AssetDbOpenHelper(
                     }
                     dbOutputStream.flush()
                     dbOutputStream.close()
-                    Log.d(WordFinder.TAG, "Database decompressed and copied to internal storage")
+                    Log.d(WordFinder.TAG, "Database  $dbName decompressed and copied to internal storage")
                     break
                 }
                 entry = sevenZFile.nextEntry
@@ -130,9 +130,9 @@ class AssetDbOpenHelper(
 
             sevenZFile.close()
             tempFile.delete()
-            Log.d(WordFinder.TAG, "Finished copying DB")
+            Log.d(WordFinder.TAG, "Finished copying DB $dbName")
         } catch (e: IOException) {
-            Log.e(WordFinder.TAG, "Error copying and decompressing database", e)
+            Log.e(WordFinder.TAG, "Error copying and decompressing database $dbName", e)
         }
 
     }
