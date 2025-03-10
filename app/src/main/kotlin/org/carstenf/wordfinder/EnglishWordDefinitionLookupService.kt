@@ -19,7 +19,7 @@ import java.io.IOException
 class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
     override fun lookupWordDefinition(lookupManager: WordDefinitionLookupManager, task: WordLookupTask) {
         val request: Request = Builder()
-            .url(DICTIONARYAPI_URL + task.word)
+            .url(DICTIONARYAPI_URL + task.word.lemma)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -39,7 +39,7 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
                     if (responseBody == null) {
                         lookupManager.processWordLookupError(
                             task, language,
-                            "Definition lookup for ${task.word} failed with empty response."
+                            "Definition lookup for ${task.word.displayText} failed with empty response."
                         )
                         return
                     }
@@ -59,7 +59,7 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
 
                         val definition = definitionObj.getString("definition")
 
-                        val definitionStr = "${task.word} ($partOfSpeech): $definition"
+                        val definitionStr = "${task.word.displayText} ($partOfSpeech): $definition"
 
                         lookupManager.processWordLookupResult(
                             task,
@@ -71,13 +71,13 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
                     } catch (e: Exception) {
                         lookupManager.processWordLookupError(
                             task, language,
-                            "Error looking up ${task.word}: ${e.message}"
+                            "Error looking up ${task.word.displayText}: ${e.message}"
                         )
                     }
                 } else {
                     lookupManager.processWordLookupError(
                         task, language,
-                        "Definition not found for: ${task.word}"
+                        "Definition not found for: ${task.word.displayText}"
                     )
                 }
             }
