@@ -31,8 +31,8 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
                 .uppercase(Locale.getDefault())]
             if (helper == null) return null
 
-            val supportsDisplayText = db == "german_wiki"
-            val supportsLemma = db == "german_wiki"
+            val supportsDisplayText = (db  == "german_wiki") || (db  == "german_simple")
+            val supportsLemma = (db  == "german_wiki") || (db  == "german_simple")
 
             var col = arrayOf(TEXT_COLUMN)
             if(supportsDisplayText) {
@@ -99,8 +99,8 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
             val dbHelper = mDatabaseOpenHelperMap[db.trim { it <= ' ' }
                 .uppercase(Locale.getDefault())]
             if (dbHelper == null) return null
-            val supportsDisplayText = db == "german_wiki"
-            val supportsLemma = db == "german_wiki"
+            val supportsDisplayText = (db  == "german_wiki") || (db  == "german_simple")
+            val supportsLemma = (db  == "german_wiki") || (db  == "german_simple")
 
             var col = arrayOf(TEXT_COLUMN)
             if(supportsDisplayText) {
@@ -137,8 +137,8 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
     internal companion object {
         private const val DB_ASSET_PATH = "dicts"
-        private val TEXT_COLUMN = "text"
-        private val DISPLAY_TEXT_COLUMN = "display_text"
-        private val LEMMA_COLUMN = "lemma"
+        private const val TEXT_COLUMN = "text"
+        private const val DISPLAY_TEXT_COLUMN = "display_text"
+        private const val LEMMA_COLUMN = "lemma"
     }
 }

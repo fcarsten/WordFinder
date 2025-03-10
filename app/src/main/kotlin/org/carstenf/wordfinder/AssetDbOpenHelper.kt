@@ -145,7 +145,7 @@ class AssetDbOpenHelper(
 //        }
 //    }
     companion object {
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
     }
 
 }

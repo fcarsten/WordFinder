@@ -4,7 +4,7 @@
     <string name="WordValue">Wortwerte</string>
     <string name="AmericanEnglish">Amerikanisches Englisch</string>
     <string name="IntEnglish">Internationales Englisch</string>
-    <string name="Deutsch">Deutsch</string>
+    <string name="Deutsch">Deutsch (Superdic)</string>
     <string name="DeutschSimple">Deutsch (Einfach)</string>
     <string name="DeutschWiki">Deutsch (Wiktionary)</string>
 </resources>
