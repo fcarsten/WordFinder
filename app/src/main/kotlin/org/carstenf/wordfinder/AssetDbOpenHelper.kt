@@ -16,6 +16,7 @@ import org.apache.commons.compress.archivers.sevenz.SevenZFile
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import androidx.core.content.edit
 
 class AssetDbOpenHelper(
     val context: Context, val dbName: String,
@@ -44,8 +45,15 @@ class AssetDbOpenHelper(
      */
     suspend fun getOrCreateDataBase(): SQLiteDatabase? {
         createDbMutex.withLock {
+            val prefs = context.getSharedPreferences("db_prefs", Context.MODE_PRIVATE)
+            val storedVersion = prefs.getInt("db_version-$dbName", 0)
 
-            val dbExist = checkDataBaseExists(context, dbName)
+            var dbExist = checkDataBaseExists(context, dbName)
+            if(dbExist && storedVersion < DATABASE_VERSION) {
+                Log.d(WordFinder.TAG, "Database update detected, recreating DB")
+                context.deleteDatabase(dbName)  // Remove old DB if it exists
+                dbExist = false
+            }
 
             if (!dbExist) {
                 Log.d(WordFinder.TAG, "Creating DB")
@@ -53,6 +61,8 @@ class AssetDbOpenHelper(
                 dbHelperDelegate.close()
                 copyDataBase(context, dbName, dbFileName)
                 Log.d(WordFinder.TAG, "Finished creating DB")
+                // Update stored version
+                prefs.edit(commit = true) { putInt("db_version-$dbName", DATABASE_VERSION) }
             }
             return dbHelperDelegate.readableDatabase
         }
@@ -134,5 +144,8 @@ class AssetDbOpenHelper(
 //            }
 //        }
 //    }
+    companion object {
+        private const val DATABASE_VERSION = 1
+    }
 
 }
