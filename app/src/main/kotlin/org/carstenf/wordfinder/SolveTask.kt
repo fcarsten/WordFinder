@@ -20,6 +20,7 @@ class SolveTask(private val gameState: GameState) {
         scope.launch {
             Thread.currentThread().priority = Thread.MIN_PRIORITY
             solve2()
+            gameState.onSolveFinished()
         }
     }
 

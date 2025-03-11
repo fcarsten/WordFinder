@@ -191,6 +191,7 @@ class GameState : ViewModel() {
         NOT_STARTED,
         STARTED,
         TIMER_STARTED,
+        UNSOLVABLE,
         TIMER_FINISHED,
         GAME_OVER
     }
@@ -236,7 +237,7 @@ class GameState : ViewModel() {
         if (countDownTime < 0) return
 
         gameLifecycleState.postValue(GameLifeCycleState.TIMER_STARTED)
-        countDownTimerCurrentValue.postValue(time)
+        countDownTimerCurrentValue.postValue(time/1000)
 
         countDownTimer = object : CountDownTimer(time, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -287,6 +288,13 @@ class GameState : ViewModel() {
 
     fun cancelCountDown() {
         countDownTimer?.cancel()
+    }
+
+    fun onSolveFinished() {
+        if(computerResultList.value?.size == 0) {
+            countDownTimer?.cancel()
+            gameLifecycleState.postValue(GameLifeCycleState.UNSOLVABLE)
+        }
     }
 
     val playerScore: Int

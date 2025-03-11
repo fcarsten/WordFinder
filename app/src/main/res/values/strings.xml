@@ -43,4 +43,6 @@
     <string name="shuffle_required_diag_msg">New game start required</string>
     <string name="shuffle_required_diag_title">Alert</string>
     <string name="shuffle_required_diag_ok">OK</string>
+    <string name="board_unsolvable">Board contains no valid words.</string>
+    <string name="unsolvable_confirm_title">Bad Luck!</string>
 </resources>
