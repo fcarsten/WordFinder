@@ -49,4 +49,6 @@
     <string name="shuffle_required_diag_ok">OK</string>
     <string name="DeutschSimple">German (Simple)</string>
     <string name="DeutschWiki">German (Wiktionary)</string>
+    <string name="board_unsolvable">Board contains no valid words.</string>
+    <string name="unsolvable_confirm_title">Bad Luck!</string>
 </resources>

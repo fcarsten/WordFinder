@@ -132,6 +132,11 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             } else if (it == GameState.GameLifeCycleState.GAME_OVER) {
                 gameState.cancelCountDown()
                 disableGuessing()
+            } else if (
+                it == GameState.GameLifeCycleState.UNSOLVABLE) {
+                gameState.cancelCountDown()
+                disableGuessing()
+                showUnsolvableDialog(this)
             } else if (it == GameState.GameLifeCycleState.STARTED) {
                 enableGuessing()
             }
@@ -252,6 +257,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     fun isGameOver(): Boolean {
         val state = gameState.gameLifecycleState.value
         return state == GameState.GameLifeCycleState.NOT_STARTED ||
+                state == GameState.GameLifeCycleState.UNSOLVABLE ||
                 state == GameState.GameLifeCycleState.GAME_OVER ||
                 state == GameState.GameLifeCycleState.TIMER_FINISHED
     }
@@ -365,19 +371,6 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             }
         } else {
             countDownView.visibility = View.GONE
-        }
-    }
-
-    private fun parseTime(timeStr: String): Long {
-        if (timeStr.contains(":")) {
-            val c = timeStr.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            var res = c[0].toInt() *60L
-            if(c.size>1) {
-                res +=  c[1].toInt()
-            }
-            return 1000 * res
-        } else {
-            return timeStr.toInt() * 1000L
         }
     }
 

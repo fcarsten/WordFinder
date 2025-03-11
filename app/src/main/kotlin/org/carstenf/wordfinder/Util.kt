@@ -58,8 +58,38 @@ fun isNetworkAvailable(context: Context): Boolean {
             capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
 }
 
-fun showTimeIsUpDialog(app: WordFinder) {
+fun showUnsolvableDialog(app: WordFinder) {
+    val builder = AlertDialog.Builder(app)
+    builder.setMessage(R.string.board_unsolvable)
+        .setTitle(R.string.unsolvable_confirm_title)
+        .setPositiveButton(
+            R.string.shuffle_ok_text
+        ) { _: DialogInterface?, _: Int ->
+            if(app.gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
+                app.gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+            }
+            app.shuffle()
+        }
 
+    val dialog = builder.create()
+    dialog.show()
+}
+
+fun parseTime(timeStr: String): Long {
+    if (timeStr.contains(":")) {
+        val c = timeStr.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        var res = c[0].toInt() *60L
+        if(c.size>1) {
+            res +=  c[1].toInt()
+        }
+        return 1000 * res
+    } else {
+        return timeStr.toInt() * 1000L
+    }
+}
+
+
+fun showTimeIsUpDialog(app: WordFinder) {
     val builder = AlertDialog.Builder(app)
     builder.setMessage(R.string.time_up_dialog_msg)
         .setTitle(R.string.time_up_dialog_title)

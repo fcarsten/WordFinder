@@ -42,4 +42,6 @@
     <string name="shuffle_required_diag_msg" >Neustart erforderlich</string>
     <string name="shuffle_required_diag_title" >Achtung</string>
     <string name="shuffle_required_diag_ok">OK</string>
+    <string name="board_unsolvable">Leider hat das Spielfeld keine Lösung</string>
+    <string name="unsolvable_confirm_title">So ein Pech!</string>
 </resources>
