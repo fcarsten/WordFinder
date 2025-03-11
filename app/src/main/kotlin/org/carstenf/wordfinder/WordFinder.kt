@@ -135,8 +135,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             } else if (
                 it == GameState.GameLifeCycleState.UNSOLVABLE) {
                 gameState.cancelCountDown()
-                disableGuessing()
-                showUnsolvableDialog(this)
+                runOnUiThread {
+                    disableGuessing()
+                    showUnsolvableDialog(this)
+                }
             } else if (it == GameState.GameLifeCycleState.STARTED) {
                 enableGuessing()
             }

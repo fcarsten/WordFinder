@@ -69,9 +69,16 @@ fun showUnsolvableDialog(app: WordFinder) {
                 app.gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
             }
             app.shuffle()
+        } .setNegativeButton(
+            R.string.shuffle_cancle_text
+        ) { _: DialogInterface?, _: Int ->
+            if(app.gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
+                app.gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+            }
         }
 
     val dialog = builder.create()
+    dialog.setCanceledOnTouchOutside(false)
     dialog.show()
 }
 
