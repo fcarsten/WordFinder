@@ -15,7 +15,9 @@ English dictionaries from Alan Beale at http://wordlist.sourceforge.net/12dicts-
 
 German dictionary from Gero Illing at https://sourceforge.net/projects/scrabbledict/files/  (GPL)
 
-Smaller German dictionary from Leibniz-Institut für Deutsche Sprache at https://www.ids-mannheim.de/en/s/corpus-linguistics/projects/methods-of-analysis/corpus-based-lemma-and-word-form-lists/  (CC BY-NC 3.0)
+Smaller German dictionary based on word list from Leibniz-Institut für Deutsche Sprache at https://www.ids-mannheim.de/en/s/corpus-linguistics/projects/methods-of-analysis/corpus-based-lemma-and-word-form-lists/  (CC BY-NC 3.0)
+
+Wiktionary based word list from https://de.wiktionary.org/wiki/Wiktionary:Hauptseite (https://de.wiktionary.org/wiki/Wiktionary:Lizenzbestimmungen - CC BY-SA 3.0)
 
 Letter tile font by Rafael Olivo Díaz and Denis Ignatov  https://font.download/font/arco (SIL Open Font License (OFL))
 
