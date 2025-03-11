@@ -17,15 +17,15 @@ import org.json.JSONArray
 import java.io.IOException
 
 class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
-    override fun lookupWordDefinition(gameState: GameState, task: WordLookupTask) {
+    override fun lookupWordDefinition(lookupManager: WordDefinitionLookupManager, task: WordLookupTask) {
         val request: Request = Builder()
-            .url(DICTIONARYAPI_URL + task.word)
+            .url(DICTIONARYAPI_URL + task.word.lemma)
             .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 Log.e("API Response", e.message, e)
-                gameState.processWordLookupError(
+                lookupManager.processWordLookupError(
                     task,
                     language,
                     "Error looking up word: " + e.message
@@ -37,9 +37,9 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
                 if (response.isSuccessful) {
                     val responseBody = response.body
                     if (responseBody == null) {
-                        gameState.processWordLookupError(
+                        lookupManager.processWordLookupError(
                             task, language,
-                            "Definition lookup for ${task.word} failed with empty response."
+                            "Definition lookup for ${task.word.displayText} failed with empty response."
                         )
                         return
                     }
@@ -59,25 +59,25 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
 
                         val definition = definitionObj.getString("definition")
 
-                        val definitionStr = "${task.word} ($partOfSpeech): $definition"
+                        val definitionStr = "${task.word.displayText} ($partOfSpeech): $definition"
 
-                        gameState.processWordLookupResult(
+                        lookupManager.processWordLookupResult(
                             task,
                             WordInfo(
-                                task.word,
+                                task.word.displayText,
                                 language, definitionStr, null
                             )
                         )
                     } catch (e: Exception) {
-                        gameState.processWordLookupError(
+                        lookupManager.processWordLookupError(
                             task, language,
-                            "Error looking up ${task.word}: ${e.message}"
+                            "Error looking up ${task.word.displayText}: ${e.message}"
                         )
                     }
                 } else {
-                    gameState.processWordLookupError(
+                    lookupManager.processWordLookupError(
                         task, language,
-                        "Definition not found for: ${task.word}"
+                        "Definition not found for: ${task.word.displayText}"
                     )
                 }
             }

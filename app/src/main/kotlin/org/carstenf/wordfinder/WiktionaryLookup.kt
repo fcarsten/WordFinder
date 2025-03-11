@@ -27,10 +27,14 @@ class WiktionaryLookup {
     // Function to fetch the meaning of a word (callable from Java)
     fun getMeaningAsync(word: String, callback: WiktionaryCallback) {
         CoroutineScope(Dispatchers.Main).launch {
-            val meaning = withContext(Dispatchers.IO) {
-                fetchMeaning(word)
+            try {
+                val meaning = withContext(Dispatchers.IO) {
+                    fetchMeaning(word)
+                }
+                callback.onResult(meaning?.let { extractMeanings(it) })
+            } catch (e: IOException) {
+                callback.onError(e)
             }
-            callback.onResult(meaning?.let { extractMeanings(it) })
         }
     }
 
@@ -43,25 +47,28 @@ class WiktionaryLookup {
         while (shouldContinue) {
             val url = buildUrl(word, continueParams)
             val request = Request.Builder().url(url).build()
-
-            client.newCall(request).execute().use { response ->
-                if (!response.isSuccessful) {
-                    throw IOException("Unexpected response code: ${response.code}")
-                }
-
-                val jsonResponse = response.body?.string()
-                if (jsonResponse != null) {
-                    val (meaning, newContinueParams) = parseResponse(jsonResponse)
-                    if (meaning != null) {
-                        fullMeaning.append(meaning)
+            try {
+                client.newCall(request).execute().use { response ->
+                    if (!response.isSuccessful) {
+                        throw IOException("Unexpected response code: ${response.code}")
                     }
 
-                    if (newContinueParams.isEmpty()) {
-                        shouldContinue = false // Stop the loop
-                    } else {
-                        continueParams = newContinueParams
+                    val jsonResponse = response.body?.string()
+                    if (jsonResponse != null) {
+                        val (meaning, newContinueParams) = parseResponse(jsonResponse)
+                        if (meaning != null) {
+                            fullMeaning.append(meaning)
+                        }
+
+                        if (newContinueParams.isEmpty()) {
+                            shouldContinue = false // Stop the loop
+                        } else {
+                            continueParams = newContinueParams
+                        }
                     }
                 }
+            } catch (e: IOException) {
+                throw IOException("Error fetching meaning: ${e.message}: ${e.message}")
             }
         }
 
@@ -109,6 +116,7 @@ class WiktionaryLookup {
         val meanings = mutableListOf<String>()
         var isMeaningSection = false
         var isMerkmaleSection = false
+        var preamble = true
 
         for (line in lines) {
             if (line.startsWith("Bedeutungen:")) {
@@ -117,7 +125,11 @@ class WiktionaryLookup {
             }
 
             if (isMeaningSection) {
-                if (line.startsWith("[")) {
+                if (preamble || line.startsWith("[")) { // Sometimes there seems to be
+                    // additional lines before the first "[...." line
+                    //
+                    if(line.startsWith("["))
+                        preamble = false
                     meanings.add(line)
                 } else {
                     // Stop when we encounter a line that does not start with '['

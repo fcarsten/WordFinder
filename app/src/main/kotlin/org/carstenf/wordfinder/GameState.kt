@@ -19,15 +19,10 @@ class GameState : ViewModel() {
 
     private val board = CharArray(16)
 
-    private val wordInfoCache: WordInfoCache = WordInfoCache()
-
 	val computerResultList: MutableLiveData<ArrayList<Result>?> = MutableLiveData(ArrayList())
 	val playerResultList: ArrayList<Result> = ArrayList()
 
 	val countDownTimerCurrentValue: MutableLiveData<Long> = MutableLiveData(-1L)
-
-	val wordLookupResult: MutableLiveData<Pair<WordLookupTask, WordInfo?>> = MutableLiveData(null)
-	val wordLookupError: MutableLiveData<Pair<WordLookupTask, String?>> = MutableLiveData(null)
 
     fun getBoard(move: Int): Char {
         return board[move]
@@ -54,7 +49,9 @@ class GameState : ViewModel() {
 
         var letterFreqProb = letterFreqProbEnglish
 
-        if (dictionaryName.equals("german", ignoreCase = true)) {
+        if (dictionaryName.equals("german", ignoreCase = true) ||
+            dictionaryName.equals("german_wiki", ignoreCase = true) ||
+            dictionaryName.equals("german_simple", ignoreCase = true)) {
             letterFreqProb = letterFreqProbGerman
         }
 
@@ -173,20 +170,6 @@ class GameState : ViewModel() {
         playerTaken[move] = true
     }
 
-    fun getWordInfoFromCache(word: String, language: String): WordInfo? {
-        return wordInfoCache.get(word, language)
-    }
-
-    fun processWordLookupError(task: WordLookupTask, language: String, error: String?) {
-        wordInfoCache.put(WordInfo(task.word, language, null, null))
-        wordLookupError.postValue(Pair(task, error))
-    }
-
-    fun processWordLookupResult(task: WordLookupTask, wordInfo: WordInfo) {
-        wordInfoCache.put(wordInfo)
-        wordLookupResult.postValue(Pair(task, wordInfo))
-    }
-
     fun autoAddPrefixalWords(): Boolean {
         return autoAddPrefixalWords
     }
@@ -198,7 +181,8 @@ class GameState : ViewModel() {
     enum class PlayerGuessState {
         TOO_SHORT,
         ALREADY_FOUND,
-        NOT_IN_DICTIONARY
+        NOT_IN_DICTIONARY,
+        GUESS_VALID
     }
 
     val gameLifecycleState: MutableLiveData<GameLifeCycleState> = MutableLiveData(GameLifeCycleState.NOT_STARTED)
@@ -211,21 +195,23 @@ class GameState : ViewModel() {
         GAME_OVER
     }
 
-    suspend fun validatePlayerGuess(guess: String): PlayerGuessState? {
+    data class PlayerGuessResult(val guess: Dictionary.WordInfoData, val state: PlayerGuessState)
+
+    suspend fun validatePlayerGuess(guess: String): PlayerGuessResult {
         val minLength = if (isAllow3LetterWords) 3 else 4
 
-        if (guess.length < minLength) return PlayerGuessState.TOO_SHORT
+        if (guess.length < minLength) return PlayerGuessResult(Dictionary.WordInfoData(guess), PlayerGuessState.TOO_SHORT)
+
+        val lookupResult = dictionary.lookup(guess, dictionaryName)
+            ?: return PlayerGuessResult(Dictionary.WordInfoData(guess),PlayerGuessState.NOT_IN_DICTIONARY)
 
         for (result in playerResultList) {
             if (result.toString()
-                    .equals(guess, ignoreCase = true)
-            ) return PlayerGuessState.ALREADY_FOUND
-        }
-        if (dictionary.lookup(guess, dictionaryName) == null) {
-            return PlayerGuessState.NOT_IN_DICTIONARY
+                    .equals(lookupResult.displayText, ignoreCase = true)
+            ) return PlayerGuessResult(Dictionary.WordInfoData(guess),PlayerGuessState.ALREADY_FOUND)
         }
 
-        return null
+        return PlayerGuessResult(lookupResult, PlayerGuessState.GUESS_VALID)
     }
 
     fun setScoringAlgorithm(string: String?) {

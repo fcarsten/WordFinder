@@ -5,7 +5,7 @@
     <string name="WordValue">Word value</string>
     <string name="AmericanEnglish">English (US)</string>
     <string name="IntEnglish">English (Int.)</string>
-    <string name="Deutsch">German</string>
+    <string name="Deutsch">German (Superdic)</string>
     <string name="info">Info</string>
     <string name="prefs">Preferences</string>
     <string name="set_preferences">Preferences</string>
@@ -47,4 +47,6 @@
     <string name="shuffle_required_diag_msg">New game start required</string>
     <string name="shuffle_required_diag_title">Alert</string>
     <string name="shuffle_required_diag_ok">OK</string>
+    <string name="DeutschSimple">German (Simple)</string>
+    <string name="DeutschWiki">German (Wiktionary)</string>
 </resources>

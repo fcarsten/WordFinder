@@ -6,6 +6,9 @@
  */
 package org.carstenf.wordfinder
 
-fun interface WiktionaryCallback {
+import java.io.IOException
+
+interface WiktionaryCallback {
     fun onResult(meaning: String?)
+    fun onError(e: IOException)
 }
