@@ -65,7 +65,8 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
                             task,
                             WordInfo(
                                 task.word.displayText,
-                                language, definitionStr, null
+                                language, definitionStr,
+                                "https://en.wiktionary.org/w/index.php?title=Special:Search&search=${task.word.displayText}"
                             )
                         )
                     } catch (e: Exception) {

@@ -1,18 +1,9 @@
 package org.carstenf.wordfinder
 
 import android.app.Activity
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
-import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
-import com.google.android.material.snackbar.Snackbar
-import org.carstenf.wordfinder.WordFinder.Companion.TAG
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicLong
 
@@ -42,44 +33,22 @@ class WordDefinitionLookupManager(private val app: Activity, private val gameSta
         return words.size
     }
 
-    fun displayWordDefinition(definitionStr: String) {
+    fun displayWordDefinition(wordInfo: WordInfo) {
+        val wordDef = wordInfo.wordDefinition
+        if (wordDef.isNullOrBlank()) return
+
         app.runOnUiThread {
-            val numWords = countWords(definitionStr)
+            val numWords = countWords(wordDef)
             val displayTime = 3 + (numWords * 60.0)/200
 
             val view = app.findViewById<View>(android.R.id.content)
-            val snackbar = Snackbar.make(view, definitionStr, Snackbar.LENGTH_INDEFINITE)
-            snackbar.setAction("Ok") {
-                // Dismiss the Snackbar when the action button is clicked
-                snackbar.dismiss()
-            }
-
-            val snackbarView = snackbar.view
-
-            val textView =
-                snackbarView.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-            if (textView != null) {
-                textView.maxLines = 10
+            val url = wordInfo.referenceUrl
+            if(url == null) {
+                showSnackbar(view, wordDef, displayTime.toLong())
             } else {
-                Log.e(
-                    TAG,
-                    "TextView not found in Snackbar view to adjust number of lines"
-                )
+                showHyperlinkSnackbar(view, wordDef, displayTime.toLong(),
+                    wordInfo.word, url )
             }
-
-            val params = snackbarView.layoutParams
-            params.width = ViewGroup.LayoutParams.WRAP_CONTENT // Wrap the width to text size
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT // Optional: Wrap height
-            snackbarView.layoutParams = params
-
-            val layoutParams = snackbarView.layoutParams as FrameLayout.LayoutParams
-            layoutParams.gravity = Gravity.CENTER // Adjust gravity if needed
-            snackbarView.layoutParams = layoutParams
-            snackbar.show()
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                snackbar.dismiss()
-            }, (displayTime*1000L).toLong())
         }
     }
 
@@ -111,7 +80,7 @@ class WordDefinitionLookupManager(private val app: Activity, private val gameSta
                         , Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    displayWordDefinition(wordDefinition)
+                    displayWordDefinition(wordInfo)
                 }
             } else {
                 if (isNetworkAvailable(app.applicationContext)) {

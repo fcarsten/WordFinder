@@ -27,15 +27,14 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
         task: WordLookupTask
     ) {
         var searchTerm: String
-        var word = task.word.text
-        var prefix = "$word: "
+        var prefix = "${task.word.text}: "
+        var url = "https://de.wiktionary.org/wiki/${task.word.displayText}"
+
         if(task.word.text != task.word.displayText) {
             if(task.word.displayText != task.word.lemma){
-                word = task.word.text
                 prefix = "${task.word.displayText} (von ${task.word.lemma}): "
                 searchTerm = task.word.lemma
             } else {
-                word = task.word.displayText
                 prefix = "${task.word.displayText}: "
                 searchTerm = task.word.displayText
             }
@@ -46,20 +45,24 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
             searchTerm = "$capitalizedWord|$lowercaseWord"
             searchTerm = searchTerm + "|" + replaceWithUmlauts(searchTerm)
             searchTerm = searchTerm + "|" + replaceWithSz(searchTerm)
+            url = "https://de.wiktionary.org/w/index.php?title=Special:Search&search=${task.word.displayText}"
         }
 
         val wiktionaryLookup = WiktionaryLookup()
         wiktionaryLookup.getMeaningAsync(searchTerm, object : WiktionaryCallback {
             override fun onResult(meaning: String?) {
                 if (!meaning.isNullOrBlank()) {
+                    var meaningClean = meaning
+                    if(! meaning.contains("[2]")) { // No need to make a list if only 1 element
+                        meaningClean = meaning.replace("\\[1]\\s*".toRegex(), "")
+                    }
+
                     lookupManager.processWordLookupResult(
                         task,
                         WordInfo(
-                            word,
+                            task.word.displayText,
                             language,
-                            "${prefix}\n$meaning",
-                            null
-                        )
+                            "${prefix}\n$meaningClean", url)
                     )
                 } else {
                     lookupManager.processWordLookupError(
