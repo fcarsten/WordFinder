@@ -170,7 +170,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 if (wordDefinition.isNullOrBlank()) {
                     displayToast(getString(R.string.definition_not_found_for) + " ${wordInfo.word}")
                 } else {
-                    wordDefinitionLookupManager.displayWordDefinition(wordDefinition)
+                    wordDefinitionLookupManager.displayWordDefinition(wordInfo)
                 }
             }
         })
