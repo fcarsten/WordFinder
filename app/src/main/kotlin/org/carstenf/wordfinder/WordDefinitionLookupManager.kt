@@ -76,7 +76,7 @@ class WordDefinitionLookupManager(private val app: Activity, private val gameSta
                 val wordDefinition = wordInfo.wordDefinition
                 if (wordDefinition.isNullOrBlank()) {
                     app.runOnUiThread {
-                        Toast.makeText(app, app.getString(R.string.definition_not_found_for) + " $selectedWord"
+                        Toast.makeText(app, app.getString(R.string.definition_not_found_for) + " ${selectedWord.displayText}"
                         , Toast.LENGTH_SHORT).show()
                     }
                 } else {
