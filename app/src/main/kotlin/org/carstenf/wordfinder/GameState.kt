@@ -38,40 +38,12 @@ class GameState : ViewModel() {
 
         val letterCounts = IntArray(26)
         for (i in 0..15) {
-            board[i] = pickRandomLetter(letterCounts)
+            board[i] = pickRandomLetter(letterCounts, dictionaryCountryCode())
         }
         board.shuffle()
 
         computerResultList.value?.clear()
         computerResultList.postValue(computerResultList.value)
-    }
-
-    private fun pickRandomLetter(letterCounts: IntArray): Char {
-        var letterCountMatrix = letterCountsEnglish
-
-        if (dictionaryName.equals("german", ignoreCase = true) ||
-            dictionaryName.equals("german_wiki", ignoreCase = true) ||
-            dictionaryName.equals("german_simple", ignoreCase = true)
-        ) {
-            letterCountMatrix = letterCountsGerman
-        }
-
-        var totalCount = 0
-        for (k in 0..25) {
-            totalCount += letterCountMatrix[k][letterCounts[k]]
-        }
-
-        var r = Math.random() * totalCount
-        var i = 0
-
-        while (letterCountMatrix[i][letterCounts[i]] < r) {
-            r -= letterCountMatrix[i][letterCounts[i]]
-            i += 1
-        }
-
-        if (letterCounts[i] < 10) // Make sure we never
-            letterCounts[i]++
-        return ('A'.code + i).toChar()
     }
 
     fun findWord(w: String): Boolean {
@@ -340,116 +312,4 @@ class GameState : ViewModel() {
     val computerScore: Int
         get() = getScore(computerResultList.value)
 
-    companion object {
-        // Letter a: [33735, 6997, 547, 44, 2, 1, 0, 0, 0, 0]
-        // Letter b: [9773, 815, 53, 2, 0, 0, 0, 0, 0, 0]
-        // Letter c: [19491, 2717, 141, 0, 0, 0, 0, 0, 0, 0]
-        // Letter d: [19196, 2487, 188, 7, 0, 0, 0, 0, 0, 0]
-        // Letter e: [45137, 15464, 3071, 287, 12, 0, 0, 0, 0, 0]
-        // Letter f: [6948, 877, 24, 1, 0, 0, 0, 0, 0, 0]
-        // Letter g: [15542, 1645, 167, 9, 0, 0, 0, 0, 0, 0]
-        // Letter h: [11844, 852, 18, 0, 0, 0, 0, 0, 0, 0]
-        // Letter i: [36396, 10132, 1811, 264, 20, 1, 0, 0, 0, 0]
-        // Letter j: [974, 6, 0, 0, 0, 0, 0, 0, 0, 0]
-        // Letter k: [5164, 241, 8, 2, 0, 0, 0, 0, 0, 0]
-        // Letter l: [24204, 4402, 393, 23, 0, 0, 0, 0, 0, 0]
-        // Letter m: [13410, 1425, 60, 2, 0, 0, 0, 0, 0, 0]
-        // Letter n: [30710, 6644, 768, 44, 2, 0, 0, 0, 0, 0]
-        // Letter o: [27453, 6177, 623, 35, 2, 0, 0, 0, 0, 0]
-        // Letter p: [14380, 1830, 98, 4, 0, 0, 0, 0, 0, 0]
-        // Letter q: [1023, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        // Letter r: [33120, 6027, 457, 8, 0, 0, 0, 0, 0, 0]
-        // Letter s: [37683, 10743, 1932, 298, 47, 4, 0, 0, 0, 0]
-        // Letter t: [30626, 6827, 558, 18, 0, 0, 0, 0, 0, 0]
-        // Letter u: [16804, 1406, 72, 7, 0, 0, 0, 0, 0, 0]
-        // Letter v: [5414, 177, 0, 0, 0, 0, 0, 0, 0, 0]
-        // Letter w: [5029, 183, 4, 0, 0, 0, 0, 0, 0, 0]
-        // Letter x: [1544, 4, 0, 0, 0, 0, 0, 0, 0, 0]
-        // Letter y: [8378, 217, 1, 0, 0, 0, 0, 0, 0, 0]
-        // Letter z: [2032, 182, 5, 3, 0, 0, 0, 0, 0, 0]
-        val letterCountsEnglish = arrayOf(
-            intArrayOf(33735, 6997, 547, 44, 2, 1, 0, 0, 0, 0),
-            intArrayOf(9773, 815, 53, 2, 0, 0, 0, 0, 0, 0),
-            intArrayOf(19491, 2717, 141, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(19196, 2487, 188, 7, 0, 0, 0, 0, 0, 0),
-            intArrayOf(45137, 15464, 3071, 287, 12, 0, 0, 0, 0, 0),
-            intArrayOf(6948, 877, 24, 1, 0, 0, 0, 0, 0, 0),
-            intArrayOf(15542, 1645, 167, 9, 0, 0, 0, 0, 0, 0),
-            intArrayOf(11844, 852, 18, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(36396, 10132, 1811, 264, 20, 1, 0, 0, 0, 0),
-            intArrayOf(974, 6, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(5164, 241, 8, 2, 0, 0, 0, 0, 0, 0),
-            intArrayOf(24204, 4402, 393, 23, 0, 0, 0, 0, 0, 0),
-            intArrayOf(13410, 1425, 60, 2, 0, 0, 0, 0, 0, 0),
-            intArrayOf(30710, 6644, 768, 44, 2, 0, 0, 0, 0, 0),
-            intArrayOf(27453, 6177, 623, 35, 2, 0, 0, 0, 0, 0),
-            intArrayOf(14380, 1830, 98, 4, 0, 0, 0, 0, 0, 0),
-            intArrayOf(1023, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(33120, 6027, 457, 8, 0, 0, 0, 0, 0, 0),
-            intArrayOf(37683, 10743, 1932, 298, 47, 4, 0, 0, 0, 0),
-            intArrayOf(30626, 6827, 558, 18, 0, 0, 0, 0, 0, 0),
-            intArrayOf(16804, 1406, 72, 7, 0, 0, 0, 0, 0, 0),
-            intArrayOf(5414, 177, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(5029, 183, 4, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(1544, 4, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(8378, 217, 1, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(2032, 182, 5, 3, 0, 0, 0, 0, 0, 0)
-        )
-
-        // Letter a: [356684, 85223, 7652, 519, 17, 0, 0, 0, 0, 0]
-        // Letter b: [160176, 16709, 898, 11, 0, 0, 0, 0, 0, 0]
-        // Letter c: [193499, 19280, 754, 6, 0, 0, 0, 0, 0, 0]
-        // Letter d: [197379, 19462, 611, 26, 0, 0, 0, 0, 0, 0]
-        // Letter e: [618852, 475775, 245253, 68822, 8606, 419, 14, 0, 0, 0]
-        // Letter f: [129908, 16156, 1228, 35, 0, 0, 0, 0, 0, 0]
-        // Letter g: [202311, 26263, 1897, 55, 0, 0, 0, 0, 0, 0]
-        // Letter h: [258859, 41444, 2911, 123, 1, 0, 0, 0, 0, 0]
-        // Letter i: [333877, 85665, 12203, 983, 69, 0, 0, 0, 0, 0]
-        // Letter j: [7808, 41, 0, 0, 0, 0, 0, 0, 0, 0]
-        // Letter k: [139865, 11136, 379, 1, 0, 0, 0, 0, 0, 0]
-        // Letter l: [263769, 48382, 5136, 275, 11, 0, 0, 0, 0, 0]
-        // Letter m: [173995, 31400, 3060, 198, 10, 0, 0, 0, 0, 0]
-        // Letter n: [418304, 149322, 32267, 4842, 475, 18, 1, 0, 0, 0]
-        // Letter o: [181046, 24644, 2602, 172, 13, 0, 0, 0, 0, 0]
-        // Letter p: [103009, 15122, 1308, 59, 9, 2, 0, 0, 0, 0]
-        // Letter q: [4335, 14, 0, 0, 0, 0, 0, 0, 0, 0]
-        // Letter r: [428704, 143364, 22738, 1793, 85, 2, 0, 0, 0, 0]
-        // Letter s: [399685, 137703, 32224, 5415, 528, 27, 1, 0, 0, 0]
-        // Letter t: [398278, 132104, 24672, 2760, 172, 3, 0, 0, 0, 0]
-        // Letter u: [256827, 44138, 3246, 72, 0, 0, 0, 0, 0, 0]
-        // Letter v: [58989, 1072, 10, 0, 0, 0, 0, 0, 0, 0]
-        // Letter w: [68051, 2102, 20, 0, 0, 0, 0, 0, 0, 0]
-        // Letter x: [7851, 26, 0, 0, 0, 0, 0, 0, 0, 0]
-        // Letter y: [11544, 353, 0, 0, 0, 0, 0, 0, 0, 0]
-        // Letter z: [97785, 5622, 125, 0, 0, 0, 0, 0, 0, 0]
-
-        val letterCountsGerman = arrayOf(
-            intArrayOf(356684, 85223, 7652, 519, 17, 0, 0, 0, 0, 0),
-            intArrayOf(160176, 16709, 898, 11, 0, 0, 0, 0, 0, 0),
-            intArrayOf(193499, 19280, 754, 6, 0, 0, 0, 0, 0, 0),
-            intArrayOf(197379, 19462, 611, 26, 0, 0, 0, 0, 0, 0),
-            intArrayOf(618852, 475775, 245253, 68822, 8606, 419, 14, 0, 0, 0),
-            intArrayOf(129908, 16156, 1228, 35, 0, 0, 0, 0, 0, 0),
-            intArrayOf(202311, 26263, 1897, 55, 0, 0, 0, 0, 0, 0),
-            intArrayOf(258859, 41444, 2911, 123, 1, 0, 0, 0, 0, 0),
-            intArrayOf(333877, 85665, 12203, 983, 69, 0, 0, 0, 0, 0),
-            intArrayOf(7808, 41, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(139865, 11136, 379, 1, 0, 0, 0, 0, 0, 0),
-            intArrayOf(263769, 48382, 5136, 275, 11, 0, 0, 0, 0, 0),
-            intArrayOf(173995, 31400, 3060, 198, 10, 0, 0, 0, 0, 0),
-            intArrayOf(418304, 149322, 32267, 4842, 475, 18, 1, 0, 0, 0),
-            intArrayOf(181046, 24644, 2602, 172, 13, 0, 0, 0, 0, 0),
-            intArrayOf(103009, 15122, 1308, 59, 9, 2, 0, 0, 0, 0),
-            intArrayOf(4335, 14, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(428704, 143364, 22738, 1793, 85, 2, 0, 0, 0, 0),
-            intArrayOf(399685, 137703, 32224, 5415, 528, 27, 1, 0, 0, 0),
-            intArrayOf(398278, 132104, 24672, 2760, 172, 3, 0, 0, 0, 0),
-            intArrayOf(256827, 44138, 3246, 72, 0, 0, 0, 0, 0, 0),
-            intArrayOf(58989, 1072, 10, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(68051, 2102, 20, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(7851, 26, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(11544, 353, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(97785, 5622, 125, 0, 0, 0, 0, 0, 0, 0)
-        )
-    }
 }
