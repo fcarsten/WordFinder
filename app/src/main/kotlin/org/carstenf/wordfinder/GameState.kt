@@ -297,6 +297,15 @@ class GameState : ViewModel() {
         }
     }
 
+    fun dictionaryCountryCode(): String {
+        if (dictionaryName.equals("german", ignoreCase = true) ||
+            dictionaryName.equals("german_wiki", ignoreCase = true) ||
+            dictionaryName.equals("german_simple", ignoreCase = true)) {
+            return "DE"
+        }
+        return "EN"
+    }
+
     val playerScore: Int
         get() = getScore(playerResultList)
 

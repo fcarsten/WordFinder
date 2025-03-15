@@ -595,7 +595,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     @SuppressLint("SetTextI18n")
     private fun updateScore() {
         scoreTextView.text =
-            ("${gameState.playerScore}/${gameState.computerScore}")
+            ("${gameState.playerScore}/${gameState.computerScore} ${gameState.dictionaryCountryCode()}")
     }
 
     private fun showComputerResults(show: Boolean, animate: Boolean) {
