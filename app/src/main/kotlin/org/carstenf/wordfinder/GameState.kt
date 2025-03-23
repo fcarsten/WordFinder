@@ -293,13 +293,13 @@ class GameState : ViewModel() {
         }
     }
 
-    fun dictionaryCountryCode(): String {
+    fun dictionaryCountryCode(): LANGUAGE {
         if (dictionaryName.equals("german", ignoreCase = true) ||
             dictionaryName.equals("german_wiki", ignoreCase = true) ||
             dictionaryName.equals("german_simple", ignoreCase = true)) {
-            return "DE"
+            return LANGUAGE.DE
         }
-        return "EN"
+        return LANGUAGE.EN
     }
 
     val playerScore: Int

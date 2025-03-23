@@ -1,22 +1,38 @@
 package org.carstenf.wordfinder
 
-fun pickRandomLetter(letterCounts: IntArray, languageCode: String): Char {
+import kotlin.math.pow
+
+
+enum class LANGUAGE {
+    EN,
+    DE
+}
+
+fun pickRandomLetter(letterCounts: IntArray, languageCode: LANGUAGE): Char {
+    return pickRandomLetter2DDistributionF(letterCounts, languageCode) {
+            x : Int -> x.toDouble().pow(0.75).toInt()
+    }
+}
+
+fun pickRandomLetter2DDistributionF(letterCounts: IntArray,
+                                    languageCode: LANGUAGE,
+                                    operation: (Int) -> Int): Char {
     var letterCountMatrix = letterCountsEnglish
 
-    if (languageCode == "DE") {
+    if (languageCode == LANGUAGE.DE) {
         letterCountMatrix = letterCountsGerman
     }
 
     var totalCount = 0
     for (k in 0..25) {
-        totalCount += letterCountMatrix[k][letterCounts[k]]
+        totalCount += operation(letterCountMatrix[k][letterCounts[k]])
     }
 
     var r = Math.random() * totalCount
     var i = 0
 
-    while (letterCountMatrix[i][letterCounts[i]] < r) {
-        r -= letterCountMatrix[i][letterCounts[i]]
+    while ( operation(letterCountMatrix[i][letterCounts[i]]) < r) {
+        r -= operation(letterCountMatrix[i][letterCounts[i]])
         i += 1
     }
 
@@ -52,34 +68,33 @@ fun pickRandomLetter(letterCounts: IntArray, languageCode: String): Char {
 // Letter y: [10102, 266, 1, 0, 0, 0, 0, 0, 0, 0]
 // Letter z: [2696, 210, 6, 4, 0, 0, 0, 0, 0, 0]
 val letterCountsEnglish = arrayOf(
-    intArrayOf(85, 39, 11, 3, 0, 0, 0, 0, 0, 0),
-    intArrayOf(46, 13, 3, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(65, 24, 5, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(63, 22, 5, 1, 0, 0, 0, 0, 0, 0),
-    intArrayOf(100, 61, 29, 11, 3, 0, 0, 0, 0, 0),
-    intArrayOf(38, 13, 1, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(57, 18, 5, 1, 0, 0, 0, 0, 0, 0),
-    intArrayOf(50, 13, 2, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(90, 48, 21, 9, 3, 1, 0, 0, 0, 0),
-    intArrayOf(14, 1, 0, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(32, 7, 0, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(72, 31, 9, 2, 0, 0, 0, 0, 0, 0),
-    intArrayOf(54, 17, 4, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(83, 40, 14, 3, 0, 0, 0, 0, 0, 0),
-    intArrayOf(77, 36, 11, 3, 0, 0, 0, 0, 0, 0),
-    intArrayOf(55, 19, 4, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(15, 1, 0, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(85, 37, 10, 1, 0, 0, 0, 0, 0, 0),
-    intArrayOf(92, 52, 26, 14, 6, 2, 0, 0, 0, 0),
-    intArrayOf(82, 38, 11, 2, 0, 0, 0, 0, 0, 0),
-    intArrayOf(61, 18, 4, 1, 0, 0, 0, 0, 0, 0),
-    intArrayOf(34, 6, 0, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(32, 6, 1, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(18, 1, 0, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(42, 6, 0, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(21, 6, 1, 0, 0, 0, 0, 0, 0, 0)
+    intArrayOf(7348, 1560, 127, 10, 0, 0, 0, 0, 0, 0),
+    intArrayOf(2137, 180, 10, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(4305, 610, 35, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(4048, 506, 34, 1, 0, 0, 0, 0, 0, 0),
+    intArrayOf(10000, 3759, 860, 122, 12, 0, 0, 0, 0, 0),
+    intArrayOf(1518, 187, 3, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(3299, 341, 33, 1, 0, 0, 0, 0, 0, 0),
+    intArrayOf(2532, 189, 4, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(8141, 2331, 448, 81, 12, 1, 0, 0, 0, 0),
+    intArrayOf(216, 2, 0, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(1041, 50, 0, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(5326, 971, 89, 5, 0, 0, 0, 0, 0, 0),
+    intArrayOf(2979, 317, 16, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(7033, 1632, 213, 14, 0, 0, 0, 0, 0, 0),
+    intArrayOf(5951, 1350, 143, 10, 0, 0, 0, 0, 0, 0),
+    intArrayOf(3099, 388, 18, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(230, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(7322, 1383, 104, 2, 0, 0, 0, 0, 0, 0),
+    intArrayOf(8505, 2711, 727, 205, 41, 4, 0, 0, 0, 0),
+    intArrayOf(6728, 1514, 133, 5, 0, 0, 0, 0, 0, 0),
+    intArrayOf(3789, 338, 17, 1, 0, 0, 0, 0, 0, 0),
+    intArrayOf(1222, 37, 0, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(1041, 41, 1, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(331, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(1778, 46, 0, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(474, 36, 1, 0, 0, 0, 0, 0, 0, 0)
 )
-
 
 // Letter a: [356683, 85223, 7652, 519, 17, 0, 0, 0, 0, 0]
 // Letter b: [160176, 16709, 898, 11, 0, 0, 0, 0, 0, 0]
@@ -107,32 +122,31 @@ val letterCountsEnglish = arrayOf(
 // Letter x: [7851, 26, 0, 0, 0, 0, 0, 0, 0, 0]
 // Letter y: [11544, 353, 0, 0, 0, 0, 0, 0, 0, 0]
 // Letter z: [97785, 5622, 125, 0, 0, 0, 0, 0, 0, 0]
-
 val letterCountsGerman = arrayOf(
-    intArrayOf(75, 37, 11, 2, 0, 0, 0, 0, 0, 0),
-    intArrayOf(50, 16, 3, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(55, 17, 3, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(56, 17, 3, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(100, 87, 62, 33, 11, 2, 0, 0, 0, 0),
-    intArrayOf(45, 16, 4, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(57, 20, 5, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(64, 25, 6, 1, 0, 0, 0, 0, 0, 0),
-    intArrayOf(73, 37, 14, 3, 1, 0, 0, 0, 0, 0),
-    intArrayOf(11, 1, 0, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(47, 13, 2, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(65, 27, 9, 2, 0, 0, 0, 0, 0, 0),
-    intArrayOf(53, 22, 7, 1, 0, 0, 0, 0, 0, 0),
-    intArrayOf(82, 49, 22, 8, 2, 0, 0, 0, 0, 0),
-    intArrayOf(54, 19, 6, 1, 0, 0, 0, 0, 0, 0),
-    intArrayOf(40, 15, 4, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(8, 1, 0, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(83, 48, 19, 5, 1, 0, 0, 0, 0, 0),
-    intArrayOf(80, 47, 22, 9, 2, 0, 0, 0, 0, 0),
-    intArrayOf(80, 46, 19, 6, 1, 0, 0, 0, 0, 0),
-    intArrayOf(64, 26, 7, 1, 0, 0, 0, 0, 0, 0),
-    intArrayOf(30, 4, 0, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(33, 5, 0, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(11, 1, 0, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(13, 2, 0, 0, 0, 0, 0, 0, 0, 0),
-    intArrayOf(39, 9, 1, 0, 0, 0, 0, 0, 0, 0)
+    intArrayOf(5763, 1377, 123, 8, 0, 0, 0, 0, 0, 0),
+    intArrayOf(2588, 270, 14, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(3126, 311, 12, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(3189, 314, 9, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(10000, 7688, 3963, 1112, 139, 6, 0, 0, 0, 0),
+    intArrayOf(2099, 261, 19, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(3269, 424, 30, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(4182, 669, 47, 1, 0, 0, 0, 0, 0, 0),
+    intArrayOf(5395, 1384, 197, 15, 1, 0, 0, 0, 0, 0),
+    intArrayOf(126, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(2260, 179, 6, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(4262, 781, 82, 4, 0, 0, 0, 0, 0, 0),
+    intArrayOf(2811, 507, 49, 3, 0, 0, 0, 0, 0, 0),
+    intArrayOf(6759, 2412, 521, 78, 7, 0, 0, 0, 0, 0),
+    intArrayOf(2925, 398, 42, 2, 0, 0, 0, 0, 0, 0),
+    intArrayOf(1664, 244, 21, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(70, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(6927, 2316, 367, 28, 1, 0, 0, 0, 0, 0),
+    intArrayOf(6458, 2225, 520, 87, 8, 0, 0, 0, 0, 0),
+    intArrayOf(6435, 2134, 398, 44, 2, 0, 0, 0, 0, 0),
+    intArrayOf(4150, 713, 52, 1, 0, 0, 0, 0, 0, 0),
+    intArrayOf(953, 17, 0, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(1099, 33, 0, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(126, 1, 0, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(186, 5, 0, 0, 0, 0, 0, 0, 0, 0),
+    intArrayOf(1580, 90, 2, 0, 0, 0, 0, 0, 0, 0)
 )
