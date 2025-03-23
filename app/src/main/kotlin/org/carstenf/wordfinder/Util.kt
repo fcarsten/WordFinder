@@ -272,8 +272,6 @@ fun addGestureHandler(app: WordFinder, tableLayout: TableLayout) {
                                     }
 
                                     MotionEvent.ACTION_UP -> {
-                                        Log.d(TAG, "Button up")
-
                                         if (firstButtonPressed !== lastButtonPressed)
                                             app.lifecycleScope.launch {
                                                 app.okClick()
