@@ -13,16 +13,16 @@ import java.util.Arrays
 import java.util.Locale
 
 class GameState : ViewModel() {
-	lateinit var dictionary: Dictionary
+    lateinit var dictionary: Dictionary
 
     private var autoAddPrefixalWords = false
 
     private val board = CharArray(16)
 
-	val computerResultList: MutableLiveData<ArrayList<Result>?> = MutableLiveData(ArrayList())
-	val playerResultList: ArrayList<Result> = ArrayList()
+    val computerResultList: MutableLiveData<ArrayList<Result>?> = MutableLiveData(ArrayList())
+    val playerResultList: ArrayList<Result> = ArrayList()
 
-	val countDownTimerCurrentValue: MutableLiveData<Long> = MutableLiveData(-1L)
+    val countDownTimerCurrentValue: MutableLiveData<Long> = MutableLiveData(-1L)
 
     fun getBoard(move: Int): Char {
         return board[move]
@@ -35,29 +35,15 @@ class GameState : ViewModel() {
     fun shuffle() {
         clearGuess()
         gameLifecycleState.postValue(GameLifeCycleState.STARTED)
+
+        val letterCounts = IntArray(26)
         for (i in 0..15) {
-            board[i] = pickRandomLetter()
+            board[i] = pickRandomLetter(letterCounts, dictionaryCountryCode())
         }
+        board.shuffle()
 
         computerResultList.value?.clear()
         computerResultList.postValue(computerResultList.value)
-    }
-
-    private fun pickRandomLetter(): Char {
-        val r = Math.random()
-        var i = 0
-
-        var letterFreqProb = letterFreqProbEnglish
-
-        if (dictionaryName.equals("german", ignoreCase = true) ||
-            dictionaryName.equals("german_wiki", ignoreCase = true) ||
-            dictionaryName.equals("german_simple", ignoreCase = true)) {
-            letterFreqProb = letterFreqProbGerman
-        }
-
-        while (letterFreqProb[i] < r) i++
-
-        return ('A'.code + i).toChar()
     }
 
     fun findWord(w: String): Boolean {
@@ -162,7 +148,7 @@ class GameState : ViewModel() {
 
     private var scoreAlg = ScoreAlgorithm.COUNT
 
-	var dictionaryName: String? = null
+    var dictionaryName: String? = null
 
     fun play(move: Int) {
         lastMove = move
@@ -185,7 +171,8 @@ class GameState : ViewModel() {
         GUESS_VALID
     }
 
-    val gameLifecycleState: MutableLiveData<GameLifeCycleState> = MutableLiveData(GameLifeCycleState.NOT_STARTED)
+    val gameLifecycleState: MutableLiveData<GameLifeCycleState> =
+        MutableLiveData(GameLifeCycleState.NOT_STARTED)
 
     enum class GameLifeCycleState {
         NOT_STARTED,
@@ -201,15 +188,24 @@ class GameState : ViewModel() {
     suspend fun validatePlayerGuess(guess: String): PlayerGuessResult {
         val minLength = if (isAllow3LetterWords) 3 else 4
 
-        if (guess.length < minLength) return PlayerGuessResult(Dictionary.WordInfoData(guess), PlayerGuessState.TOO_SHORT)
+        if (guess.length < minLength) return PlayerGuessResult(
+            Dictionary.WordInfoData(guess),
+            PlayerGuessState.TOO_SHORT
+        )
 
         val lookupResult = dictionary.lookup(guess, dictionaryName)
-            ?: return PlayerGuessResult(Dictionary.WordInfoData(guess),PlayerGuessState.NOT_IN_DICTIONARY)
+            ?: return PlayerGuessResult(
+                Dictionary.WordInfoData(guess),
+                PlayerGuessState.NOT_IN_DICTIONARY
+            )
 
         for (result in playerResultList) {
             if (result.toString()
                     .equals(lookupResult.displayText, ignoreCase = true)
-            ) return PlayerGuessResult(Dictionary.WordInfoData(guess),PlayerGuessState.ALREADY_FOUND)
+            ) return PlayerGuessResult(
+                Dictionary.WordInfoData(guess),
+                PlayerGuessState.ALREADY_FOUND
+            )
         }
 
         return PlayerGuessResult(lookupResult, PlayerGuessState.GUESS_VALID)
@@ -225,7 +221,7 @@ class GameState : ViewModel() {
 
     private var countDownTimer: CountDownTimer? = null
 
-	var countDownTime: Long = -1
+    var countDownTime: Long = -1
 
     fun startCountDown() {
         startCountDown(countDownTime)
@@ -237,7 +233,7 @@ class GameState : ViewModel() {
         if (countDownTime < 0) return
 
         gameLifecycleState.postValue(GameLifeCycleState.TIMER_STARTED)
-        countDownTimerCurrentValue.postValue(time/1000)
+        countDownTimerCurrentValue.postValue(time / 1000)
 
         countDownTimer = object : CountDownTimer(time, 1000) {
             override fun onTick(millisUntilFinished: Long) {
@@ -270,7 +266,7 @@ class GameState : ViewModel() {
 
     fun onPause() {
         // If game is interrupted while in progress, cancel timer and restart later in on Resume()
-        if(gameLifecycleState.value == GameLifeCycleState.TIMER_STARTED ){
+        if (gameLifecycleState.value == GameLifeCycleState.TIMER_STARTED) {
             countDownTimer?.cancel()
         }
     }
@@ -279,8 +275,8 @@ class GameState : ViewModel() {
         val state = gameLifecycleState.value ?: return
 
         // If game was interrupted while in progress continue with the left over time.
-        if ( state == GameLifeCycleState.TIMER_STARTED) {
-            countDownTimerCurrentValue.value?.let { startCountDown(it*1000L) }
+        if (state == GameLifeCycleState.TIMER_STARTED) {
+            countDownTimerCurrentValue.value?.let { startCountDown(it * 1000L) }
         } else if (state >= GameLifeCycleState.TIMER_FINISHED) {
             gameLifecycleState.postValue(state) // Give UI a chance to update as well.
         }
@@ -291,19 +287,19 @@ class GameState : ViewModel() {
     }
 
     fun onSolveFinished() {
-        if(computerResultList.value?.size == 0) {
+        if (computerResultList.value?.size == 0) {
             countDownTimer?.cancel()
             gameLifecycleState.postValue(GameLifeCycleState.UNSOLVABLE)
         }
     }
 
-    fun dictionaryCountryCode(): String {
+    fun dictionaryCountryCode(): LANGUAGE {
         if (dictionaryName.equals("german", ignoreCase = true) ||
             dictionaryName.equals("german_wiki", ignoreCase = true) ||
             dictionaryName.equals("german_simple", ignoreCase = true)) {
-            return "DE"
+            return LANGUAGE.DE
         }
-        return "EN"
+        return LANGUAGE.EN
     }
 
     val playerScore: Int
@@ -316,93 +312,4 @@ class GameState : ViewModel() {
     val computerScore: Int
         get() = getScore(computerResultList.value)
 
-    companion object {
-        //
-        // English letter frequencies: http://en.wikipedia.org/wiki/Letter_frequency
-        //
-        // a 8.167%
-        // b 1.492%
-        // c 2.782%
-        // d 4.253%
-        // e 12.702%
-        // f 2.228%
-        // g 2.015%
-        // h 6.094%
-        // i 6.966%
-        // j 0.153%
-        // k 0.772%
-        // l 4.025%
-        // m 2.406%
-        // n 6.749%
-        // o 7.507%
-        // p 1.929%
-        // q 0.095%
-        // r 5.987%
-        // s 6.327%
-        // t 9.056%
-        // u 2.758%
-        // v 0.978%
-        // w 2.360%
-        // x 0.150%
-        // y 1.974%
-        // z 0.074%
-        // Source: https://en.wikipedia.org/wiki/Letter_frequency
-        private val letterFreqProbEnglish = doubleArrayOf(
-            0.07, // a 8
-            0.09, // b 2
-            0.12, // c 3
-            0.16, // d 4
-            0.27, // e 11
-            0.29, // f 2
-            0.32, // g 3
-            0.34, // h 2
-            0.43, // i 9
-            0.44, // j 1
-            0.45, // k 1
-            0.49, // l 4
-            0.52, // m 3
-            0.59, // n 6
-            0.66, // o 7
-            0.69, // p 3
-            0.70, // q 1
-            0.76, // r 6
-            0.81, // s 5
-            0.88, // t 7
-            0.92, // u 4
-            0.94, // v 2
-            0.96, // w 2
-            0.97, // x 1
-            0.99, // y 2
-            1.0   // z 1
-        )
-
-        private val letterFreqProbGerman = doubleArrayOf(
-            0.06, // a = 6
-            0.08, // b = 2
-            0.11, // c = 3
-            0.16, // d = 5
-            0.31, // e = 15
-            0.33, // f = 2
-            0.36, // g = 3
-            0.41, // h = 5
-            0.47, // i = 6
-            0.48, // j = 1
-            0.50, // k = 2
-            0.53, // l = 3
-            0.57, // m = 4
-            0.66, // n = 9
-            0.68, // o = 2
-            0.69, // p = 1
-            0.70, // q = 1
-            0.76, // r = 6
-            0.83, // s = 7
-            0.89, // t = 6
-            0.95, // u = 6
-            0.96, // v = 1
-            0.97, // w = 1
-            0.98, // x = 1
-            0.99, // y = 1
-            1.0   // z = 1
-        )
-    }
 }
