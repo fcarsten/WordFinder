@@ -36,10 +36,11 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
             var col = arrayOf(TEXT_COLUMN)
             if(supportsDisplayText) {
-                if(supportsLemma) {
-                    col = arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN, LEMMA_COLUMN)
+                @Suppress("KotlinConstantConditions")
+                col = if(supportsLemma) {
+                    arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN, LEMMA_COLUMN)
                 } else {
-                    col = arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN)
+                    arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN)
                 }
             }
 
@@ -104,10 +105,11 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
             var col = arrayOf(TEXT_COLUMN)
             if(supportsDisplayText) {
-                if(supportsLemma) {
-                    col = arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN, LEMMA_COLUMN)
+                @Suppress("KotlinConstantConditions")
+                col = if(supportsLemma) {
+                    arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN, LEMMA_COLUMN)
                 } else {
-                    col = arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN)
+                    arrayOf(TEXT_COLUMN, DISPLAY_TEXT_COLUMN)
                 }
             }
 

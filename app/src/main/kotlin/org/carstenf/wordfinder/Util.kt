@@ -16,7 +16,6 @@ import android.graphics.Insets
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
-import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
@@ -27,7 +26,6 @@ import android.widget.TableRow
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
-import org.carstenf.wordfinder.WordFinder.Companion.TAG
 
 
 fun slideUpAndHide(toHide: View, toReveal: View) {
