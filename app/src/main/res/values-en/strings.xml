@@ -51,4 +51,11 @@
     <string name="DeutschWiki">German (Wiktionary)</string>
     <string name="board_unsolvable">" Board contains no valid words."</string>
     <string name="unsolvable_confirm_title">Bad Luck!</string>
+    <string name="WhateverRandom">Surprise me</string>
+    <string name="UniformRandom">Equal chanes for all</string>
+    <string name="LetterFrequency">Letterfrequency in dictionary</string>
+    <string name="MultiLetterFrequence">"Multi-Letter frequency in dictionary "</string>
+    <string name="LetterDice">Letter dice</string>
+    <string name="RandomDistribution">Letter Selector</string>
+    <string name="PrefRandomDistributionSummary">Selects how the letters are selected.\nCurrently: %s</string>
 </resources>

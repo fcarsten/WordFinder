@@ -20,6 +20,14 @@
 			android:entries="@array/scoring_algs_entries"
 			android:entryValues="@array/scoring_algs_values" />
 
+		<androidx.preference.ListPreference
+			android:title="@string/RandomDistribution"
+			android:summary="@string/PrefRandomDistributionSummary"
+			android:key="rand_dist_pref"
+			android:defaultValue="multiLetterFrequence"
+			android:entries="@array/letter_selection_entries"
+			android:entryValues="@array/letter_selection_values" />
+
 		<androidx.preference.CheckBoxPreference
 			android:title="@string/PrefAllowThreeLetter"
 			android:defaultValue="true"

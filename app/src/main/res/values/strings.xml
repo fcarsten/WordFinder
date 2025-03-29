@@ -45,4 +45,6 @@
     <string name="shuffle_required_diag_ok">OK</string>
     <string name="board_unsolvable">Board contains no valid words.</string>
     <string name="unsolvable_confirm_title">Bad Luck!</string>
+    <string name="RandomDistribution">Letter Selector</string>
+    <string name="PrefRandomDistributionSummary">Selects how the letters are selected.\nCurrently: %s</string>
 </resources>
