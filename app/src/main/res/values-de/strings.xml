@@ -45,5 +45,5 @@
     <string name="board_unsolvable">Leider hat das Spielfeld keine Lösung</string>
     <string name="unsolvable_confirm_title">So ein Pech!</string>
     <string name="RandomDistribution">Buchstabenauswahl</string>
-    <string name="PrefRandomDistributionSummary">Methode wie die Buchstaben ausgewählt werden.\n(%s)</string>
+    <string name="PrefRandomDistributionSummary">Zufallsmethode für die Buchstaben Auswahl.\n(%s)</string>
 </resources>

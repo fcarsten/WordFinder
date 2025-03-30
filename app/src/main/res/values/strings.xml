@@ -46,5 +46,5 @@
     <string name="board_unsolvable">Board contains no valid words.</string>
     <string name="unsolvable_confirm_title">Bad Luck!</string>
     <string name="RandomDistribution">Letter Selector</string>
-    <string name="PrefRandomDistributionSummary">Selects how the letters are selected.\nCurrently: %s</string>
+    <string name="PrefRandomDistributionSummary">How the letters are selected.\nCurrently: %s</string>
 </resources>

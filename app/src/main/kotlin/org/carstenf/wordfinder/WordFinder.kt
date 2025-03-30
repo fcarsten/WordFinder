@@ -335,6 +335,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
             gameState.dictionaryName = prefs.getString("dict_pref", defaultDict)
             gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count"))
+
+            gameState.setLetterSelector(prefs.getString("rand_dist_pref", "multiLetterFrequency"))
+
             gameState.isAllow3LetterWords = prefs
                 .getBoolean("threeLetterPref", true)
 

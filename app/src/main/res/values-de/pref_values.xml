@@ -8,8 +8,7 @@
     <string name="DeutschSimple">Deutsch (Einfach)</string>
     <string name="DeutschWiki">Deutsch (Wiktionary)</string>
     <string name="WhateverRandom">Überrasch mich</string>
-    <string name="UniformRandom">Equal chanes for all</string>
-    <string name="LetterFrequency">Buchstabenhäufigkeit</string>
-    <string name="MultiLetterFrequence">"Buchstabenwiederholungs Häufigkeit"</string>
-    <string name="LetterDice">Buchstabenwürfel</string>
+    <string name="UniformRandom">Alle Buchstaben gleich wahrscheinlich</string>
+    <string name="LetterFrequency">Häufigkeit der Buchstaben</string>
+    <string name="MultiLetterFrequence">"Häufigkeit von Buchstabenwiederholungen"</string>
 </resources>
