@@ -7,12 +7,15 @@
 package org.carstenf.wordfinder
 
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import java.util.Arrays
 import java.util.Locale
 
 class GameState : ViewModel() {
+    private var letterSelector: LETTER_RANDOM_DIST? = LETTER_RANDOM_DIST.MULTI_LETTER_FREQUENCY
+
     lateinit var dictionary: Dictionary
 
     private var autoAddPrefixalWords = false
@@ -37,9 +40,19 @@ class GameState : ViewModel() {
         gameLifecycleState.postValue(GameLifeCycleState.STARTED)
 
         val letterCounts = IntArray(26)
-        for (i in 0..15) {
-            board[i] = pickRandomLetter(letterCounts, dictionaryCountryCode())
+
+        var letterRandomDistCur = letterSelector
+        if(letterRandomDistCur == null) {
+            Log.d(WordFinder.TAG, "Letter selector: Whatever")
+            letterRandomDistCur =  LETTER_RANDOM_DIST.entries.toTypedArray().random()
         }
+
+        Log.d(WordFinder.TAG, "Letter selector: ${letterRandomDistCur.name}")
+
+        for (i in 0..15) {
+            board[i] = pickRandomLetter(letterRandomDistCur, letterCounts, dictionaryCountryCode())
+        }
+
         board.shuffle()
 
         computerResultList.value?.clear()
@@ -183,6 +196,12 @@ class GameState : ViewModel() {
         GAME_OVER
     }
 
+    enum class LETTER_RANDOM_DIST {
+        UNIFORM,
+        LETTER_FREQUENCY,
+        MULTI_LETTER_FREQUENCY
+    }
+
     data class PlayerGuessResult(val guess: Dictionary.WordInfoData, val state: PlayerGuessState)
 
     suspend fun validatePlayerGuess(guess: String): PlayerGuessResult {
@@ -300,6 +319,18 @@ class GameState : ViewModel() {
             return LANGUAGE.DE
         }
         return LANGUAGE.EN
+    }
+
+    fun setLetterSelector(distStr: String?) {
+        if ("uniformRandom".equals(distStr, ignoreCase = true)) {
+            letterSelector = LETTER_RANDOM_DIST.UNIFORM
+        } else if ("letterFrequency".equals(distStr, ignoreCase = true)) {
+            letterSelector = LETTER_RANDOM_DIST.LETTER_FREQUENCY
+        } else if ("multiLetterFrequence".equals(distStr, ignoreCase = true)) {
+            letterSelector = LETTER_RANDOM_DIST.MULTI_LETTER_FREQUENCY
+        }  else if ("whateverRandom".equals(distStr, ignoreCase = true)) {
+            letterSelector = null
+        }
     }
 
     val playerScore: Int

@@ -22,6 +22,20 @@
 		<item>count</item>
 		<item>value</item>
 	</string-array>
+
+	<string-array name="letter_selection_entries">
+		<item>@string/WhateverRandom</item>
+		<item>@string/UniformRandom</item>
+		<item>@string/LetterFrequency</item>
+		<item>@string/MultiLetterFrequence</item>
+	</string-array>
+	<string-array name="letter_selection_values">
+		<item>whateverRandom</item>
+		<item>uniformRandom</item>
+		<item>letterFrequency</item>
+		<item>multiLetterFrequence</item>
+	</string-array>
+
 	<string name="WordCount">Word count</string>
 	<string name="WordValue">Word value</string>
 	<string name="AmericanEnglish">English (US)</string>
@@ -29,4 +43,8 @@
 	<string name="Deutsch">German</string>
 	<string name="DeutschSimple">German (Simple)</string>
 	<string name="DeutschWiki">German (Wiktionary)</string>
+	<string name="WhateverRandom">Whatever</string>
+	<string name="UniformRandom">Equal probabilities</string>
+	<string name="LetterFrequency">Letter frequency</string>
+	<string name="MultiLetterFrequence">"Multi-letter frequency"</string>
 </resources>

@@ -23,14 +23,14 @@
     <string name="start_game_diag_ok">Go!</string>
     <string name="GamePreferences">Game Preferences</string>
     <string name="PrefDictionary">Dictionary</string>
-    <string name="PrefSelectDict">Select which dictionary to use</string>
+    <string name="PrefSelectDict">Select which dictionary to use\nCurrently: %s</string>
     <string name="PrefScoring">Scoring</string>
     <string name="PrefAllowThreeLetter">Allow 3-letter words</string>
     <string name="PrefAllowThreeLetterSummary">Check to allow 3 letter words</string>
     <string name="PrefTimer">Timer enabled</string>
     <string name="PrefTimerSummary">Check to enable time limit</string>
     <string name="PrefTimeLimitSummary">Enter the time limit</string>
-    <string name="PrefScoringSummary">Select how the score is calculated</string>
+    <string name="PrefScoringSummary">Select how the score is calculated\nCurrently: %s</string>
     <string name="PrefTimeLimit">Countdown time (mm:ss)</string>
     <string name="OK">OK</string>
     <string name="WordGuessTooShort">is too short</string>
@@ -51,4 +51,10 @@
     <string name="DeutschWiki">German (Wiktionary)</string>
     <string name="board_unsolvable">Board contains no valid words.</string>
     <string name="unsolvable_confirm_title">Bad Luck!</string>
+    <string name="WhateverRandom">Whatever</string>
+    <string name="UniformRandom">Equal probabilities</string>
+    <string name="LetterFrequency">Letter frequency</string>
+    <string name="MultiLetterFrequence">"Multi-letter frequency"</string>
+    <string name="RandomDistribution">Letter Selector</string>
+    <string name="PrefRandomDistributionSummary">How the letters are selected.\nCurrently: %s</string>
 </resources>

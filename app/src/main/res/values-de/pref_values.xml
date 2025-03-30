@@ -7,4 +7,8 @@
     <string name="Deutsch">Deutsch (Superdic)</string>
     <string name="DeutschSimple">Deutsch (Einfach)</string>
     <string name="DeutschWiki">Deutsch (Wiktionary)</string>
+    <string name="WhateverRandom">Überrasch mich</string>
+    <string name="UniformRandom">Alle Buchstaben gleich wahrscheinlich</string>
+    <string name="LetterFrequency">Häufigkeit der Buchstaben</string>
+    <string name="MultiLetterFrequence">"Häufigkeit von Buchstabenwiederholungen"</string>
 </resources>
