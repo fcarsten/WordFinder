@@ -7,7 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import kotlin.random.Random
 
-class FireworkView(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
+class FireworkViewOld(context: Context, attrs: AttributeSet? = null) : View(context, attrs) {
 
     private val fireworks = mutableListOf<Firework>()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
