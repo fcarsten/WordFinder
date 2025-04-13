@@ -50,7 +50,7 @@ class GameState : ViewModel() {
         Log.d(WordFinder.TAG, "Letter selector: ${letterRandomDistCur.name}")
 
         for (i in 0..15) {
-            board[i] = pickRandomLetter(letterRandomDistCur, letterCounts, dictionaryCountryCode())
+            board[i] = pickRandomLetter(letterRandomDistCur, letterCounts, dictionaryCountryCode(), i)
         }
 
         board.shuffle()
@@ -199,7 +199,8 @@ class GameState : ViewModel() {
     enum class LETTER_RANDOM_DIST {
         UNIFORM,
         LETTER_FREQUENCY,
-        MULTI_LETTER_FREQUENCY
+        MULTI_LETTER_FREQUENCY,
+        LETTER_DICE
     }
 
     data class PlayerGuessResult(val guess: Dictionary.WordInfoData, val state: PlayerGuessState)
@@ -328,6 +329,8 @@ class GameState : ViewModel() {
             letterSelector = LETTER_RANDOM_DIST.LETTER_FREQUENCY
         } else if ("multiLetterFrequence".equals(distStr, ignoreCase = true)) {
             letterSelector = LETTER_RANDOM_DIST.MULTI_LETTER_FREQUENCY
+        } else if ("letterDice".equals(distStr, ignoreCase = true)) {
+            letterSelector = LETTER_RANDOM_DIST.LETTER_DICE
         }  else if ("whateverRandom".equals(distStr, ignoreCase = true)) {
             letterSelector = null
         }

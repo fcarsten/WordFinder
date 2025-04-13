@@ -10,5 +10,6 @@
     <string name="WhateverRandom">Überrasch mich</string>
     <string name="UniformRandom">Alle Buchstaben gleich wahrscheinlich</string>
     <string name="LetterFrequency">Häufigkeit der Buchstaben</string>
+    <string name="LetterDice">Würfel</string>
     <string name="MultiLetterFrequence">"Häufigkeit von Buchstabenwiederholungen"</string>
 </resources>
