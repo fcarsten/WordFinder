@@ -1,8 +1,8 @@
 package org.carstenf.wordfinder
 
-fun pickRandomLetter2DDistribution(letterCounts: IntArray, languageCode: LANGUAGE) : Char {
-    return pickRandomLetter2DDistributionF(letterCounts, languageCode) { it }
-}
+//fun pickRandomLetter2DDistribution(letterCounts: IntArray, languageCode: LANGUAGE) : Char {
+//    return pickRandomLetter2DDistributionF(letterCounts, languageCode) { it }
+//}
 
 fun pickRandomLetter2DDistributionF(letterCounts: IntArray,
                                    languageCode: LANGUAGE,
