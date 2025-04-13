@@ -51,7 +51,7 @@ class GameState : ViewModel() {
         Log.d(WordFinder.TAG, "Letter selector: ${letterRandomDistCur.name}")
 
         for (i in 0..15) {
-            board[i] = pickRandomLetter(letterRandomDistCur, letterCounts, dictionaryCountryCode(), i)
+            board[i] = pickRandomLetter(letterRandomDistCur, letterCounts, dictionaryCountryCode(), i).uppercaseChar()
         }
 
         board.shuffle()
