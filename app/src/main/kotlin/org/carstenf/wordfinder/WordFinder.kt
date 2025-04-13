@@ -10,11 +10,8 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -29,13 +26,13 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.Button
-import android.widget.FrameLayout
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.graphics.toColorInt
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -44,12 +41,10 @@ import androidx.preference.PreferenceManager
 import kotlinx.coroutines.launch
 import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
+import org.carstenf.wordfinder.fireworks.FIREWORK_DISMISS
+import org.carstenf.wordfinder.fireworks.FIREWORK_DISMISSED
+import org.carstenf.wordfinder.fireworks.FireworksPlayer
 import java.io.IOException
-import androidx.core.graphics.toColorInt
-import org.carstenf.wordfinder.fireworks.ExplosionStyle
-import org.carstenf.wordfinder.fireworks.FireworkConfig
-import org.carstenf.wordfinder.fireworks.FireworkManager
-import org.carstenf.wordfinder.fireworks.FireworkViewOld
 
 class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val playerResultList by lazy {
@@ -234,6 +229,12 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             // Calling recycle() is important. Especially if you use a lot of TypedArrays
             // http://stackoverflow.com/a/13805641/8524
             themeArray.recycle()
+        }
+
+        supportFragmentManager.setFragmentResultListener(FIREWORK_DISMISS, this) { _, bundle ->
+            if (bundle.getBoolean(FIREWORK_DISMISSED)) {
+                showGameWonDialog(this)
+            }
         }
 
         addGestureHandler(this, findViewById(R.id.letterGridView))
@@ -450,43 +451,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun shuffleClick() {
-        showFireWork()
-//        showConfirmShuffleDialog(this)
-    }
-
-    private fun showFireWork() {
-        val overlay = findViewById<View>(R.id.darkOverlay)
-        overlay.visibility = View.VISIBLE
-        val container = findViewById<FrameLayout>(R.id.fireworkContainer)
-
-        val manager = FireworkManager(this, container, overlay)
-
-        manager.launch(
-            FireworkConfig(
-                x = container.width/2f,
-                y = container.height/3f,
-                style = ExplosionStyle.RING,
-                color = Color.MAGENTA,
-                hasTrails = true,
-                hasGlow = true,
-                soundResId = null
-            )
-        )
-    }
-
-    private fun showFireWorkOld() {
-        val overlay = findViewById<View>(R.id.darkOverlay)
-        overlay.visibility = View.VISIBLE
-        val container = findViewById<FrameLayout>(R.id.fireworkContainer)
-        val fireworkView = FireworkViewOld(this)
-
-        container.addView(fireworkView)
-        Handler(Looper.getMainLooper()).postDelayed({
-            fireworkView.clearAnimation()
-            container.removeView(fireworkView)
-            overlay.visibility = View.GONE
-            showGameWonDialog(this)
-        }, 5000) // 5 seconds of fireworks
+        showConfirmShuffleDialog(this)
     }
 
     private val letterButtons by lazy {
@@ -646,8 +611,12 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         if(gameState.solveFinished && gameState.computerScore > 0 &&
             gameState.playerScore == gameState.computerScore) {
-            showFireWork()
+            showFirework()
         }
+    }
+
+    private fun showFirework() {
+        FireworksPlayer.show(supportFragmentManager, durationSeconds = 10)
     }
 
     private fun showComputerResults(show: Boolean, animate: Boolean) {
