@@ -28,12 +28,14 @@
 		<item>@string/UniformRandom</item>
 		<item>@string/LetterFrequency</item>
 		<item>@string/MultiLetterFrequence</item>
+		<item>@string/LetterDice</item>
 	</string-array>
 	<string-array name="letter_selection_values">
 		<item>whateverRandom</item>
 		<item>uniformRandom</item>
 		<item>letterFrequency</item>
 		<item>multiLetterFrequence</item>
+		<item>letterDice</item>
 	</string-array>
 
 	<string name="WordCount">Word count</string>
@@ -46,5 +48,6 @@
 	<string name="WhateverRandom">Whatever</string>
 	<string name="UniformRandom">Equal probabilities</string>
 	<string name="LetterFrequency">Letter frequency</string>
+	<string name="LetterDice">Letter dice</string>
 	<string name="MultiLetterFrequence">"Multi-letter frequency"</string>
 </resources>

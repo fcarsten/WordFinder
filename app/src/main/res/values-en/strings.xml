@@ -54,6 +54,7 @@
     <string name="WhateverRandom">Whatever</string>
     <string name="UniformRandom">Equal probabilities</string>
     <string name="LetterFrequency">Letter frequency</string>
+    <string name="LetterDice">Letter dice</string>
     <string name="MultiLetterFrequence">"Multi-letter frequency"</string>
     <string name="RandomDistribution">Letter Selector</string>
     <string name="PrefRandomDistributionSummary">How the letters are selected.\nCurrently: %s</string>
