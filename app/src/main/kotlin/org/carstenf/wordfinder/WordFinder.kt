@@ -10,6 +10,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -45,7 +46,10 @@ import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
 import java.io.IOException
 import androidx.core.graphics.toColorInt
-import org.carstenf.wordfinder.fireworks.FireworkView
+import org.carstenf.wordfinder.fireworks.ExplosionStyle
+import org.carstenf.wordfinder.fireworks.FireworkConfig
+import org.carstenf.wordfinder.fireworks.FireworkManager
+import org.carstenf.wordfinder.fireworks.FireworkViewOld
 
 class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val playerResultList by lazy {
@@ -446,14 +450,35 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun shuffleClick() {
-        showConfirmShuffleDialog(this)
+        showFireWork()
+//        showConfirmShuffleDialog(this)
     }
 
     private fun showFireWork() {
         val overlay = findViewById<View>(R.id.darkOverlay)
         overlay.visibility = View.VISIBLE
         val container = findViewById<FrameLayout>(R.id.fireworkContainer)
-        val fireworkView = FireworkView(this)
+
+        val manager = FireworkManager(this, container, overlay)
+
+        manager.launch(
+            FireworkConfig(
+                x = container.width/2f,
+                y = container.height/3f,
+                style = ExplosionStyle.RING,
+                color = Color.MAGENTA,
+                hasTrails = true,
+                hasGlow = true,
+                soundResId = null
+            )
+        )
+    }
+
+    private fun showFireWorkOld() {
+        val overlay = findViewById<View>(R.id.darkOverlay)
+        overlay.visibility = View.VISIBLE
+        val container = findViewById<FrameLayout>(R.id.fireworkContainer)
+        val fireworkView = FireworkViewOld(this)
 
         container.addView(fireworkView)
         Handler(Looper.getMainLooper()).postDelayed({

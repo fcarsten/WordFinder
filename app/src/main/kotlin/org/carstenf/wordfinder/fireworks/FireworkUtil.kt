@@ -8,7 +8,7 @@ import kotlin.math.sin
 import kotlin.random.Random
 
 class Firework(private val x: Float, private val y: Float) {
-    private val particles = List(50) { Particle(x, y) }
+    private val particles = List(50) { ParticleOld(x, y) }
 
     fun update() {
         particles.forEach { it.update() }
@@ -23,14 +23,13 @@ class Firework(private val x: Float, private val y: Float) {
     }
 }
 
-class Particle(private var x: Float, private var y: Float) {
+class ParticleOld(private var x: Float, private var y: Float) {
     private val angle = Random.nextFloat() * 2f * Math.PI
     private val speed = Random.nextFloat() * 5f + 2f // random speed between 2 and 7
 
     private var velocityX = (cos(angle) * speed).toFloat()
     private var velocityY = (sin(angle) * speed).toFloat()
-//    private var velocityX: Float = Random.nextFloat() * 6f - 3f
-//    private var velocityY: Float = Random.nextFloat() * 6f - 3f
+
     private val color: Int = Color.rgb(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256))
     private var life: Float = 10f
     private val gravity = 0.05f
