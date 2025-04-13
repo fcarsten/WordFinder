@@ -80,6 +80,30 @@ fun showUnsolvableDialog(app: WordFinder) {
     dialog.show()
 }
 
+fun showGameWonDialog(app: WordFinder) {
+    val builder = AlertDialog.Builder(app)
+    builder.setMessage(R.string.game_won_message)
+        .setTitle(R.string.game_won_title)
+        .setPositiveButton(
+            R.string.shuffle_ok_text
+        ) { _: DialogInterface?, _: Int ->
+            if(app.gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
+                app.gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+            }
+            app.shuffle()
+        } .setNegativeButton(
+            R.string.shuffle_cancle_text
+        ) { _: DialogInterface?, _: Int ->
+            if(app.gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
+                app.gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+            }
+        }
+
+    val dialog = builder.create()
+    dialog.setCanceledOnTouchOutside(false)
+    dialog.show()
+}
+
 fun parseTime(timeStr: String): Long {
     if (timeStr.contains(":")) {
         val c = timeStr.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()

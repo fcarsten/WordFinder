@@ -14,6 +14,7 @@ import java.util.Arrays
 import java.util.Locale
 
 class GameState : ViewModel() {
+    var solveFinished: Boolean = false
     private var letterSelector: LETTER_RANDOM_DIST? = LETTER_RANDOM_DIST.MULTI_LETTER_FREQUENCY
 
     lateinit var dictionary: Dictionary
@@ -106,11 +107,13 @@ class GameState : ViewModel() {
 
     fun stopSolving() {
         solver?.cancel()
+        solveFinished = true
         solver = null
     }
 
     fun startSolving() {
         solver = SolveTask(this)
+        solveFinished = false
         solver?.execute()
     }
 
@@ -311,6 +314,7 @@ class GameState : ViewModel() {
             countDownTimer?.cancel()
             gameLifecycleState.postValue(GameLifeCycleState.UNSOLVABLE)
         }
+        solveFinished = true
     }
 
     fun dictionaryCountryCode(): LANGUAGE {
