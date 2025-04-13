@@ -46,4 +46,6 @@
     <string name="unsolvable_confirm_title">So ein Pech!</string>
     <string name="RandomDistribution">Buchstabenauswahl</string>
     <string name="PrefRandomDistributionSummary">Zufallsmethode für die Buchstaben Auswahl.\n(%s)</string>
+    <string name="game_won_message">Alle Wörter wurden gefunden</string>
+    <string name="game_won_title">Gewonnen!</string>
 </resources>

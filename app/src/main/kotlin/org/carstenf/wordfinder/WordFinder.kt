@@ -12,6 +12,8 @@ import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.os.VibratorManager
@@ -26,6 +28,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
@@ -42,6 +45,7 @@ import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
 import java.io.IOException
 import androidx.core.graphics.toColorInt
+import org.carstenf.wordfinder.fireworks.FireworkView
 
 class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val playerResultList by lazy {
@@ -445,6 +449,21 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         showConfirmShuffleDialog(this)
     }
 
+    private fun showFireWork() {
+        val overlay = findViewById<View>(R.id.darkOverlay)
+        overlay.visibility = View.VISIBLE
+        val container = findViewById<FrameLayout>(R.id.fireworkContainer)
+        val fireworkView = FireworkView(this)
+
+        container.addView(fireworkView)
+        Handler(Looper.getMainLooper()).postDelayed({
+            fireworkView.clearAnimation()
+            container.removeView(fireworkView)
+            overlay.visibility = View.GONE
+            showGameWonDialog(this)
+        }, 5000) // 5 seconds of fireworks
+    }
+
     private val letterButtons by lazy {
         val res = ArrayList<LetterButton>(16)
         for (c in 0..15) {
@@ -599,6 +618,11 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private fun updateScore() {
         scoreTextView.text =
             ("${gameState.playerScore}/${gameState.computerScore} ${gameState.dictionaryCountryCode()}")
+
+        if(gameState.solveFinished && gameState.computerScore > 0 &&
+            gameState.playerScore == gameState.computerScore) {
+            showFireWork()
+        }
     }
 
     private fun showComputerResults(show: Boolean, animate: Boolean) {
