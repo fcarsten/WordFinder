@@ -31,13 +31,6 @@ class FireworkView @JvmOverloads constructor(
         // You can add more colors using Color constants or ARGB hex values like 0xFFFFD700 (Gold)
     )
 
-
-    // Add onSizeChanged to see view dimensions
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-//        Log.d(DEBUG_TAG, "onSizeChanged: Width=$w, Height=$h")
-    }
-
     fun startAnimation() {
         if (animator?.isRunning == true) {
             Log.d(WordFinder.TAG, "startAnimation: Animator already running.")
@@ -212,12 +205,6 @@ class FireworkView @JvmOverloads constructor(
         super.onDetachedFromWindow()
         // Log.d(DEBUG_TAG, "onDetachedFromWindow: Stopping animation.")
         stopAnimation()
-    }
-
-    override fun onAttachedToWindow() {
-        // Log.d(DEBUG_TAG, "onAttachedToWindow.")
-        super.onAttachedToWindow()
-        // Animation should be started via startAnimation() call from DialogFragment now
     }
 }
 
