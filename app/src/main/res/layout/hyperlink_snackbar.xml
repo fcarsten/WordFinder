@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/linearLayout2"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/md_theme_surfaceContainerHigh">
 
     <TextView
         android:id="@+id/snackbar_text"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:autoLink="none"
         android:maxLines="10"
         android:paddingStart="16dp"
@@ -17,6 +17,7 @@
         android:paddingBottom="16dp"
         android:textColor="@color/md_theme_onSurfaceVariant"
         android:textSize="16sp"
+        android:gravity="top"
         android:scrollbars="vertical"
         app:layout_constraintEnd_toStartOf="@+id/snackbar_action"
         app:layout_constraintStart_toStartOf="parent"
