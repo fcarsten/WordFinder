@@ -38,7 +38,7 @@
     <string name="PrefAutoAddPrefixalWordsSummary">Präfixwörter werden automatisch hinzuhingefügt.</string>
     <string name="press_to_submit_current_word">Wort prüfen</string>
     <string name="curtains">Vorhang als Hintergrund</string>
-    <string name="definition_not_found_for">"Keine Definition verfügbar für: "</string>
+    <string name="definition_not_found_for">"Keine Definition für \"%1$s\" gefunden.\nLeider sind nicht für alle Wörter Definitionen verfügbar."</string>
     <string name="shuffle_required_diag_msg" >Neustart erforderlich</string>
     <string name="shuffle_required_diag_title" >Achtung</string>
     <string name="shuffle_required_diag_ok">OK</string>

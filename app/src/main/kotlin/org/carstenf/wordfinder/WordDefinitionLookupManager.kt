@@ -34,20 +34,25 @@ class WordDefinitionLookupManager(private val app: Activity, private val gameSta
     }
 
     fun displayWordDefinition(wordInfo: WordInfo) {
-        val wordDef = wordInfo.wordDefinition
-        if (wordDef.isNullOrBlank()) return
+        var wordDef = wordInfo.wordDefinition
+        var url = wordInfo.referenceUrl
 
+        if (wordDef.isNullOrBlank()) {
+            wordDef = app.getString(R.string.definition_not_found_for, wordInfo.word)
+            url = "https://www.google.com/search?q="+wordInfo.word+"+definition"
+        }
         app.runOnUiThread {
             val numWords = countWords(wordDef)
-            val displayTime = 3 + (numWords * 60.0)/200
+            val displayTime = 3 + (numWords * 60.0) / 200
 
             val view = app.findViewById<View>(android.R.id.content)
-            val url = wordInfo.referenceUrl
-            if(url == null) {
+            if (url == null) {
                 showSnackbar(view, wordDef, displayTime.toLong())
             } else {
-                showHyperlinkSnackbar(view, wordDef, displayTime.toLong(),
-                    wordInfo.word, url )
+                showHyperlinkSnackbar(
+                    view, wordDef, displayTime.toLong(),
+                    wordInfo.word, url
+                )
             }
         }
     }
@@ -73,15 +78,7 @@ class WordDefinitionLookupManager(private val app: Activity, private val gameSta
             )
 
             if (wordInfo != null) {
-                val wordDefinition = wordInfo.wordDefinition
-                if (wordDefinition.isNullOrBlank()) {
-                    app.runOnUiThread {
-                        Toast.makeText(app, app.getString(R.string.definition_not_found_for) + " ${selectedWord.displayText}"
-                        , Toast.LENGTH_SHORT).show()
-                    }
-                } else {
-                    displayWordDefinition(wordInfo)
-                }
+                displayWordDefinition(wordInfo)
             } else {
                 if (isNetworkAvailable(app.applicationContext)) {
                     val lookupTaskCounter = wordLookupTaskCounter.incrementAndGet()
