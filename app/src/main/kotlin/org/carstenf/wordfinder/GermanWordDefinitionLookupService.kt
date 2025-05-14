@@ -65,9 +65,11 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
                             "${prefix}\n$meaningClean", url)
                     )
                 } else {
-                    lookupManager.processWordLookupError(
-                        task, language,
-                        "Definition not found for: ${task.word}"
+                    lookupManager.processWordLookupResult(
+                        task,
+                        WordInfo(
+                            task.word.displayText,
+                            language, null, url)
                     )
                 }
             }

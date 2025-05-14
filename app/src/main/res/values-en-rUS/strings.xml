@@ -43,7 +43,7 @@
     <string name="PrefAutoAddPrefixalWordsSummary">Check to automatically add prefixal words E.g. \"cats\" will also add \"cat\"</string>
     <string name="press_to_submit_current_word">Press to submit current word guess</string>
     <string name="curtains">Curtains as background</string>
-    <string name="definition_not_found_for">"Definition not found for: "</string>
+    <string name="definition_not_found_for">Definition not found for: "%1$s"\nUnfortunately, definitions are not available for all words.</string>
     <string name="shuffle_required_diag_msg">New game start required</string>
     <string name="shuffle_required_diag_title">Alert</string>
     <string name="shuffle_required_diag_ok">OK</string>

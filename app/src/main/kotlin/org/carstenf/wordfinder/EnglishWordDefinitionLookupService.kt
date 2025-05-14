@@ -76,9 +76,13 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
                         )
                     }
                 } else {
-                    lookupManager.processWordLookupError(
-                        task, language,
-                        "Definition not found for: ${task.word.displayText}"
+                    lookupManager.processWordLookupResult(
+                        task,
+                        WordInfo(
+                            task.word.displayText,
+                            language, null,
+                            "https://en.wiktionary.org/w/index.php?title=Special:Search&search=${task.word.displayText}"
+                        )
                     )
                 }
             }

@@ -168,13 +168,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
                 val wordInfo = result?.second ?: return@Observer
 
-                val wordDefinition = wordInfo.wordDefinition
-
-                if (wordDefinition.isNullOrBlank()) {
-                    displayToast(getString(R.string.definition_not_found_for) + " ${wordInfo.word}")
-                } else {
-                    wordDefinitionLookupManager.displayWordDefinition(wordInfo)
-                }
+                wordDefinitionLookupManager.displayWordDefinition(wordInfo)
             }
         })
 
