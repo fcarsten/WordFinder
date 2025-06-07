@@ -610,7 +610,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun showFirework() {
-        FireworksPlayer.show(supportFragmentManager, durationSeconds = 10)
+        FireworksPlayer.show(supportFragmentManager, durationSeconds = 8)
     }
 
     private fun showComputerResults(show: Boolean, animate: Boolean) {

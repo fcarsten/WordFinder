@@ -29,6 +29,8 @@ Cog icon by Google https://pictogrammers.com/library/mdi/icon/cog/ (License http
 
 Info icon by Google https://pictogrammers.com/library/mdi/icon/help-circle-outline/ (License https://pictogrammers.com/docs/general/license/)
 
+Vicotry fanfare by FunWithSound: https://freesound.org/people/FunWithSound/sounds/456969/
+
 App Icon design by Tobias Friedrich
 
 Curtain Graphic by Gen AI
