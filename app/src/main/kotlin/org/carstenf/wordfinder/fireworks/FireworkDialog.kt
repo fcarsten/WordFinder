@@ -3,6 +3,7 @@ package org.carstenf.wordfinder.fireworks
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,13 +27,20 @@ class FireworkDialog() : DialogFragment() {
     private var fireworkView: FireworkView? = null
     private var durationMillis: Long = 5000L // Default duration
     private var dismissJob: Job? = null
+    private lateinit var fanfarePlayer: VictoryFanfarePlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // Retrieve duration argument
-        durationMillis = arguments?.getLong(ARG_DURATION, 5000L) ?: 5000L
+        durationMillis = arguments?.getLong(ARG_DURATION, 8000L) ?: 8000L
         // Make the dialog full screen and transparent
         setStyle(STYLE_NORMAL, R.style.FullScreenDialog) // Use a custom style
+        fanfarePlayer = VictoryFanfarePlayer(requireContext())
+        fanfarePlayer.playFanfare {
+            // Optional callback when fanfare completes
+            Log.d(TAG, "Fanfare completed")
+        }
+
     }
 
     override fun onCreateView(
@@ -90,6 +98,16 @@ class FireworkDialog() : DialogFragment() {
         dismissJob?.cancel() // Cancel the dismiss coroutine if the view is destroyed
         fireworkView?.stopAnimation() // Ensure animation stops
         fireworkView = null // Avoid memory leaks
+    }
+
+    // Call this if you want to stop the fanfare early
+    private fun stopFanfare() {
+        fanfarePlayer.stopFanfare()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        fanfarePlayer.stopFanfare()
     }
 
     companion object {
