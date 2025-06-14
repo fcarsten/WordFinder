@@ -240,17 +240,20 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         updateScore()
     }
 
-    private fun enableGuessing() {
+    internal fun enableGuessing() {
         for (button in letterButtons) {
             button.isEnabled = true
             button.setContentDescription("Unavailable Letter Button")
         }
     }
 
-    private fun disableGuessing() {
+    private fun clearGuess() {
         gameState.clearGuess()
         updateOkButton()
+    }
 
+    internal fun disableGuessing() {
+        clearGuess()
         for (button in letterButtons) {
             button.isEnabled = false
             button.setContentDescription("Unavailable Letter Button")
@@ -293,6 +296,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             if(!showConfirmStartGameDialogVisible)
                 showConfirmStartGameDialog(this)
         }
+
+        updateButtonEnabledStatus()
     }
 
     private val sharedPreferences: SharedPreferences
@@ -301,6 +306,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     public override fun onPause() {
         super.onPause()
+        clearGuess()
         gameState.onPause()
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -427,13 +433,14 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         gameState.startSolving()
 
-        updateDiceState(gameState.lastMove)
+        updateDiceState(-1)
         updateOkButton()
         gameState.startTimer()
         updateScore()
     }
 
     private fun shuffleClick() {
+        clearGuess()
         showConfirmShuffleDialog(this)
     }
 
@@ -640,11 +647,22 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         return true
     }
 
+    fun updateButtonEnabledStatus(){
+        if (gameState.gameLifecycleState.value == GameState.GameLifeCycleState.STARTED ||
+            gameState.gameLifecycleState.value == GameState.GameLifeCycleState.TIMER_STARTED) {
+            enableGuessing()
+        } else {
+            disableGuessing()
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_item_info -> {
                 val fragmentManager = supportFragmentManager
+                clearGuess()
                 showInfo(fragmentManager, gameState)
+                updateButtonEnabledStatus()
                 return true
             }
             R.id.menu_item_prefs -> {

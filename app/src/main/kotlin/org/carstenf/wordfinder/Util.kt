@@ -145,7 +145,9 @@ fun showConfirmShuffleDialog(app: WordFinder) {
         ) { _: DialogInterface?, _: Int -> app.shuffle() }
         .setNegativeButton(
             R.string.shuffle_cancle_text
-        ) { _: DialogInterface?, _: Int -> }
+        ) { _: DialogInterface?, _: Int ->
+            app.updateButtonEnabledStatus()
+        }
 
     val dialog = builder.create()
     dialog.show()

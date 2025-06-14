@@ -125,15 +125,14 @@ class GameState : ViewModel() {
 
     fun clearGuess() {
         currentGuess = ""
-        lastMove = -1
+        moves.clear()
         Arrays.fill(playerTaken, false)
     }
 
     var currentGuess: String = ""
         private set
 
-    var lastMove: Int = -1
-        private set
+    val moves = mutableListOf<Int>()
 
     var isAllow3LetterWords: Boolean = true
         set(flag) {
@@ -169,7 +168,7 @@ class GameState : ViewModel() {
     var dictionaryName: String? = null
 
     fun play(move: Int) {
-        lastMove = move
+        moves.add(move)
         currentGuess += board[move]
         playerTaken[move] = true
     }
