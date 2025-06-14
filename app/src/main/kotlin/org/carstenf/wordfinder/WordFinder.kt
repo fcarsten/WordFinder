@@ -550,6 +550,13 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     private fun insertPlayerResult(guess: Dictionary.WordInfoData) {
         playerResultList.insert(Result(guess), 0)
+        playerResultList.sort {
+            object1: Result, object2: Result ->
+            val s1 = object1.toString()
+            val s2 = object2.toString()
+            s1.compareTo(s2)
+        }
+        playerResultList.notifyDataSetChanged()
         highlightFirstMatchingItem(guess.displayText)
     }
 
