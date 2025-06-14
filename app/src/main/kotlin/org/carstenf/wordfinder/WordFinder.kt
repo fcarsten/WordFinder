@@ -32,6 +32,7 @@ import android.widget.Toast
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -250,6 +251,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private fun clearGuess() {
         gameState.clearGuess()
         updateOkButton()
+        updateLetterButtonOverlay()
     }
 
     internal fun disableGuessing() {
@@ -410,6 +412,15 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 }
             }
         }
+        updateLetterButtonOverlay()
+    }
+
+    private fun updateLetterButtonOverlay() {
+        val buttons = mutableListOf<AppCompatButton>()
+        for(m in gameState.moves) {
+            buttons.add(this.findViewById<AppCompatButton>(letterButtonIds[m]))
+        }
+        drawConnectionsBetweenButtons(this.findViewById<BackGestureBlockingTableLayout>(R.id.letterGridView), buttons)
     }
 
     private fun labelDices() {
