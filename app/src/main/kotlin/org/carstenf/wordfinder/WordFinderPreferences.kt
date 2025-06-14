@@ -14,6 +14,10 @@ class WordFinderPreferences : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // Enable the up button in the action bar
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         // Create a FrameLayout to host the fragment
         val frame = FrameLayout(this)
         frame.id = R.id.content
@@ -27,4 +31,10 @@ class WordFinderPreferences : AppCompatActivity() {
 
         frame.fitsSystemWindows = true
     }
+    // Handle the up button press
+    override fun onSupportNavigateUp(): Boolean {
+        finish()
+        return true
+    }
+
 }
