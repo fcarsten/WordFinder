@@ -254,7 +254,7 @@ fun addGestureHandler(app: WordFinder, tableLayout: TableLayout) {
                 val view = child.getChildAt(j)
                 if (view is Button) {
                     // Attach the OnTouchListener to each button
-                    view.setOnClickListener { app.letterClick(view) }
+                    view.setOnClickListener { app.onLetterClick(view) }
 
                     view.setOnTouchListener(object : OnTouchListener {
                         private var firstButtonPressed: Button? = null

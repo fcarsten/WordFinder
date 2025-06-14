@@ -477,15 +477,15 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     private val idToLetterButton = SparseArray<LetterButton?>()
 
-    fun letterClick(view: View) {
+    fun onLetterClick(view: View) {
         val pressedButton = checkNotNull(idToLetterButton[view.id])
         var move = pressedButton.pos
 
         if (!pressedButton.isEnabled) {
-            if(gameState.lastMove() != move) {
+            if(move !in gameState.moves) {
                 return
             }
-            gameState.undo()
+            gameState.undo(move)
             move = gameState.lastMove()
         } else {
             gameState.play(move)

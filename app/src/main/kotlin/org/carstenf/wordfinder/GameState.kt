@@ -167,11 +167,14 @@ class GameState : ViewModel() {
 
     var dictionaryName: String? = null
 
-    fun undo() {
-        if(! moves.isEmpty()) {
+    // Undoes all moves after and including "move"
+    fun undo(move: Int) {
+        while(! moves.isEmpty()) {
+            val last = moves.last()
             playerTaken[moves[moves.lastIndex]] = false
             moves.removeAt(moves.lastIndex)
             currentGuess = currentGuess.substring(0, currentGuess.length - 1)
+            if(last == move) return
         }
     }
 
