@@ -17,6 +17,8 @@ fun drawConnectionsBetweenButtons(tableLayout: TableLayout, buttons: List<AppCom
     val overlay = tableLayout.overlay
     overlay.clear()
 
+    if(buttons.size<2) return
+
     val buttonWidth = buttons.firstOrNull()?.width?.toFloat() ?: 0f
     val width = buttonWidth * 0.2f
     val arrowSize = width * 2f
