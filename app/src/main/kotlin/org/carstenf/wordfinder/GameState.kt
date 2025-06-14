@@ -259,8 +259,7 @@ class GameState : ViewModel() {
     }
 
     private fun startTimer(time: Long) {
-        countDownTimer?.cancel()
-        countUpTimer?.cancel()
+        cancelTimer()
 
         if (gameTime < 0) return
 
@@ -321,13 +320,14 @@ class GameState : ViewModel() {
         }
     }
 
-    fun cancelCountDown() {
+    fun cancelTimer() {
         countDownTimer?.cancel()
+        countUpTimer?.cancel()
     }
 
     fun onSolveFinished() {
         if (computerResultList.value?.size == 0) {
-            countDownTimer?.cancel()
+            cancelTimer()
             gameLifecycleState.postValue(GameLifeCycleState.UNSOLVABLE)
         }
         solveFinished = true
