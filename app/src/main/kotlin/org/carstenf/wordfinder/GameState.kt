@@ -167,6 +167,14 @@ class GameState : ViewModel() {
 
     var dictionaryName: String? = null
 
+    fun undo() {
+        if(! moves.isEmpty()) {
+            playerTaken[moves[moves.lastIndex]] = false
+            moves.removeAt(moves.lastIndex)
+            currentGuess = currentGuess.substring(0, currentGuess.length - 1)
+        }
+    }
+
     fun play(move: Int) {
         moves.add(move)
         currentGuess += board[move]
@@ -353,6 +361,13 @@ class GameState : ViewModel() {
         }  else if ("whateverRandom".equals(distStr, ignoreCase = true)) {
             letterSelector = null
         }
+    }
+
+    fun lastMove(): Int {
+        if (moves.isNotEmpty()) {
+            return moves.last()
+        }
+        return -1
     }
 
     val playerScore: Int
