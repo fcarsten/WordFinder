@@ -364,10 +364,18 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private fun updateTimeView(time: Long) {
         if (isFinishing) return
 
-        val m = time / 60
+        var m = time / 60
         val s = time % 60
-        val ms = "%02d:%02d".format(m, s)
-        countDownView.text = ms
+        if(m<60) {
+            val ms = "%02d:%02d".format(m, s)
+            countDownView.text = ms
+        } else {
+            val h = m / 60
+            m = m % 60
+            val ms = "%02d:%02d:%02d".format(h, m, s)
+            countDownView.text = ms
+        }
+
         if (time == 0L && gameState.timerMode== TIMER_MODE.COUNT_DOWN &&
             gameState.gameLifecycleState.value != GameState.GameLifeCycleState.NOT_STARTED) {
 
