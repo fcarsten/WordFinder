@@ -169,12 +169,17 @@ class GameState : ViewModel() {
 
     // Undoes all moves after and including "move"
     fun undo(move: Int) {
-        while(! moves.isEmpty()) {
+        if (moves.isEmpty() || move !in moves) return
+
+        //
+        // The while condition should never be false. But just in case...
+        //
+        while(!moves.isEmpty()) {
             val last = moves.last()
             playerTaken[moves[moves.lastIndex]] = false
             moves.removeAt(moves.lastIndex)
             currentGuess = currentGuess.substring(0, currentGuess.length - 1)
-            if(last == move) return
+            if (last == move || moves.last() == move) return // This makes sure at least on move is undone
         }
     }
 

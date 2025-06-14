@@ -20,12 +20,12 @@ fun drawConnectionsBetweenButtons(tableLayout: TableLayout, buttons: List<AppCom
     if(buttons.size<2) return
 
     val buttonWidth = buttons.firstOrNull()?.width?.toFloat() ?: 0f
-    val width = buttonWidth * 0.2f
+    val width = buttonWidth * 0.15f
     val arrowSize = width * 2f
-    val transparency = 230
+    val transparency = 200
 
     val linePaint = Paint().apply {
-        color = Color.argb(transparency, 173, 230, 216)
+        color = Color.argb(transparency, 255, 0, 50)
         strokeWidth = width
         style = Paint.Style.STROKE
         strokeCap = Paint.Cap.BUTT
