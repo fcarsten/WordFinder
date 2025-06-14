@@ -40,6 +40,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.launch
 import org.carstenf.wordfinder.GameState.PlayerGuessState
+import org.carstenf.wordfinder.GameState.TIMER_MODE
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
 import org.carstenf.wordfinder.fireworks.FIREWORK_DISMISS
 import org.carstenf.wordfinder.fireworks.FIREWORK_DISMISSED
@@ -126,18 +127,16 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         val playerResultListView = findViewById<ListView>(R.id.playerResultsList)
 
-        countDownView.visibility = View.GONE
-
         gameState.gameLifecycleState.observe(this) {
             @Suppress("CascadeIf") // Warning makes no sense as we don't consider all possible values
             if (it == GameState.GameLifeCycleState.TIMER_FINISHED) {
                 disableGuessing()
             } else if (it == GameState.GameLifeCycleState.GAME_OVER) {
-                gameState.cancelCountDown()
+                gameState.cancelTimer()
                 disableGuessing()
             } else if (
                 it == GameState.GameLifeCycleState.UNSOLVABLE) {
-                gameState.cancelCountDown()
+                gameState.cancelTimer()
                 runOnUiThread {
                     disableGuessing()
                     showUnsolvableDialog(this)
@@ -210,7 +209,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             )
         }
 
-        gameState.countDownTimerCurrentValue.observe(
+        gameState.timerCurrentValue.observe(
             this
         ) { time: Long -> this.updateTimeView(time) }
 
@@ -282,7 +281,6 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         super.onPostResume()
 
         if (preferencesChanged) {
-            countDownView.visibility = View.GONE
             prefs
             if(reshuffleRequired) {
                 showRestartRequiredDialog(this)
@@ -292,13 +290,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         }
 
         if (gameState.gameLifecycleState.value == GameState.GameLifeCycleState.NOT_STARTED) {
-            if (gameState.countDownTime >= 0) {
-                if(!showConfirmStartGameDialogVisible)
-                    showConfirmStartGameDialog(this)
-            }
-            else {
-                shuffle()
-            }
+            if(!showConfirmStartGameDialogVisible)
+                showConfirmStartGameDialog(this)
         }
     }
 
@@ -341,20 +334,20 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
             gameState.setLetterSelector(prefs.getString("rand_dist_pref", "multiLetterFrequency"))
 
-            gameState.isAllow3LetterWords = prefs
-                .getBoolean("threeLetterPref", true)
+            gameState.isAllow3LetterWords = prefs.getBoolean("threeLetterPref", true)
 
             gameState.setAutoAddPrefixalWords(
-                prefs
-                    .getBoolean("autoAddPrefixPref", false)
+                prefs.getBoolean("autoAddPrefixPref", false)
             )
 
             if (prefs.getBoolean("countdown_pref", true)) {
+                gameState.timerMode = TIMER_MODE.COUNT_DOWN
                 val timeStr = prefs.getString("countdown_time_pref", "03:00")!!
                 val time = parseTime(timeStr)
-                gameState.countDownTime = time
+                gameState.gameTime = time
             } else {
-                gameState.countDownTime = -1
+                gameState.timerMode = TIMER_MODE.STOP_WATCH
+                gameState.gameTime = 0
             }
             updateScore()
         }
@@ -363,22 +356,18 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private fun updateTimeView(time: Long) {
         if (isFinishing) return
 
-        if (time >= 0) {
-            if (countDownView.visibility != View.VISIBLE) countDownView.visibility =
-                View.VISIBLE
-            val h = time / 60
-            val m = time % 60
-            val ms = "%02d:%02d".format(h, m)
-            countDownView.text = ms
-            if (time == 0L) {
-                if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.TIMER_FINISHED) {
-                    gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.TIMER_FINISHED)
-                }
-                if (!isFinishing)
-                    showTimeIsUpDialog(this)
+        val m = time / 60
+        val s = time % 60
+        val ms = "%02d:%02d".format(m, s)
+        countDownView.text = ms
+        if (time == 0L && gameState.timerMode== TIMER_MODE.COUNT_DOWN &&
+            gameState.gameLifecycleState.value != GameState.GameLifeCycleState.NOT_STARTED) {
+
+            if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.TIMER_FINISHED) {
+                gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.TIMER_FINISHED)
             }
-        } else {
-            countDownView.visibility = View.GONE
+            if (!isFinishing)
+                showTimeIsUpDialog(this)
         }
     }
 
@@ -440,7 +429,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         updateDiceState(gameState.lastMove)
         updateOkButton()
-        gameState.startCountDown()
+        gameState.startTimer()
         updateScore()
     }
 
@@ -561,6 +550,13 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     private fun insertPlayerResult(guess: Dictionary.WordInfoData) {
         playerResultList.insert(Result(guess), 0)
+        playerResultList.sort {
+            object1: Result, object2: Result ->
+            val s1 = object1.toString()
+            val s2 = object2.toString()
+            s1.compareTo(s2)
+        }
+        playerResultList.notifyDataSetChanged()
         highlightFirstMatchingItem(guess.displayText)
     }
 
@@ -605,6 +601,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         if(gameState.solveFinished && gameState.computerScore > 0 &&
             gameState.playerScore == gameState.computerScore) {
+            gameState.countUpTimer?.cancel()
             showFirework()
         }
     }

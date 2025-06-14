@@ -17,6 +17,8 @@ class GameState : ViewModel() {
     var solveFinished: Boolean = false
     private var letterSelector: LETTER_RANDOM_DIST? = LETTER_RANDOM_DIST.MULTI_LETTER_FREQUENCY
 
+    var timerMode: TIMER_MODE = TIMER_MODE.COUNT_DOWN
+
     lateinit var dictionary: Dictionary
 
     private var autoAddPrefixalWords = false
@@ -26,7 +28,7 @@ class GameState : ViewModel() {
     val computerResultList: MutableLiveData<ArrayList<Result>?> = MutableLiveData(ArrayList())
     val playerResultList: ArrayList<Result> = ArrayList()
 
-    val countDownTimerCurrentValue: MutableLiveData<Long> = MutableLiveData(-1L)
+    val timerCurrentValue: MutableLiveData<Long> = MutableLiveData(0L)
 
     fun getBoard(move: Int): Char {
         return board[move]
@@ -206,6 +208,11 @@ class GameState : ViewModel() {
         LETTER_DICE
     }
 
+    enum class TIMER_MODE {
+        COUNT_DOWN,
+        STOP_WATCH
+    }
+
     data class PlayerGuessResult(val guess: Dictionary.WordInfoData, val state: PlayerGuessState)
 
     suspend fun validatePlayerGuess(guess: String): PlayerGuessResult {
@@ -243,29 +250,36 @@ class GameState : ViewModel() {
     }
 
     private var countDownTimer: CountDownTimer? = null
+    var countUpTimer: CountUpTimer? = null
 
-    var countDownTime: Long = -1
+    var gameTime: Long = -1
 
-    fun startCountDown() {
-        startCountDown(countDownTime)
+    fun startTimer() {
+        startTimer(gameTime)
     }
 
-    private fun startCountDown(time: Long) {
-        countDownTimer?.cancel()
+    private fun startTimer(time: Long) {
+        cancelTimer()
 
-        if (countDownTime < 0) return
+        if (gameTime < 0) return
 
         gameLifecycleState.postValue(GameLifeCycleState.TIMER_STARTED)
-        countDownTimerCurrentValue.postValue(time / 1000)
+        timerCurrentValue.postValue(time / 1000)
 
-        countDownTimer = object : CountDownTimer(time, 1000) {
-            override fun onTick(millisUntilFinished: Long) {
-                countDownTimerCurrentValue.postValue(millisUntilFinished / 1000)
-            }
+        if(timerMode == TIMER_MODE.COUNT_DOWN) {
+            countDownTimer = object : CountDownTimer(time, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    timerCurrentValue.postValue(millisUntilFinished / 1000)
+                }
 
-            override fun onFinish() {
-            }
-        }.start()
+                override fun onFinish() {
+                }
+            }.start()
+        } else {
+            countUpTimer =  CountUpTimer(time/1000){ seconds: Long -> timerCurrentValue.postValue(seconds)}
+            countUpTimer?.start()
+        }
+
     }
 
     private fun getScore(list: List<Result>?): Int {
@@ -291,6 +305,7 @@ class GameState : ViewModel() {
         // If game is interrupted while in progress, cancel timer and restart later in on Resume()
         if (gameLifecycleState.value == GameLifeCycleState.TIMER_STARTED) {
             countDownTimer?.cancel()
+            countUpTimer?.cancel()
         }
     }
 
@@ -299,19 +314,20 @@ class GameState : ViewModel() {
 
         // If game was interrupted while in progress continue with the left over time.
         if (state == GameLifeCycleState.TIMER_STARTED) {
-            countDownTimerCurrentValue.value?.let { startCountDown(it * 1000L) }
+            timerCurrentValue.value?.let { startTimer(it * 1000L) }
         } else if (state >= GameLifeCycleState.TIMER_FINISHED) {
             gameLifecycleState.postValue(state) // Give UI a chance to update as well.
         }
     }
 
-    fun cancelCountDown() {
+    fun cancelTimer() {
         countDownTimer?.cancel()
+        countUpTimer?.cancel()
     }
 
     fun onSolveFinished() {
         if (computerResultList.value?.size == 0) {
-            countDownTimer?.cancel()
+            cancelTimer()
             gameLifecycleState.postValue(GameLifeCycleState.UNSOLVABLE)
         }
         solveFinished = true
