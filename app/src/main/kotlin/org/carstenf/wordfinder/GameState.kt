@@ -125,15 +125,14 @@ class GameState : ViewModel() {
 
     fun clearGuess() {
         currentGuess = ""
-        lastMove = -1
+        moves.clear()
         Arrays.fill(playerTaken, false)
     }
 
     var currentGuess: String = ""
         private set
 
-    var lastMove: Int = -1
-        private set
+    val moves = mutableListOf<Int>()
 
     var isAllow3LetterWords: Boolean = true
         set(flag) {
@@ -168,8 +167,24 @@ class GameState : ViewModel() {
 
     var dictionaryName: String? = null
 
+    // Undoes all moves after and including "move"
+    fun undo(move: Int) {
+        if (moves.isEmpty() || move !in moves) return
+
+        //
+        // The while condition should never be false. But just in case...
+        //
+        while(!moves.isEmpty()) {
+            val last = moves.last()
+            playerTaken[moves[moves.lastIndex]] = false
+            moves.removeAt(moves.lastIndex)
+            currentGuess = currentGuess.substring(0, currentGuess.length - 1)
+            if (last == move || moves.last() == move) return // This makes sure at least on move is undone
+        }
+    }
+
     fun play(move: Int) {
-        lastMove = move
+        moves.add(move)
         currentGuess += board[move]
         playerTaken[move] = true
     }
@@ -354,6 +369,13 @@ class GameState : ViewModel() {
         }  else if ("whateverRandom".equals(distStr, ignoreCase = true)) {
             letterSelector = null
         }
+    }
+
+    fun lastMove(): Int {
+        if (moves.isNotEmpty()) {
+            return moves.last()
+        }
+        return -1
     }
 
     val playerScore: Int

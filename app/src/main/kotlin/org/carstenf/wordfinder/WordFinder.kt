@@ -32,6 +32,7 @@ import android.widget.Toast
 import android.window.OnBackInvokedDispatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
@@ -240,17 +241,21 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         updateScore()
     }
 
-    private fun enableGuessing() {
+    internal fun enableGuessing() {
         for (button in letterButtons) {
             button.isEnabled = true
             button.setContentDescription("Unavailable Letter Button")
         }
     }
 
-    private fun disableGuessing() {
+    private fun clearGuess() {
         gameState.clearGuess()
         updateOkButton()
+        updateLetterButtonOverlay()
+    }
 
+    internal fun disableGuessing() {
+        clearGuess()
         for (button in letterButtons) {
             button.isEnabled = false
             button.setContentDescription("Unavailable Letter Button")
@@ -293,6 +298,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             if(!showConfirmStartGameDialogVisible)
                 showConfirmStartGameDialog(this)
         }
+
+        updateButtonEnabledStatus()
     }
 
     private val sharedPreferences: SharedPreferences
@@ -301,6 +308,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     public override fun onPause() {
         super.onPause()
+        clearGuess()
         gameState.onPause()
         sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
@@ -356,10 +364,18 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private fun updateTimeView(time: Long) {
         if (isFinishing) return
 
-        val m = time / 60
+        var m = time / 60
         val s = time % 60
-        val ms = "%02d:%02d".format(m, s)
-        countDownView.text = ms
+        if(m<60) {
+            val ms = "%02d:%02d".format(m, s)
+            countDownView.text = ms
+        } else {
+            val h = m / 60
+            m = m % 60
+            val ms = "%02d:%02d:%02d".format(h, m, s)
+            countDownView.text = ms
+        }
+
         if (time == 0L && gameState.timerMode== TIMER_MODE.COUNT_DOWN &&
             gameState.gameLifecycleState.value != GameState.GameLifeCycleState.NOT_STARTED) {
 
@@ -404,6 +420,15 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 }
             }
         }
+        updateLetterButtonOverlay()
+    }
+
+    private fun updateLetterButtonOverlay() {
+        val buttons = mutableListOf<AppCompatButton>()
+        for(m in gameState.moves) {
+            buttons.add(this.findViewById<AppCompatButton>(letterButtonIds[m]))
+        }
+        drawConnectionsBetweenButtons(this.findViewById<BackGestureBlockingTableLayout>(R.id.letterGridView), buttons)
     }
 
     private fun labelDices() {
@@ -427,13 +452,14 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         gameState.startSolving()
 
-        updateDiceState(gameState.lastMove)
+        updateDiceState(-1)
         updateOkButton()
         gameState.startTimer()
         updateScore()
     }
 
     private fun shuffleClick() {
+        clearGuess()
         showConfirmShuffleDialog(this)
     }
 
@@ -459,16 +485,21 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     private val idToLetterButton = SparseArray<LetterButton?>()
 
-    fun letterClick(view: View) {
+    fun onLetterClick(view: View) {
         val pressedButton = checkNotNull(idToLetterButton[view.id])
+        var move = pressedButton.pos
 
-        if (!pressedButton.isEnabled) return
-
-        val move = pressedButton.pos
-        gameState.play(move)
-
-        updateOkButton()
+        if (!pressedButton.isEnabled) {
+            if(move !in gameState.moves) {
+                return
+            }
+            gameState.undo(move)
+            move = gameState.lastMove()
+        } else {
+            gameState.play(move)
+        }
         updateDiceState(move)
+        updateOkButton()
     }
 
     suspend fun okClick() {
@@ -640,11 +671,22 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         return true
     }
 
+    fun updateButtonEnabledStatus(){
+        if (gameState.gameLifecycleState.value == GameState.GameLifeCycleState.STARTED ||
+            gameState.gameLifecycleState.value == GameState.GameLifeCycleState.TIMER_STARTED) {
+            enableGuessing()
+        } else {
+            disableGuessing()
+        }
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_item_info -> {
                 val fragmentManager = supportFragmentManager
+                clearGuess()
                 showInfo(fragmentManager, gameState)
+                updateButtonEnabledStatus()
                 return true
             }
             R.id.menu_item_prefs -> {
