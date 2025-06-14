@@ -145,7 +145,9 @@ fun showConfirmShuffleDialog(app: WordFinder) {
         ) { _: DialogInterface?, _: Int -> app.shuffle() }
         .setNegativeButton(
             R.string.shuffle_cancle_text
-        ) { _: DialogInterface?, _: Int -> }
+        ) { _: DialogInterface?, _: Int ->
+            app.updateButtonEnabledStatus()
+        }
 
     val dialog = builder.create()
     dialog.show()
@@ -252,7 +254,7 @@ fun addGestureHandler(app: WordFinder, tableLayout: TableLayout) {
                 val view = child.getChildAt(j)
                 if (view is Button) {
                     // Attach the OnTouchListener to each button
-                    view.setOnClickListener { app.letterClick(view) }
+                    view.setOnClickListener { app.onLetterClick(view) }
 
                     view.setOnTouchListener(object : OnTouchListener {
                         private var firstButtonPressed: Button? = null
