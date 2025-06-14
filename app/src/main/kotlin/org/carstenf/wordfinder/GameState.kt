@@ -276,7 +276,7 @@ class GameState : ViewModel() {
                 }
             }.start()
         } else {
-            countUpTimer =  CountUpTimer{ seconds: Long -> timerCurrentValue.postValue(seconds)}
+            countUpTimer =  CountUpTimer(time/1000){ seconds: Long -> timerCurrentValue.postValue(seconds)}
             countUpTimer?.start()
         }
 
