@@ -22,8 +22,8 @@
     <string name="PrefScoring">Wertungsmethode</string>
     <string name="PrefAllowThreeLetter">Wörter mit 3 Buchstaben erlauben</string>
     <string name="PrefAllowThreeLetterSummary">Bitte ankreuzen um Wörter mit 3 Buchstaben zu erlauben</string>
-    <string name="PrefTimer">Stoppuhr aktivieren</string>
-    <string name="PrefTimerSummary">Bitte ankreuzen um die Stoppuhr zu aktivieren</string>
+    <string name="PrefTimer">Zeitlimit aktivieren</string>
+    <string name="PrefTimerSummary">Bitte ankreuzen um Zeitlimit zu aktivieren</string>
     <string name="PrefTimeLimitSummary">Zeitlimit eingeben</string>
     <string name="PrefScoringSummary">Wertungsmethode auswählen\n(%s)</string>
     <string name="PrefTimeLimit">Zeitlimit (mm:ss)</string>
