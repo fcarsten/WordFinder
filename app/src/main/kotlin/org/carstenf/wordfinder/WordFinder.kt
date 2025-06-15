@@ -34,6 +34,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.graphics.toColorInt
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -81,8 +84,25 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContentView(R.layout.main)
+
+        val rootView = findViewById<View>(R.id.root)
+        if(rootView!=null) {
+            ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                val systemGestures = insets.getInsets(WindowInsetsCompat.Type.systemGestures())
+
+                view.setPadding(
+                    systemGestures.left,  // Left edge swipe area
+                    systemBars.top,       // Status bar
+                    systemGestures.right, // Right edge swipe area
+                    systemBars.bottom     // Traditional nav bar OR gesture pill
+                )
+                WindowInsetsCompat.CONSUMED
+            }
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             onBackInvokedDispatcher.registerOnBackInvokedCallback(
@@ -406,11 +426,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 val enabled = gameState.isAvailable(bid)
                 letterButtons[bid].isEnabled = enabled
                 if (!enabled) {
-                    letterButtons[bid].setContentDescription(
-                        "Disabled Letter " + gameState.getBoard(
-                            bid
-                        )
-                    )
+                    letterButtons[bid].setContentDescription("Disabled Letter " + gameState.getBoard(bid))
                 }
             }
         } else {
