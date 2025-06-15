@@ -24,9 +24,9 @@
     <string name="PrefScoringSummary">Select how the score is calculated\nCurrently: %s</string>
     <string name="PrefAllowThreeLetter">Allow 3-letter words</string>
     <string name="PrefAllowThreeLetterSummary">Check to allow 3 letter words</string>
-    <string name="PrefTimer">Timer enabled</string>
+    <string name="PrefTimer">Time limit enabled</string>
     <string name="PrefTimerSummary">Check to enable time limit</string>
-    <string name="PrefTimeLimitSummary">Enter the time limit</string>
+    <string name="PrefTimeLimitSummary">Enter the time limit\nCurrently: %s</string>
     <string name="PrefTimeLimit">Countdown time (mm:ss)</string>
     <string name="OK">OK</string>
     <string name="WordGuessTooShort">is too short</string>

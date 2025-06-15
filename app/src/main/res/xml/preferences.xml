@@ -47,10 +47,10 @@
 			android:key="countdown_pref" />
 
 		<com.takisoft.preferencex.EditTextPreference
+			android:title="@string/PrefTimeLimit"
 			android:summary="@string/PrefTimeLimitSummary"
 			android:inputType="time"
 			android:defaultValue="03:00"
-			android:title="@string/PrefTimeLimit"
 			android:key="countdown_time_pref"
 			android:dependency="countdown_pref" />
 	</androidx.preference.PreferenceCategory>

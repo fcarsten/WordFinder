@@ -18,14 +18,14 @@
     <string name="start_game_diag_ok">Los!</string>
     <string name="GamePreferences">Spieleinstellungen</string>
     <string name="PrefDictionary">Wörterbuch</string>
-    <string name="PrefSelectDict">Wörterbuch auswählen\n(%s)</string>
+    <string name="PrefSelectDict">Wörterbuch auswählen\nZ.Z.: %s</string>
     <string name="PrefScoring">Wertungsmethode</string>
     <string name="PrefAllowThreeLetter">Wörter mit 3 Buchstaben erlauben</string>
     <string name="PrefAllowThreeLetterSummary">Bitte ankreuzen um Wörter mit 3 Buchstaben zu erlauben</string>
-    <string name="PrefTimer">Stoppuhr aktivieren</string>
-    <string name="PrefTimerSummary">Bitte ankreuzen um die Stoppuhr zu aktivieren</string>
-    <string name="PrefTimeLimitSummary">Zeitlimit eingeben</string>
-    <string name="PrefScoringSummary">Wertungsmethode auswählen\n(%s)</string>
+    <string name="PrefTimer">Zeitlimit aktivieren</string>
+    <string name="PrefTimerSummary">Bitte ankreuzen um Zeitlimit zu aktivieren</string>
+    <string name="PrefTimeLimitSummary">Zeitlimit eingeben\nZ.Z.: %s</string>
+    <string name="PrefScoringSummary">Wertungsmethode auswählen\nZ.Z.: %s</string>
     <string name="PrefTimeLimit">Zeitlimit (mm:ss)</string>
     <string name="OK">OK</string>
     <string name="WordGuessTooShort">" ist zu kurz"</string>
@@ -45,7 +45,7 @@
     <string name="board_unsolvable">Leider hat das Spielfeld keine Lösung</string>
     <string name="unsolvable_confirm_title">So ein Pech!</string>
     <string name="RandomDistribution">Buchstabenauswahl</string>
-    <string name="PrefRandomDistributionSummary">Zufallsmethode für die Buchstaben Auswahl.\n(%s)</string>
+    <string name="PrefRandomDistributionSummary">Zufallsmethode für die Buchstaben Auswahl.\nZ.Z.: %s</string>
     <string name="game_won_message">Alle Wörter wurden gefunden</string>
     <string name="game_won_title">Gewonnen!</string>
 </resources>
