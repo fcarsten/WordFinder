@@ -286,7 +286,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         super.onPostResume()
 
         if (preferencesChanged) {
-            prefs
+            reloadPreferences()
             if(reshuffleRequired) {
                 showRestartRequiredDialog(this)
                 reshuffleRequired = false
@@ -330,35 +330,38 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             sharedPreferences.getBoolean("threeLetterPref", true) != gameState.isAllow3LetterWords) {
             reshuffleRequired = true
         }
+        if(key =="countdown_pref") {
+            reshuffleRequired = true
+        }
     }
 
 
-    private val prefs: Unit
-        get() {
-            val prefs = sharedPreferences
+    private fun reloadPreferences()
+    {
+        val prefs = sharedPreferences
 
-            gameState.dictionaryName = prefs.getString("dict_pref", defaultDict)
-            gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count"))
+        gameState.dictionaryName = prefs.getString("dict_pref", defaultDict)
+        gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count"))
 
-            gameState.setLetterSelector(prefs.getString("rand_dist_pref", "multiLetterFrequency"))
+        gameState.setLetterSelector(prefs.getString("rand_dist_pref", "multiLetterFrequency"))
 
-            gameState.isAllow3LetterWords = prefs.getBoolean("threeLetterPref", true)
+        gameState.isAllow3LetterWords = prefs.getBoolean("threeLetterPref", true)
 
-            gameState.setAutoAddPrefixalWords(
-                prefs.getBoolean("autoAddPrefixPref", false)
-            )
+        gameState.setAutoAddPrefixalWords(
+            prefs.getBoolean("autoAddPrefixPref", false)
+        )
 
-            if (prefs.getBoolean("countdown_pref", true)) {
-                gameState.timerMode = TIMER_MODE.COUNT_DOWN
-                val timeStr = prefs.getString("countdown_time_pref", "03:00")!!
-                val time = parseTime(timeStr)
-                gameState.gameTime = time
-            } else {
-                gameState.timerMode = TIMER_MODE.STOP_WATCH
-                gameState.gameTime = 0
-            }
-            updateScore()
+        if (prefs.getBoolean("countdown_pref", true)) {
+            gameState.timerMode = TIMER_MODE.COUNT_DOWN
+            val timeStr = prefs.getString("countdown_time_pref", "03:00")!!
+            val time = parseTime(timeStr)
+            gameState.gameTime = time
+        } else {
+            gameState.timerMode = TIMER_MODE.STOP_WATCH
+            gameState.gameTime = 0
         }
+        updateScore()
+    }
 
 
     private fun updateTimeView(time: Long) {
@@ -389,7 +392,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     override fun onStart() {
         super.onStart()
-        prefs
+        reloadPreferences()
     }
 
     private fun updateDiceState(move: Int) {
