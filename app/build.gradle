@@ -30,7 +30,7 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'com.takisoft.preferencex:preferencex:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1'
@@ -41,11 +41,11 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3"
     implementation 'androidx.core:core-ktx:1.16.0'
     implementation "androidx.preference:preference-ktx:1.2.1"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.0" // For Kotlin
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.9.0"     // For Java
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1" // For Kotlin
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.9.1"     // For Java
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"    // Optional, if using Lifecycle Extensions
     implementation "androidx.activity:activity-ktx:1.10.1"             // For Activity scope
-    implementation "androidx.fragment:fragment-ktx:1.8.6"             // For Fragment scope
+    implementation "androidx.fragment:fragment-ktx:1.8.8"             // For Fragment scope
     //noinspection GradleDependency
     implementation 'org.apache.commons:commons-compress:1.12' // Old version of library required
                                                                 // newer ones don't work on Android Lollipop (Java 6)
