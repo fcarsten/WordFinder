@@ -50,6 +50,7 @@ import org.carstenf.wordfinder.fireworks.FIREWORK_DISMISS
 import org.carstenf.wordfinder.fireworks.FIREWORK_DISMISSED
 import org.carstenf.wordfinder.fireworks.FireworksPlayer
 import java.io.IOException
+import kotlin.math.max
 
 class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val playerResultList by lazy {
@@ -92,15 +93,19 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         if(rootView!=null) {
             ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
                 val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-                val systemGestures = insets.getInsets(WindowInsetsCompat.Type.systemGestures())
+                // Individual padding values (in pixels)
+                val paddingLeft = view.paddingLeft    // or paddingStart
+                val paddingTop = view.paddingTop
+                val paddingRight = view.paddingRight  // or paddingEnd
+                val paddingBottom = view.paddingBottom
 
                 view.setPadding(
-                    systemGestures.left,  // Left edge swipe area
-                    systemBars.top,       // Status bar
-                    systemGestures.right, // Right edge swipe area
-                    systemBars.bottom     // Traditional nav bar OR gesture pill
+                    paddingLeft,  // Left edge swipe area
+                    max(systemBars.top, paddingTop),       // Status bar
+                    paddingRight, // Right edge swipe area
+                    max(systemBars.bottom, paddingBottom)     // Traditional nav bar OR gesture pill
                 )
-                WindowInsetsCompat.CONSUMED
+                insets
             }
         }
 
