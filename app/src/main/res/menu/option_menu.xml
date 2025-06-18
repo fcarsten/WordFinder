@@ -2,6 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_item_hint"
+        android:enabled="true"
+        android:icon="@drawable/psychology_alt"
+        android:title="@string/hint"
+        android:visible="true"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/menu_item_shuffle"
         android:enabled="true"
         android:icon="@drawable/shuffle_button_icon"

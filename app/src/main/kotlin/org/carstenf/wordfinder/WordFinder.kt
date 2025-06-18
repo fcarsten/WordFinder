@@ -700,10 +700,25 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 shuffleClick()
                 return true
             }
+            R.id.menu_item_hint -> {
+                displayHint()
+                return true
+            }
             else -> {
                 return super.onOptionsItemSelected(item)
             }
         }
+    }
+
+    // Usage:
+    val tableData = listOf(
+        listOf("Name", "Age", "Occupation"),
+        listOf("John Doe", "28", "Developer"),
+        listOf("Jane Smith", "32", "Designer")
+    )
+    private fun displayHint() {
+        val view = findViewById<View>(android.R.id.content)
+        showMapSnackbar(view, "", tableData, 2)
     }
 
     private fun showPreferences() {

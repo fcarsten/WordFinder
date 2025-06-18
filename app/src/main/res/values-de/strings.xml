@@ -48,4 +48,5 @@
     <string name="PrefRandomDistributionSummary">Zufallsmethode für die Buchstaben Auswahl.\nZ.Z.: %s</string>
     <string name="game_won_message">Alle Wörter wurden gefunden</string>
     <string name="game_won_title">Gewonnen!</string>
+    <string name="hint">Tip</string>
 </resources>

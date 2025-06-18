@@ -60,4 +60,5 @@
     <string name="PrefRandomDistributionSummary">How the letters are selected.\nCurrently: %s</string>
     <string name="game_won_message">You found all the words</string>
     <string name="game_won_title">You Win!</string>
+    <string name="hint">Hint</string>
 </resources>
