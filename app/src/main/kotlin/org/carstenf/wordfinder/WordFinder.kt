@@ -40,6 +40,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.launch
+import org.carstenf.wordfinder.GameState.GameLifeCycleState.*
 import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.GameState.TIMER_MODE
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
@@ -128,24 +129,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         val playerResultListView = findViewById<ListView>(R.id.playerResultsList)
 
-        gameState.gameLifecycleState.observe(this) {
-            @Suppress("CascadeIf") // Warning makes no sense as we don't consider all possible values
-            if (it == GameState.GameLifeCycleState.TIMER_FINISHED) {
-                disableGuessing()
-            } else if (it == GameState.GameLifeCycleState.GAME_OVER) {
-                gameState.cancelTimer()
-                disableGuessing()
-            } else if (
-                it == GameState.GameLifeCycleState.UNSOLVABLE) {
-                gameState.cancelTimer()
-                runOnUiThread {
-                    disableGuessing()
-                    showUnsolvableDialog(this)
-                }
-            } else if (it == GameState.GameLifeCycleState.STARTED) {
-                enableGuessing()
-            }
-        }
+        gameState.gameLifecycleState.observe(this) { onGameStateChanged(it) }
 
         try {
             gameState.dictionary = Dictionary(this)
@@ -241,11 +225,38 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         updateScore()
     }
 
+    private fun onGameStateChanged(state: GameState.GameLifeCycleState) {
+        when (state) {
+            TIMER_FINISHED -> {
+                disableGuessing()
+            }
+            GAME_OVER -> {
+                gameState.cancelTimer()
+                disableGuessing()
+            }
+            UNSOLVABLE -> {
+                gameState.cancelTimer()
+                runOnUiThread {
+                    disableGuessing()
+                    showUnsolvableDialog(this)
+                }
+            }
+            STARTED -> {
+                enableGuessing()
+            }
+
+            NOT_STARTED -> disableGuessing()
+            TIMER_STARTED -> enableGuessing()
+        }
+    }
+
+
     internal fun enableGuessing() {
         for (button in letterButtons) {
             button.isEnabled = true
             button.setContentDescription("Unavailable Letter Button")
         }
+        setHintVisibility(true)
     }
 
     private fun clearGuess() {
@@ -260,15 +271,27 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             button.isEnabled = false
             button.setContentDescription("Unavailable Letter Button")
         }
+        setHintVisibility(false)
     }
 
+    private var showHint = false
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        menu.findItem(R.id.menu_item_hint)?.isVisible = showHint
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    fun setHintVisibility(visible: Boolean) {
+        showHint = visible
+        invalidateOptionsMenu()
+    }
 
     fun isGameOver(): Boolean {
         val state = gameState.gameLifecycleState.value
-        return state == GameState.GameLifeCycleState.NOT_STARTED ||
-                state == GameState.GameLifeCycleState.UNSOLVABLE ||
-                state == GameState.GameLifeCycleState.GAME_OVER ||
-                state == GameState.GameLifeCycleState.TIMER_FINISHED
+        return state == NOT_STARTED ||
+                state == UNSOLVABLE ||
+                state == GAME_OVER ||
+                state == TIMER_FINISHED
     }
 
 
@@ -294,7 +317,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             preferencesChanged = false
         }
 
-        if (gameState.gameLifecycleState.value == GameState.GameLifeCycleState.NOT_STARTED) {
+        if (gameState.gameLifecycleState.value == NOT_STARTED) {
             if(!showConfirmStartGameDialogVisible)
                 showConfirmStartGameDialog(this)
         }
@@ -380,13 +403,15 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         }
 
         if (time == 0L && gameState.timerMode== TIMER_MODE.COUNT_DOWN &&
-            gameState.gameLifecycleState.value != GameState.GameLifeCycleState.NOT_STARTED) {
+            gameState.gameLifecycleState.value != NOT_STARTED
+        ) {
 
-            if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.TIMER_FINISHED) {
-                gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.TIMER_FINISHED)
+            if (gameState.gameLifecycleState.value != TIMER_FINISHED) {
+                gameState.gameLifecycleState.postValue(TIMER_FINISHED)
             }
-            if (!isFinishing)
+            if (!isFinishing) {
                 showTimeIsUpDialog(this)
+            }
         }
     }
 
@@ -662,8 +687,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun solveClick() {
-        if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
-            gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+        if(gameState.gameLifecycleState.value != GAME_OVER) {
+            gameState.gameLifecycleState.postValue(GAME_OVER)
         }
         showComputerResults(show = true, animate = true)
     }
@@ -675,8 +700,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     fun updateButtonEnabledStatus(){
-        if (gameState.gameLifecycleState.value == GameState.GameLifeCycleState.STARTED ||
-            gameState.gameLifecycleState.value == GameState.GameLifeCycleState.TIMER_STARTED) {
+        if (gameState.gameLifecycleState.value == STARTED ||
+            gameState.gameLifecycleState.value == TIMER_STARTED
+        ) {
             enableGuessing()
         } else {
             disableGuessing()
@@ -710,15 +736,30 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         }
     }
 
-    // Usage:
-    val tableData = listOf(
-        listOf("Name", "Age", "Occupation"),
-        listOf("John Doe", "28", "Developer"),
-        listOf("Jane Smith", "32", "Designer")
-    )
     private fun displayHint() {
         val view = findViewById<View>(android.R.id.content)
-        showMapSnackbar(view, "", tableData, 2)
+        showTableSnackbar(view, "Number of words still to be found by word length:",
+            listOf("Word length", "Number of words"), getHintTableData(), 100)
+    }
+
+    private fun getHintTableData(): List<List<String>> {
+        val currentGuesses = gameState.playerResultList
+        val solution = gameState.computerResultList
+
+        val solutionList = solution.value ?: return emptyList()
+        val missingResults = solutionList.filter { solutionResult ->
+            // Check if no item in currentGuesses has the same text
+            currentGuesses.none { guess -> guess.result.text == solutionResult.result.text }
+        }
+
+        val result = missingResults
+            .groupBy { it.result.text.length }  // Group by word length
+            .mapValues { it.value.size } // Convert to counts
+            .filter { it.value > 0 }     // Remove lengths with zero counts
+            .entries
+            .sortedBy { it.key }         // Sort by word length
+            .map { listOf(it.key.toString(), it.value.toString()) } // Convert to List<String>
+        return result
     }
 
     private fun showPreferences() {

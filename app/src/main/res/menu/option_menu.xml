@@ -4,10 +4,10 @@
     <item
         android:id="@+id/menu_item_hint"
         android:enabled="true"
-        android:icon="@drawable/psychology_alt"
+        android:icon="@drawable/lightbulb_2"
         android:title="@string/hint"
-        android:visible="true"
-        app:showAsAction="ifRoom" />
+        android:visible="false"
+        app:showAsAction="always" />
     <item
         android:id="@+id/menu_item_shuffle"
         android:enabled="true"
