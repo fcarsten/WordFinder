@@ -284,10 +284,13 @@ class GameState : ViewModel() {
         if(timerMode == TIMER_MODE.COUNT_DOWN) {
             countDownTimer = object : CountDownTimer(time, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
-                    timerCurrentValue.postValue(millisUntilFinished / 1000)
+                    val secsLeft = millisUntilFinished / 1000
+                    if(secsLeft>0) // Otherwise 0 gets posted twice. Here and in onFinish()
+                        timerCurrentValue.postValue(secsLeft)
                 }
 
                 override fun onFinish() {
+                    timerCurrentValue.postValue(0)
                 }
             }.start()
         } else {
