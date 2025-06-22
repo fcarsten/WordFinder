@@ -40,6 +40,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.launch
+import org.carstenf.wordfinder.GameState.GameLifeCycleState.*
 import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.GameState.TIMER_MODE
 import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
@@ -89,11 +90,11 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 OnBackInvokedDispatcher.PRIORITY_DEFAULT
             ) {
                 val hasNavigationBar = !isGestureNavigationEnabled(this@WordFinder)
-                Log.d(TAG, "Navigation Bar: $hasNavigationBar")
+                Log.d(TAG, "Navigation Bar: $hasNavigationBar") // NON-NLS
                 if(hasNavigationBar) {
                     moveTaskToBack(true)
                 } else {
-                    Log.d(TAG, "Ignore Tiramisu Back")
+                    Log.d(TAG, "Ignore Tiramisu Back") // NON-NLS
                 }
             }
         }
@@ -102,11 +103,11 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     val hasNavigationBar = !isGestureNavigationEnabled(this@WordFinder)
-                    Log.d(TAG, "Navigation Bar: $hasNavigationBar")
+                    Log.d(TAG, "Navigation Bar: $hasNavigationBar") // NON-NLS
                     if(hasNavigationBar) {
                         moveTaskToBack(true)
                     } else {
-                        Log.d(TAG, "Ignore Q Back")
+                        Log.d(TAG, "Ignore Q Back") // NON-NLS
                     }
                 }
             })
@@ -128,24 +129,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         val playerResultListView = findViewById<ListView>(R.id.playerResultsList)
 
-        gameState.gameLifecycleState.observe(this) {
-            @Suppress("CascadeIf") // Warning makes no sense as we don't consider all possible values
-            if (it == GameState.GameLifeCycleState.TIMER_FINISHED) {
-                disableGuessing()
-            } else if (it == GameState.GameLifeCycleState.GAME_OVER) {
-                gameState.cancelTimer()
-                disableGuessing()
-            } else if (
-                it == GameState.GameLifeCycleState.UNSOLVABLE) {
-                gameState.cancelTimer()
-                runOnUiThread {
-                    disableGuessing()
-                    showUnsolvableDialog(this)
-                }
-            } else if (it == GameState.GameLifeCycleState.STARTED) {
-                enableGuessing()
-            }
-        }
+        gameState.gameLifecycleState.observe(this) { onGameStateChanged(it) }
 
         try {
             gameState.dictionary = Dictionary(this)
@@ -241,11 +225,38 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         updateScore()
     }
 
+    private fun onGameStateChanged(state: GameState.GameLifeCycleState) {
+        when (state) {
+            TIMER_FINISHED -> {
+                disableGuessing()
+            }
+            GAME_OVER -> {
+                gameState.cancelTimer()
+                disableGuessing()
+            }
+            UNSOLVABLE -> {
+                gameState.cancelTimer()
+                runOnUiThread {
+                    disableGuessing()
+                    showUnsolvableDialog(this)
+                }
+            }
+            STARTED -> {
+                enableGuessing()
+            }
+
+            NOT_STARTED -> disableGuessing()
+            TIMER_STARTED -> enableGuessing()
+        }
+    }
+
+
     internal fun enableGuessing() {
         for (button in letterButtons) {
             button.isEnabled = true
             button.setContentDescription("Unavailable Letter Button")
         }
+        setHintVisibility(true)
     }
 
     private fun clearGuess() {
@@ -260,15 +271,27 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             button.isEnabled = false
             button.setContentDescription("Unavailable Letter Button")
         }
+        setHintVisibility(false)
     }
 
+    private var showHint = false
+
+    override fun onPrepareOptionsMenu(menu: Menu): Boolean {
+        menu.findItem(R.id.menu_item_hint)?.isVisible = showHint
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    fun setHintVisibility(visible: Boolean) {
+        showHint = visible
+        invalidateOptionsMenu()
+    }
 
     fun isGameOver(): Boolean {
         val state = gameState.gameLifecycleState.value
-        return state == GameState.GameLifeCycleState.NOT_STARTED ||
-                state == GameState.GameLifeCycleState.UNSOLVABLE ||
-                state == GameState.GameLifeCycleState.GAME_OVER ||
-                state == GameState.GameLifeCycleState.TIMER_FINISHED
+        return state == NOT_STARTED ||
+                state == UNSOLVABLE ||
+                state == GAME_OVER ||
+                state == TIMER_FINISHED
     }
 
 
@@ -294,7 +317,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             preferencesChanged = false
         }
 
-        if (gameState.gameLifecycleState.value == GameState.GameLifeCycleState.NOT_STARTED) {
+        if (gameState.gameLifecycleState.value == NOT_STARTED) {
             if(!showConfirmStartGameDialogVisible)
                 showConfirmStartGameDialog(this)
         }
@@ -320,17 +343,17 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val defaultDict by lazy {getString(R.string.default_dict)}
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
-        Log.i(TAG, "Preferences changed for $key")
+        Log.i(TAG, "Preferences changed for $key") // NON-NLS
         preferencesChanged = true
-        if (key == "dict_pref" &&
-            sharedPreferences.getString("dict_pref", defaultDict) != gameState.dictionaryName) {
+        if (key == "dict_pref" && // NON-NLS
+            sharedPreferences.getString("dict_pref", defaultDict) != gameState.dictionaryName) { // NON-NLS
             reshuffleRequired = true
         }
         if(key =="threeLetterPref" &&
             sharedPreferences.getBoolean("threeLetterPref", true) != gameState.isAllow3LetterWords) {
             reshuffleRequired = true
         }
-        if(key =="countdown_pref") {
+        if(key =="countdown_pref") { // NON-NLS
             reshuffleRequired = true
         }
     }
@@ -340,10 +363,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     {
         val prefs = sharedPreferences
 
-        gameState.dictionaryName = prefs.getString("dict_pref", defaultDict)
-        gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count"))
+        gameState.dictionaryName = prefs.getString("dict_pref", defaultDict) // NON-NLS
+        gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count")) // NON-NLS
 
-        gameState.setLetterSelector(prefs.getString("rand_dist_pref", "multiLetterFrequency"))
+        gameState.setLetterSelector(prefs.getString("rand_dist_pref", "multiLetterFrequency")) // NON-NLS
 
         gameState.isAllow3LetterWords = prefs.getBoolean("threeLetterPref", true)
 
@@ -351,9 +374,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             prefs.getBoolean("autoAddPrefixPref", false)
         )
 
-        if (prefs.getBoolean("countdown_pref", true)) {
+        if (prefs.getBoolean("countdown_pref", true)) { // NON-NLS
             gameState.timerMode = TIMER_MODE.COUNT_DOWN
-            val timeStr = prefs.getString("countdown_time_pref", "03:00")!!
+            val timeStr = prefs.getString("countdown_time_pref", "03:00")!! // NON-NLS
             val time = parseTime(timeStr)
             gameState.gameTime = time
         } else {
@@ -370,23 +393,25 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         var m = time / 60
         val s = time % 60
         if(m<60) {
-            val ms = "%02d:%02d".format(m, s)
+            val ms = "%02d:%02d".format(m, s) // NON-NLS
             countDownView.text = ms
         } else {
             val h = m / 60
             m = m % 60
-            val ms = "%02d:%02d:%02d".format(h, m, s)
+            val ms = "%02d:%02d:%02d".format(h, m, s) // NON-NLS
             countDownView.text = ms
         }
 
         if (time == 0L && gameState.timerMode== TIMER_MODE.COUNT_DOWN &&
-            gameState.gameLifecycleState.value != GameState.GameLifeCycleState.NOT_STARTED) {
+            gameState.gameLifecycleState.value != NOT_STARTED
+        ) {
 
-            if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.TIMER_FINISHED) {
-                gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.TIMER_FINISHED)
+            if (gameState.gameLifecycleState.value != TIMER_FINISHED) {
+                gameState.gameLifecycleState.postValue(TIMER_FINISHED)
             }
-            if (!isFinishing)
+            if (!isFinishing) {
                 showTimeIsUpDialog(this)
+            }
         }
     }
 
@@ -518,7 +543,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 testAndAddPrefixWords(guess)
             }
         } else {
-            guess = guess.replace("Q".toRegex(), "QU")
+            guess = guess.replace("Q".toRegex(), "QU") // NON-NLS
             guessVal = gameState.validatePlayerGuess(guess)
             if (guessVal.state == PlayerGuessState.GUESS_VALID) {
                 insertPlayerResult(guessVal.guess)
@@ -534,7 +559,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 }
 
                 val context = applicationContext
-                val toast = Toast.makeText(context, "\"${guess.replace("QUU", "Q(u)U")}\" $text", Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(context, "\"${guess.replace("QUU", "Q(u)U")}\" $text", Toast.LENGTH_SHORT) // NON-NLS
                 toast.show()
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -621,9 +646,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             val minLength = if (gameState.isAllow3LetterWords) 3 else 4
             val enabled = gameState.currentGuess.length >= minLength
             if (enabled) {
-                okButton.setTextColor("#000000".toColorInt())
+                okButton.setTextColor("#000000".toColorInt()) // NON-NLS
             } else {
-                okButton.setTextColor("#FA1616".toColorInt())
+                okButton.setTextColor("#FA1616".toColorInt()) // NON-NLS
             }
         }
     }
@@ -662,8 +687,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun solveClick() {
-        if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
-            gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+        if(gameState.gameLifecycleState.value != GAME_OVER) {
+            gameState.gameLifecycleState.postValue(GAME_OVER)
         }
         showComputerResults(show = true, animate = true)
     }
@@ -675,8 +700,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     fun updateButtonEnabledStatus(){
-        if (gameState.gameLifecycleState.value == GameState.GameLifeCycleState.STARTED ||
-            gameState.gameLifecycleState.value == GameState.GameLifeCycleState.TIMER_STARTED) {
+        if (gameState.gameLifecycleState.value == STARTED ||
+            gameState.gameLifecycleState.value == TIMER_STARTED
+        ) {
             enableGuessing()
         } else {
             disableGuessing()
@@ -700,10 +726,40 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 shuffleClick()
                 return true
             }
+            R.id.menu_item_hint -> {
+                displayHint()
+                return true
+            }
             else -> {
                 return super.onOptionsItemSelected(item)
             }
         }
+    }
+
+    private fun displayHint() {
+        val view = findViewById<View>(android.R.id.content)
+        showTableSnackbar(view, getString(R.string.number_of_words_still_to_be_found_by_word_length),
+            listOf(getString(R.string.word_length), getString(R.string.number_of_words)), getHintTableData(), 100)
+    }
+
+    private fun getHintTableData(): List<List<String>> {
+        val currentGuesses = gameState.playerResultList
+        val solution = gameState.computerResultList
+
+        val solutionList = solution.value ?: return emptyList()
+        val missingResults = solutionList.filter { solutionResult ->
+            // Check if no item in currentGuesses has the same text
+            currentGuesses.none { guess -> guess.result.text == solutionResult.result.text }
+        }
+
+        val result = missingResults
+            .groupBy { it.result.text.length }  // Group by word length
+            .mapValues { it.value.size } // Convert to counts
+            .filter { it.value > 0 }     // Remove lengths with zero counts
+            .entries
+            .sortedBy { it.key }         // Sort by word length
+            .map { listOf(it.key.toString(), it.value.toString()) } // Convert to List<String>
+        return result
     }
 
     private fun showPreferences() {
@@ -719,7 +775,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     companion object {
-        const val TAG: String = "CF_WF"
+        const val TAG: String = "CF_WF" // NON-NLS
 
         val MOVES: Array<IntArray> = arrayOf(
             intArrayOf(1, 4, 5),
@@ -739,7 +795,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             intArrayOf(9, 10, 11, 13, 15),
             intArrayOf(10, 11, 14)
         )
-        private const val SHOW_COMPUTER_RESULTS_FLAG = "SHOW_COMPUTER_RESULTS_FLAG"
+        private const val SHOW_COMPUTER_RESULTS_FLAG = "SHOW_COMPUTER_RESULTS_FLAG" // NON-NLS
 
         private val letterButtonIds = intArrayOf(
             R.id.button01, R.id.button02,

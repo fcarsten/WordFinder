@@ -163,6 +163,6 @@ fun main() {
 
     // Print the rescaled array
     rescaledArray.forEach { row ->
-        println( "intArrayOf(${row.joinToString(", ")}), ")
+        println( "intArrayOf(${row.joinToString(", ")}), ") // NON-NLS
     }
 }

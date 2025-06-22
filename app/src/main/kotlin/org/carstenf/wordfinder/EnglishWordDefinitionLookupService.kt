@@ -24,7 +24,7 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
-                Log.e("API Response", e.message, e)
+                Log.e("API Response", e.message, e) // NON-NLS
                 lookupManager.processWordLookupError(
                     task,
                     language,
@@ -45,19 +45,19 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
                     }
 
                     val responseBodyStr = responseBody.string()
-                    Log.d("API Response", responseBodyStr)
+                    Log.d("API Response", responseBodyStr) // NON-NLS
 
                     try {
                         val jsonObject = JSONArray(responseBodyStr).getJSONObject(0)
-                        val meaningArray = jsonObject.getJSONArray("meanings")
+                        val meaningArray = jsonObject.getJSONArray("meanings") // NON-NLS
                         val meaning = meaningArray.getJSONObject(0)
 
                         val partOfSpeech = meaning.getString("partOfSpeech")
 
-                        val definitionArray = meaning.getJSONArray("definitions")
+                        val definitionArray = meaning.getJSONArray("definitions") // NON-NLS
                         val definitionObj = definitionArray.getJSONObject(0)
 
-                        val definition = definitionObj.getString("definition")
+                        val definition = definitionObj.getString("definition") // NON-NLS
 
                         val definitionStr = "${task.word.displayText} ($partOfSpeech): $definition"
 
@@ -72,7 +72,7 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
                     } catch (e: Exception) {
                         lookupManager.processWordLookupError(
                             task, language,
-                            "Error looking up ${task.word.displayText}: ${e.message}"
+                            "Error looking up ${task.word.displayText}: ${e.message}" // NON-NLS
                         )
                     }
                 } else {
@@ -89,7 +89,7 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
         })
     }
 
-    override val language: String = "E"
+    override val language: String = "E" // NON-NLS
 
     companion object {
         private val client = OkHttpClient()

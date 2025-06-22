@@ -18,9 +18,9 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.carstenf.wordfinder.R
 
-const val FIREWORK_DISMISS = "firework_dismiss"
+const val FIREWORK_DISMISS = "firework_dismiss" // NON-NLS
 
-const val FIREWORK_DISMISSED = "firework_dismissed"
+const val FIREWORK_DISMISSED = "firework_dismissed" // NON-NLS
 
 class FireworkDialog() : DialogFragment() {
 
@@ -38,7 +38,7 @@ class FireworkDialog() : DialogFragment() {
         fanfarePlayer = VictoryFanfarePlayer(requireContext())
         fanfarePlayer.playFanfare {
             // Optional callback when fanfare completes
-            Log.d(TAG, "Fanfare completed")
+            Log.d(TAG, "Fanfare completed") // NON-NLS
         }
 
     }
@@ -101,6 +101,7 @@ class FireworkDialog() : DialogFragment() {
     }
 
     // Call this if you want to stop the fanfare early
+    @Suppress("UNUSED")
     private fun stopFanfare() {
         fanfarePlayer.stopFanfare()
     }
@@ -111,7 +112,7 @@ class FireworkDialog() : DialogFragment() {
     }
 
     companion object {
-        private const val ARG_DURATION = "duration"
+        private const val ARG_DURATION = "duration" // NON-NLS
         const val TAG = "FireworkDialog" // Tag for finding the fragment
 
         fun newInstance(durationSeconds: Int): FireworkDialog {

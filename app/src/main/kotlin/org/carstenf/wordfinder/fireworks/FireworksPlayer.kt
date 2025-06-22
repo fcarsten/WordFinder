@@ -32,7 +32,7 @@ object FireworksPlayer {
      *
      * @param fragmentManager The FragmentManager from the Activity or Fragment context.
      */
-    @Suppress("unused")
+    @Suppress("unused") // NON-NLS
     fun dismiss(fragmentManager: FragmentManager) {
         mainHandler.post {
             val dialog = fragmentManager.findFragmentByTag(FireworkDialog.TAG) as? FireworkDialog

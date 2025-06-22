@@ -79,7 +79,7 @@ class WiktionaryLookup {
     private fun buildUrl(word: String, continueParams: Map<String, String>): String {
         var url = "$WIKTIONARY_API_URL$word"
         if (continueParams.isNotEmpty()) {
-            url += "&continue=${continueParams["continue"]}&excontinue=${continueParams["excontinue"]}"
+            url += "&continue=${continueParams["continue"]}&excontinue=${continueParams["excontinue"]}" // NON-NLS
         }
         return url
     }
@@ -87,20 +87,20 @@ class WiktionaryLookup {
     // Parse the API response and extract the meaning and continue parameters
     private fun parseResponse(jsonResponse: String): Pair<String?, Map<String, String>> {
         val rootNode = objectMapper.readTree(jsonResponse)
-        val pagesNode = rootNode.path("query").path("pages")
+        val pagesNode = rootNode.path("query").path("pages") // NON-NLS
 
         var meaning: String? = null
         for (pageNode in pagesNode) {
-            if (pageNode.has("extract")) {
-                meaning = pageNode.path("extract").asText()
+            if (pageNode.has("extract")) { // NON-NLS
+                meaning = pageNode.path("extract").asText() // NON-NLS
             }
         }
 
         val continueParams = mutableMapOf<String, String>()
-        if (rootNode.has("continue")) {
-            val continueNode = rootNode.path("continue")
-            continueParams["continue"] = continueNode.path("continue").asText()
-            continueParams["excontinue"] = continueNode.path("excontinue").asText()
+        if (rootNode.has("continue")) { // NON-NLS
+            val continueNode = rootNode.path("continue") // NON-NLS
+            continueParams["continue"] = continueNode.path("continue").asText() // NON-NLS
+            continueParams["excontinue"] = continueNode.path("excontinue").asText() // NON-NLS
         }
 
         return Pair(meaning, continueParams)
@@ -119,7 +119,7 @@ class WiktionaryLookup {
         var preamble = true
 
         for (line in lines) {
-            if (line.startsWith("Bedeutungen:")) {
+            if (line.startsWith("Bedeutungen:")) { // NON-NLS
                 isMeaningSection = true
                 continue // Skip the "Bedeutungen:" line
             }
@@ -142,7 +142,7 @@ class WiktionaryLookup {
                 isMerkmaleSection = false // Can't tell end of section reliably so only taking the first line
             }
 
-            if(line.startsWith("Grammatische Merkmale:")) {
+            if(line.startsWith("Grammatische Merkmale:")) { // NON-NLS
                 isMerkmaleSection = true
             }
 

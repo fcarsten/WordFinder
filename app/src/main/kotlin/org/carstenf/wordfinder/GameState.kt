@@ -46,11 +46,11 @@ class GameState : ViewModel() {
 
         var letterRandomDistCur = letterSelector
         if(letterRandomDistCur == null) {
-            Log.d(WordFinder.TAG, "Letter selector: Whatever")
+            Log.d(WordFinder.TAG, "Letter selector: Whatever") // NON-NLS
             letterRandomDistCur =  LETTER_RANDOM_DIST.entries.toTypedArray().random()
         }
 
-        Log.d(WordFinder.TAG, "Letter selector: ${letterRandomDistCur.name}")
+        Log.d(WordFinder.TAG, "Letter selector: ${letterRandomDistCur.name}") // NON-NLS
 
         for (i in 0..15) {
             board[i] = pickRandomLetter(letterRandomDistCur, letterCounts, dictionaryCountryCode(), i).uppercaseChar()
@@ -64,7 +64,7 @@ class GameState : ViewModel() {
 
     fun findWord(w: String): Boolean {
         var word = w
-        word = word.uppercase(Locale.getDefault()).replace("QU".toRegex(), "Q")
+        word = word.uppercase(Locale.getDefault()).replace("QU".toRegex(), "Q") // NON-NLS
         val taken = BooleanArray(16)
 
         val chars = word.toCharArray()
@@ -257,7 +257,7 @@ class GameState : ViewModel() {
     }
 
     fun setScoringAlgorithm(string: String?) {
-        if ("count".equals(string, ignoreCase = true)) {
+        if ("count".equals(string, ignoreCase = true)) { // NON-NLS
             this.scoreAlg = ScoreAlgorithm.COUNT
         } else {
             this.scoreAlg = ScoreAlgorithm.VALUE
@@ -284,10 +284,13 @@ class GameState : ViewModel() {
         if(timerMode == TIMER_MODE.COUNT_DOWN) {
             countDownTimer = object : CountDownTimer(time, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
-                    timerCurrentValue.postValue(millisUntilFinished / 1000)
+                    val secsLeft = millisUntilFinished / 1000
+                    if(secsLeft>0) // Otherwise 0 gets posted twice. Here and in onFinish()
+                        timerCurrentValue.postValue(secsLeft)
                 }
 
                 override fun onFinish() {
+                    timerCurrentValue.postValue(0)
                 }
             }.start()
         } else {
@@ -349,9 +352,9 @@ class GameState : ViewModel() {
     }
 
     fun dictionaryCountryCode(): LANGUAGE {
-        if (dictionaryName.equals("german", ignoreCase = true) ||
-            dictionaryName.equals("german_wiki", ignoreCase = true) ||
-            dictionaryName.equals("german_simple", ignoreCase = true)) {
+        if (dictionaryName.equals("german", ignoreCase = true) || // NON-NLS
+            dictionaryName.equals("german_wiki", ignoreCase = true) || // NON-NLS
+            dictionaryName.equals("german_simple", ignoreCase = true)) { // NON-NLS
             return LANGUAGE.DE
         }
         return LANGUAGE.EN

@@ -22,7 +22,7 @@ class VictoryFanfarePlayer(private val context: Context) {
                 onCompletion?.invoke()
             }
 
-            setOnErrorListener { _, what, extra ->
+            setOnErrorListener { _, _, _ ->
                 cleanup()
                 false
             }

@@ -21,20 +21,20 @@ class WordInfoCache {
     }
 
     // Remove a WordInfo object by word and language
-    @Suppress("unused")
+    @Suppress("unused") // NON-NLS
     fun remove(word: String, language: String) {
         val key = "$word|$language"
         cache.remove(key)
     }
 
     // Clear the cache
-    @Suppress("unused")
+    @Suppress("unused") // NON-NLS
     fun clear() {
         cache.clear()
     }
 
     // Get all cached WordInfo objects (for debugging or inspection)
-    @Suppress("unused")
+    @Suppress("unused") // NON-NLS
     fun getAll(): List<WordInfo> {
         return cache.values.toList()
     }
