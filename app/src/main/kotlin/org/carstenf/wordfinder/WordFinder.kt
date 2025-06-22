@@ -34,6 +34,9 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.graphics.toColorInt
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -48,6 +51,7 @@ import org.carstenf.wordfinder.fireworks.FIREWORK_DISMISS
 import org.carstenf.wordfinder.fireworks.FIREWORK_DISMISSED
 import org.carstenf.wordfinder.fireworks.FireworksPlayer
 import java.io.IOException
+import kotlin.math.max
 
 class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val playerResultList by lazy {
@@ -82,8 +86,29 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContentView(R.layout.main)
+
+        val rootView = findViewById<View>(R.id.root)
+        if(rootView!=null) {
+            ViewCompat.setOnApplyWindowInsetsListener(rootView) { view, insets ->
+                val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+                // Individual padding values (in pixels)
+                val paddingLeft = view.paddingLeft    // or paddingStart
+                val paddingTop = view.paddingTop
+                val paddingRight = view.paddingRight  // or paddingEnd
+                val paddingBottom = view.paddingBottom
+
+                view.setPadding(
+                    paddingLeft,  // Left edge swipe area
+                    max(systemBars.top, paddingTop),       // Status bar
+                    paddingRight, // Right edge swipe area
+                    max(systemBars.bottom, paddingBottom)     // Traditional nav bar OR gesture pill
+                )
+                insets
+            }
+        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             onBackInvokedDispatcher.registerOnBackInvokedCallback(
@@ -431,11 +456,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 val enabled = gameState.isAvailable(bid)
                 letterButtons[bid].isEnabled = enabled
                 if (!enabled) {
-                    letterButtons[bid].setContentDescription(
-                        "Disabled Letter " + gameState.getBoard(
-                            bid
-                        )
-                    )
+                    letterButtons[bid].setContentDescription("Disabled Letter " + gameState.getBoard(bid))
                 }
             }
         } else {
