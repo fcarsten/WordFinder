@@ -16,7 +16,7 @@ class WordFinderSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
-        val timePref: EditTextPreference? = findPreference("countdown_time_pref")
+        val timePref: EditTextPreference? = findPreference("countdown_time_pref") // NON-NLS
         if(timePref!=null) {
             timePref.setSummary(
                 String.format(

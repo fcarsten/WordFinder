@@ -88,6 +88,6 @@ private class DrawableCanvas(private val paint: Paint, private val path: Path) :
     override fun draw(canvas: Canvas) { canvas.drawPath(path, paint) }
     override fun setAlpha(alpha: Int) {} // Not needed as transparency is set in paint
     override fun setColorFilter(colorFilter: ColorFilter?) {}
-    @Deprecated("Deprecated in Java")
+    @Deprecated("Deprecated in Java")  // NON-NLS
     override fun getOpacity() = PixelFormat.TRANSLUCENT
 }

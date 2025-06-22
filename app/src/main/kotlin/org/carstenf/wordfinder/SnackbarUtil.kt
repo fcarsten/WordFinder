@@ -40,7 +40,7 @@ fun showSnackbar(view: View, definitionStr: String, displayTime: Long) {
     } else {
         Log.e(
             TAG,
-            "TextView not found in Snackbar view to adjust number of lines"
+            "TextView not found in Snackbar view to adjust number of lines" // NON-NLS
         )
     }
 
@@ -128,8 +128,8 @@ private fun addTableHeader(tableLayout: TableLayout, vararg headers: String) {
 
 fun showTableSnackbar(view: View, description: String, tableHeader: List<String>,
                       tableData: List<List<String>>, displayTime: Long) {
-    val evenRowColor = "#FFFFFF".toColorInt()
-    val oddRowColor = "#B5B5B5".toColorInt()
+    val evenRowColor = "#FFFFFF".toColorInt() // NON-NLS
+    val oddRowColor = "#B5B5B5".toColorInt() // NON-NLS
 
     // Create a Snackbar with empty text
     val snackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE)

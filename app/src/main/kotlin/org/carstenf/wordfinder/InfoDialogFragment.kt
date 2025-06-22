@@ -60,8 +60,8 @@ class InfoDialogFragment : DialogFragment() {
         val locale = Locale.getDefault().language
 
         val htmlAssetPath  = when (locale) {
-            "de" -> "html/de"
-            else -> "html/en" // Default to English
+            "de" -> "html/de" // NON-NLS
+            else -> "html/en" // Default to English // NON-NLS
         }
 
         val pages = mutableListOf <PageData>()
@@ -69,7 +69,7 @@ class InfoDialogFragment : DialogFragment() {
         if (assets != null) {
             val sortedAssets = assets.filterNotNull().sortedBy { it.lowercase() }
             for (page in sortedAssets) {
-                if (page != "images") {
+                if (page != "images") { // NON-NLS
                     val htmlFileName = "$htmlAssetPath/$page"
                     val htmlContent = loadHtmlFromAssets(htmlFileName)
                     pages.add(PageData(htmlContent, htmlAssetPath))
@@ -145,7 +145,7 @@ class InfoDialogFragment : DialogFragment() {
     private lateinit var gameState: GameState
 
     companion object {
-        const val TAG = "WordFinder InfoDialog"
+        const val TAG = "WordFinder InfoDialog" // NON-NLS
 
         fun showInfo(fragmentManager: FragmentManager, state: GameState) {
             val dialogFragment = InfoDialogFragment()
@@ -201,7 +201,7 @@ class DialogImageHandler(private val page: PageData, private val textView: TextV
                 textView.context.assets.open(page.htmlAssetPath + "/" + source)
             val drawable = Drawable.createFromStream(inputStream, null)
             if(drawable==null) {
-                Log.e(TAG, "Drawable is null")
+                Log.e(TAG, "Drawable is null in DialogImageHandler#getDrawable")  // NON-NLS
                 return null
             }
             val originalWidth = drawable.intrinsicWidth

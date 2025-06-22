@@ -61,4 +61,7 @@
     <string name="game_won_message">You found all the words</string>
     <string name="game_won_title">You Win!</string>
     <string name="hint">Hint</string>
+    <string name="number_of_words_still_to_be_found_by_word_length">Number of words still to be found by word length:</string>
+    <string name="word_length">Word length</string>
+    <string name="number_of_words">Number of words</string>
 </resources>

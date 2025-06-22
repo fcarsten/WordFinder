@@ -12,14 +12,14 @@ import java.util.Locale
 class GermanWordDefinitionLookupService : WordDefinitionLookupService {
     private fun replaceWithUmlauts(input: String): String {
         return input
-            .replace("ae", "ä")
-            .replace("ue", "ü")
-            .replace("oe", "ö")
+            .replace("ae", "ä") // NON-NLS
+            .replace("ue", "ü") // NON-NLS
+            .replace("oe", "ö") // NON-NLS
     }
 
     private fun replaceWithSz(input: String): String {
         return input
-            .replace("ss", "ß")
+            .replace("ss", "ß") // NON-NLS
     }
 
     override fun lookupWordDefinition(
@@ -32,7 +32,7 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
 
         if(task.word.text != task.word.displayText) {
             if(task.word.displayText != task.word.lemma){
-                prefix = "${task.word.displayText} (von ${task.word.lemma}): "
+                prefix = "${task.word.displayText} (von ${task.word.lemma}): " // NON-NLS
                 searchTerm = task.word.lemma
             } else {
                 prefix = "${task.word.displayText}: "
@@ -54,7 +54,7 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
                 if (!meaning.isNullOrBlank()) {
                     var meaningClean = meaning
                     if(! meaning.contains("[2]")) { // No need to make a list if only 1 element
-                        meaningClean = meaning.replace("\\[1]\\s*".toRegex(), "")
+                        meaningClean = meaning.replace("\\[1]\\s*".toRegex(), "") // NON-NLS
                     }
 
                     lookupManager.processWordLookupResult(
@@ -84,5 +84,5 @@ class GermanWordDefinitionLookupService : WordDefinitionLookupService {
 
     }
 
-    override val language: String = "D"
+    override val language: String = "D" // NON-NLS
 }

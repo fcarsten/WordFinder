@@ -33,7 +33,7 @@ class FireworkView @JvmOverloads constructor(
 
     fun startAnimation() {
         if (animator?.isRunning == true) {
-            Log.d(WordFinder.TAG, "startAnimation: Animator already running.")
+            Log.d(WordFinder.TAG, "startAnimation: Animator already running.") // NON-NLS
             return
         }
 //        Log.d(DEBUG_TAG, "startAnimation: Starting animator. IsAttached: $isAttachedToWindow")
@@ -41,11 +41,11 @@ class FireworkView @JvmOverloads constructor(
         // Add post block to ensure layout is complete
         post {
             if (!isAttachedToWindow) {
-                Log.w(WordFinder.TAG, "startAnimation (post): View detached before execution.")
+                Log.w(WordFinder.TAG, "startAnimation (post): View detached before execution.") // NON-NLS
                 return@post
             }
             if (width == 0 || height == 0) {
-                Log.e(WordFinder.TAG, "startAnimation (post): View width or height is zero! Cannot launch fireworks.")
+                Log.e(WordFinder.TAG, "startAnimation (post): View width or height is zero! Cannot launch fireworks.") // NON-NLS
                 // Consider trying again after a delay or stopping. For now, just log.
                 return@post
             }
@@ -116,7 +116,7 @@ class FireworkView @JvmOverloads constructor(
                 // Log.d(DEBUG_TAG, "Launching next firework after explosion delay.")
                 launchFirework()
             } else {
-                Log.d(WordFinder.TAG, "Skipping next firework launch (animator stopped or view detached).")
+                Log.d(WordFinder.TAG, "Skipping next firework launch (animator stopped or view detached).") // NON-NLS
             }
         }, random.nextLong(100, 800))
     }
@@ -142,7 +142,7 @@ class FireworkView @JvmOverloads constructor(
                         // Log.d(DEBUG_TAG, "Rocket marked for explosion: y=${particle.y}, targetY=${particle.targetY}, alpha=${particle.alpha}")
                         particlesToExplode.add(particle)
                     } else {
-                        Log.d(WordFinder.TAG, "Rocket died before reaching target: y=${particle.y}, targetY=${particle.targetY}")
+                        Log.d(WordFinder.TAG, "Rocket died before reaching target: y=${particle.y}, targetY=${particle.targetY}") // NON-NLS
                     }
                 }
                 iterator.remove() // Remove dead particle

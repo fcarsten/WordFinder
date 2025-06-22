@@ -28,7 +28,7 @@ class WordDefinitionLookupManager(private val app: Activity, private val gameSta
         if (input.isBlank()) return 0 // Return 0 if the string is empty or contains only whitespace
 
         // Split the string by whitespace and filter out any empty strings (caused by multiple spaces)
-        val words = input.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() }
+        val words = input.trim().split("\\s+".toRegex()).filter { it.isNotEmpty() } // NON-NLS
 
         return words.size
     }
@@ -39,7 +39,7 @@ class WordDefinitionLookupManager(private val app: Activity, private val gameSta
 
         if (wordDef.isNullOrBlank()) {
             wordDef = app.getString(R.string.definition_not_found_for, wordInfo.word)
-            url = "https://www.google.com/search?q="+wordInfo.word+"+definition"
+            url = "https://www.google.com/search?q="+wordInfo.word+"+definition" // NON-NLS
         }
         app.runOnUiThread {
             val numWords = countWords(wordDef)
@@ -105,8 +105,8 @@ class WordDefinitionLookupManager(private val app: Activity, private val gameSta
 
     private fun getWordDefinitionLookupService(dictionaryName: String): WordDefinitionLookupService? {
         return when (dictionaryName.lowercase(Locale.getDefault())) {
-            "int_english", "2of12inf" -> EnglishWordDefinitionLookupService()
-            "german", "german_simple", "german_wiki" -> GermanWordDefinitionLookupService()
+            "int_english", "2of12inf" -> EnglishWordDefinitionLookupService() // NON-NLS
+            "german", "german_simple", "german_wiki" -> GermanWordDefinitionLookupService() // NON-NLS
             else -> null
         }
     }

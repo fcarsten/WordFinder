@@ -20,7 +20,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
     suspend fun lookup(word: String, db: String?): WordInfoData? {
         return dbMutex.withLock {
             if (db == null) {
-                Log.e(WordFinder.TAG, "Dictionary name null")
+                Log.e(WordFinder.TAG, "Dictionary name null") // NON-NLS
                 return null
             }
 
@@ -31,8 +31,8 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
                 .uppercase(Locale.getDefault())]
             if (helper == null) return null
 
-            val supportsDisplayText = (db  == "german_wiki") || (db  == "german_simple")
-            val supportsLemma = (db  == "german_wiki") || (db  == "german_simple")
+            val supportsDisplayText = (db  == "german_wiki") || (db  == "german_simple") // NON-NLS
+            val supportsLemma = (db  == "german_wiki") || (db  == "german_simple") // NON-NLS
 
             var col = arrayOf(TEXT_COLUMN)
             if(supportsDisplayText) {
@@ -47,7 +47,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
             helper.getOrCreateDataBase().use { sqlite ->
                 builder.query(
                     sqlite,
-                    col, "text = ?",
+                    col, "text = ?", // NON-NLS
                     arrayOf(s), null, null, null
                 ).use { cursor ->
                     if (cursor == null) {
@@ -79,12 +79,12 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
                     file.trim { it <= ' ' }.uppercase(Locale.getDefault()).replace(".7Z", "")
                 mDatabaseOpenHelperMap[dbName] = AssetDbOpenHelper(
                     wordFinder.applicationContext, dbName,
-                    "$DB_ASSET_PATH/$file"
+                    "$DB_ASSET_PATH/$file" // NON-NLS
                 )
             }
         }
         builder = SQLiteQueryBuilder()
-        builder.tables = "words"
+        builder.tables = "words" // NON-NLS
     }
 
     private val dbMutex = Mutex()
@@ -100,8 +100,8 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
             val dbHelper = mDatabaseOpenHelperMap[db.trim { it <= ' ' }
                 .uppercase(Locale.getDefault())]
             if (dbHelper == null) return null
-            val supportsDisplayText = (db  == "german_wiki") || (db  == "german_simple")
-            val supportsLemma = (db  == "german_wiki") || (db  == "german_simple")
+            val supportsDisplayText = (db  == "german_wiki") || (db  == "german_simple") // NON-NLS
+            val supportsLemma = (db  == "german_wiki") || (db  == "german_simple") // NON-NLS
 
             var col = arrayOf(TEXT_COLUMN)
             if(supportsDisplayText) {
@@ -116,7 +116,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
             dbHelper.getOrCreateDataBase().use { sqlite ->
                 builder.query(
                     sqlite,
-                    col, "prefix = ?",
+                    col, "prefix = ?", // NON-NLS
                     arrayOf(prefix), null, null, null
                 ).use { cursor ->
                     if (cursor == null) {
@@ -138,9 +138,9 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
     }
 
     internal companion object {
-        private const val DB_ASSET_PATH = "dicts"
-        private const val TEXT_COLUMN = "text"
-        private const val DISPLAY_TEXT_COLUMN = "display_text"
-        private const val LEMMA_COLUMN = "lemma"
+        private const val DB_ASSET_PATH = "dicts" // NON-NLS
+        private const val TEXT_COLUMN = "text" // NON-NLS
+        private const val DISPLAY_TEXT_COLUMN = "display_text" // NON-NLS
+        private const val LEMMA_COLUMN = "lemma" // NON-NLS
     }
 }

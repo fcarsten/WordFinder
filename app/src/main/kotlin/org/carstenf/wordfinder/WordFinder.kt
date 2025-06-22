@@ -90,11 +90,11 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 OnBackInvokedDispatcher.PRIORITY_DEFAULT
             ) {
                 val hasNavigationBar = !isGestureNavigationEnabled(this@WordFinder)
-                Log.d(TAG, "Navigation Bar: $hasNavigationBar")
+                Log.d(TAG, "Navigation Bar: $hasNavigationBar") // NON-NLS
                 if(hasNavigationBar) {
                     moveTaskToBack(true)
                 } else {
-                    Log.d(TAG, "Ignore Tiramisu Back")
+                    Log.d(TAG, "Ignore Tiramisu Back") // NON-NLS
                 }
             }
         }
@@ -103,11 +103,11 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     val hasNavigationBar = !isGestureNavigationEnabled(this@WordFinder)
-                    Log.d(TAG, "Navigation Bar: $hasNavigationBar")
+                    Log.d(TAG, "Navigation Bar: $hasNavigationBar") // NON-NLS
                     if(hasNavigationBar) {
                         moveTaskToBack(true)
                     } else {
-                        Log.d(TAG, "Ignore Q Back")
+                        Log.d(TAG, "Ignore Q Back") // NON-NLS
                     }
                 }
             })
@@ -343,17 +343,17 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val defaultDict by lazy {getString(R.string.default_dict)}
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
-        Log.i(TAG, "Preferences changed for $key")
+        Log.i(TAG, "Preferences changed for $key") // NON-NLS
         preferencesChanged = true
-        if (key == "dict_pref" &&
-            sharedPreferences.getString("dict_pref", defaultDict) != gameState.dictionaryName) {
+        if (key == "dict_pref" && // NON-NLS
+            sharedPreferences.getString("dict_pref", defaultDict) != gameState.dictionaryName) { // NON-NLS
             reshuffleRequired = true
         }
         if(key =="threeLetterPref" &&
             sharedPreferences.getBoolean("threeLetterPref", true) != gameState.isAllow3LetterWords) {
             reshuffleRequired = true
         }
-        if(key =="countdown_pref") {
+        if(key =="countdown_pref") { // NON-NLS
             reshuffleRequired = true
         }
     }
@@ -363,10 +363,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     {
         val prefs = sharedPreferences
 
-        gameState.dictionaryName = prefs.getString("dict_pref", defaultDict)
-        gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count"))
+        gameState.dictionaryName = prefs.getString("dict_pref", defaultDict) // NON-NLS
+        gameState.setScoringAlgorithm(prefs.getString("scoring_pref", "count")) // NON-NLS
 
-        gameState.setLetterSelector(prefs.getString("rand_dist_pref", "multiLetterFrequency"))
+        gameState.setLetterSelector(prefs.getString("rand_dist_pref", "multiLetterFrequency")) // NON-NLS
 
         gameState.isAllow3LetterWords = prefs.getBoolean("threeLetterPref", true)
 
@@ -374,9 +374,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             prefs.getBoolean("autoAddPrefixPref", false)
         )
 
-        if (prefs.getBoolean("countdown_pref", true)) {
+        if (prefs.getBoolean("countdown_pref", true)) { // NON-NLS
             gameState.timerMode = TIMER_MODE.COUNT_DOWN
-            val timeStr = prefs.getString("countdown_time_pref", "03:00")!!
+            val timeStr = prefs.getString("countdown_time_pref", "03:00")!! // NON-NLS
             val time = parseTime(timeStr)
             gameState.gameTime = time
         } else {
@@ -393,12 +393,12 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         var m = time / 60
         val s = time % 60
         if(m<60) {
-            val ms = "%02d:%02d".format(m, s)
+            val ms = "%02d:%02d".format(m, s) // NON-NLS
             countDownView.text = ms
         } else {
             val h = m / 60
             m = m % 60
-            val ms = "%02d:%02d:%02d".format(h, m, s)
+            val ms = "%02d:%02d:%02d".format(h, m, s) // NON-NLS
             countDownView.text = ms
         }
 
@@ -543,7 +543,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 testAndAddPrefixWords(guess)
             }
         } else {
-            guess = guess.replace("Q".toRegex(), "QU")
+            guess = guess.replace("Q".toRegex(), "QU") // NON-NLS
             guessVal = gameState.validatePlayerGuess(guess)
             if (guessVal.state == PlayerGuessState.GUESS_VALID) {
                 insertPlayerResult(guessVal.guess)
@@ -559,7 +559,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 }
 
                 val context = applicationContext
-                val toast = Toast.makeText(context, "\"${guess.replace("QUU", "Q(u)U")}\" $text", Toast.LENGTH_SHORT)
+                val toast = Toast.makeText(context, "\"${guess.replace("QUU", "Q(u)U")}\" $text", Toast.LENGTH_SHORT) // NON-NLS
                 toast.show()
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -646,9 +646,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             val minLength = if (gameState.isAllow3LetterWords) 3 else 4
             val enabled = gameState.currentGuess.length >= minLength
             if (enabled) {
-                okButton.setTextColor("#000000".toColorInt())
+                okButton.setTextColor("#000000".toColorInt()) // NON-NLS
             } else {
-                okButton.setTextColor("#FA1616".toColorInt())
+                okButton.setTextColor("#FA1616".toColorInt()) // NON-NLS
             }
         }
     }
@@ -738,8 +738,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     private fun displayHint() {
         val view = findViewById<View>(android.R.id.content)
-        showTableSnackbar(view, "Number of words still to be found by word length:",
-            listOf("Word length", "Number of words"), getHintTableData(), 100)
+        showTableSnackbar(view, getString(R.string.number_of_words_still_to_be_found_by_word_length),
+            listOf(getString(R.string.word_length), getString(R.string.number_of_words)), getHintTableData(), 100)
     }
 
     private fun getHintTableData(): List<List<String>> {
@@ -775,7 +775,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     companion object {
-        const val TAG: String = "CF_WF"
+        const val TAG: String = "CF_WF" // NON-NLS
 
         val MOVES: Array<IntArray> = arrayOf(
             intArrayOf(1, 4, 5),
@@ -795,7 +795,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             intArrayOf(9, 10, 11, 13, 15),
             intArrayOf(10, 11, 14)
         )
-        private const val SHOW_COMPUTER_RESULTS_FLAG = "SHOW_COMPUTER_RESULTS_FLAG"
+        private const val SHOW_COMPUTER_RESULTS_FLAG = "SHOW_COMPUTER_RESULTS_FLAG" // NON-NLS
 
         private val letterButtonIds = intArrayOf(
             R.id.button01, R.id.button02,
