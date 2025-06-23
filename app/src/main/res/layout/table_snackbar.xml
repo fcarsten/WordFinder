@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toTopOf="@+id/snackbar_action"
         >
 
-        <!-- More rows can be added programmatically -->
+        <!-- More rows are added programmatically at runtime -->
     </TableLayout>
     <TextView
         android:id="@+id/snackbar_action"
