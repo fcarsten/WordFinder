@@ -758,9 +758,16 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun displayHint() {
-        val view = findViewById<View>(android.R.id.content)
-        showTableDialog(view.context, getString(R.string.number_of_words_still_to_be_found_by_word_length),
-            listOf(getString(R.string.word_length), getString(R.string.number_of_words)), getHintTableData(), 10)
+        showTableDialog(
+            supportFragmentManager,
+            getString(R.string.number_of_words_still_to_be_found_by_word_length),
+            listOf(
+                getString(R.string.word_length),
+                getString(R.string.number_of_words)
+            ),
+            getHintTableData(),
+            10
+        )
     }
 
     private fun getHintTableData(): List<List<String>> {

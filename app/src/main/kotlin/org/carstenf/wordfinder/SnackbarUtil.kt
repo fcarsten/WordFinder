@@ -1,10 +1,6 @@
 package org.carstenf.wordfinder
 
-import android.app.Dialog
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.text.SpannableString
@@ -16,19 +12,12 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.FrameLayout
-import android.widget.TableLayout
-import android.widget.TableRow
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toDrawable
-import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
+import androidx.fragment.app.FragmentManager
 import com.google.android.material.snackbar.Snackbar
 import org.carstenf.wordfinder.WordFinder.Companion.TAG
-import java.lang.ref.WeakReference
 
 fun showSnackbar(view: View, definitionStr: String, displayTime: Long) {
     val snackbar = Snackbar.make(view, definitionStr, Snackbar.LENGTH_INDEFINITE)
@@ -66,188 +55,41 @@ fun showSnackbar(view: View, definitionStr: String, displayTime: Long) {
 
 }
 
-val columnWeights = floatArrayOf(0.5f, 0.5f)
 
-private fun addTableRow(tableLayout: TableLayout, rowColor: Int, vararg cells: String) {
-    val row = TableRow(tableLayout.context).apply {
-        layoutParams = TableLayout.LayoutParams(
-            TableLayout.LayoutParams.MATCH_PARENT,
-            TableLayout.LayoutParams.WRAP_CONTENT
-        )
-        background = ContextCompat.getDrawable(context, R.drawable.cell_border)
+/**
+ * Shows a dialog with a table using DialogFragment for lifecycle safety.
+ *
+ * @param fragmentManager The FragmentManager to use for showing the dialog.
+ * @param description Text to display above the table.
+ * @param tableHeader List of strings for the table header (expects 2 items).
+ * @param tableData List of rows, where each row is a list of strings for table cells (expects 2 cells per row).
+ * @param displayTime How long the dialog should be displayed in seconds before auto-dismissing.
+ */
+fun showTableDialog(
+    fragmentManager: FragmentManager,
+    description: String,
+    tableHeader: List<String>,
+    tableData: List<List<String>>,
+    displayTime: Long
+) {
+    val dialogFragment = TableDialogFragment.newInstance(
+        description,
+        tableHeader,
+        tableData,
+        displayTime
+    )
+    // It's good practice to check if the fragment manager can still commit transactions
+    if (!fragmentManager.isStateSaved) {
+        dialogFragment.show(fragmentManager, TAG)
+    } else {
+        Log.w(TAG, "FragmentManager state saved, cannot show TableDialogFragment.") // NON-NLS
     }
-
-    cells.forEachIndexed { index, cellText ->
-        TextView(tableLayout.context).apply {
-            text = cellText
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                setTextAppearance(R.style.TableBodyText)
-            } else {
-                setTextColor(ResourcesCompat.getColor(resources, R.color.md_theme_onPrimary, null))
-            }
-            setBackgroundColor(rowColor)
-            layoutParams = TableRow.LayoutParams(
-                0, // Will be weighted
-                TableRow.LayoutParams.WRAP_CONTENT,
-                columnWeights[index]
-            ).apply {
-//                setMargins(4, 4, 4, 4)
-                setPadding(8,2,8,2)
-            }
-            row.addView(this)
-        }
-    }
-
-    tableLayout.addView(row)
-}
-
-private fun addTableHeader(tableLayout: TableLayout, vararg headers: String) {
-    val headerBackground = "#202020".toColorInt()
-    val headerRow = TableRow(tableLayout.context).apply {
-        layoutParams = TableLayout.LayoutParams(
-            TableLayout.LayoutParams.MATCH_PARENT,
-            TableLayout.LayoutParams.WRAP_CONTENT
-        )
-        background = ContextCompat.getDrawable(context, R.drawable.cell_border)
-    }
-
-    headers.forEachIndexed { index, headerText ->
-        TextView(tableLayout.context).apply {
-            text = headerText
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                setTextAppearance(R.style.TableHeaderText)
-            }
-            setBackgroundColor(headerBackground)
-            layoutParams = TableRow.LayoutParams(
-                0, // Will be weighted
-                TableRow.LayoutParams.WRAP_CONTENT,
-                columnWeights[index]
-            ).apply {
-                setMargins(1, 1, 1, 1)
-            }
-            headerRow.addView(this)
-        }
-    }
-
-    tableLayout.addView(headerRow)
-}
-
-fun showTableDialog(context: Context, description: String, tableHeader: List<String>,
-                    tableData: List<List<String>>, displayTime: Long) {
-    val dialog = Dialog(context).apply {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        setContentView(R.layout.table_snackbar)
-        window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
-        window?.setLayout(
-            (context.resources.displayMetrics.widthPixels * 0.7).toInt(),
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-    }
-    // Inflate custom layout
-    val snackbarText = dialog.findViewById<TextView>(R.id.snackbar_text)
-    val snackbarAction = dialog.findViewById<TextView>(R.id.snackbar_action)
-    val snackbarTable = dialog.findViewById<TableLayout>(R.id.snackbar_table)
-
-
-    addTableHeader(snackbarTable, tableHeader.getOrNull(0) ?: "", tableHeader.getOrNull(1) ?: "")
-    val evenRowColor = "#FFFFFF".toColorInt() // NON-NLS
-    val oddRowColor = "#B5B5B5".toColorInt() // NON-NLS
-
-    tableData.forEachIndexed { index, rowData ->
-        addTableRow(
-            snackbarTable,
-            if (index % 2 == 0) evenRowColor else oddRowColor,
-            rowData.getOrNull(0) ?: "", rowData.getOrNull(1) ?: ""
-        )
-    }
-
-    // Apply to TextView
-    snackbarText.text = description
-
-    snackbarAction.setOnClickListener {
-        dialog.dismiss()
-    }
-    val dialogRef = WeakReference(dialog)
-    Handler(Looper.getMainLooper()).postDelayed({
-        dialogRef.get()?.let { d ->
-            if (d.isShowing) {
-                try {
-                    d.dismiss()
-                } catch (e: IllegalArgumentException) {
-                    Log.e(TAG, "Error dismissing dialog", e) // NON-NLS
-                }
-            }
-        }
-    }, displayTime * 1000L)
-
-    dialog.show()
-}
-
-fun showTableSnackbar(view: View, description: String, tableHeader: List<String>,
-                      tableData: List<List<String>>, displayTime: Long) {
-    val evenRowColor = "#FFFFFF".toColorInt() // NON-NLS
-    val oddRowColor = "#B5B5B5".toColorInt() // NON-NLS
-
-    // Create a Snackbar with empty text
-    val snackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE).apply {
-        // Remove default background
-        view.background = null
-        // Remove default margins
-//        (view.layoutParams as? ViewGroup.MarginLayoutParams)?.setMargins(0, 0, 0, 0)
-    }
-
-    // Get the Snackbar layout and remove padding
-    val snackbarLayout = snackbar.view as ViewGroup
-    snackbarLayout.setPadding(0, 0, 0, 0)
-    snackbarLayout.background = null
-
-//    (snackbarLayout.layoutParams as? ViewGroup.MarginLayoutParams)?.setMargins(0, 0, 0, 0)
-
-    val snackView = LayoutInflater.from(view.context).inflate(R.layout.table_snackbar,
-        snackbarLayout, false)
-    // Inflate custom layout
-    val snackbarText = snackView.findViewById<TextView>(R.id.snackbar_text)
-    val snackbarAction = snackView.findViewById<TextView>(R.id.snackbar_action)
-    val snackbarTable = snackView.findViewById<TableLayout>(R.id.snackbar_table)
-
-
-    addTableHeader(snackbarTable, tableHeader.getOrNull(0) ?: "", tableHeader.getOrNull(1) ?: "")
-
-    tableData.forEachIndexed { index, rowData ->
-        addTableRow(
-            snackbarTable,
-            if (index % 2 == 0) evenRowColor else oddRowColor,
-            rowData.getOrNull(0) ?: "", rowData.getOrNull(1) ?: ""
-        )
-    }
-
-    // Apply to TextView
-    snackbarText.text = description
-
-    // Handle Snackbar action button click (like setAction)
-    snackbarAction.setOnClickListener {
-        snackbar.dismiss()
-    }
-
-    // Add custom view to Snackbar
-    snackbarLayout.addView(snackView, 0)
-//    snackbarLayout.removeViewAt(1)
-
-    val layoutParams = snackbarLayout.layoutParams as FrameLayout.LayoutParams
-    layoutParams.gravity = Gravity.CENTER // Adjust gravity if needed
-    snackbarLayout.layoutParams = layoutParams
-    snackbar.show()
-
-    Handler(Looper.getMainLooper()).postDelayed({
-        snackbar.dismiss()
-    }, (displayTime*1000L))
-
 }
 
 fun showHyperlinkSnackbar(view: View,  definitionStr: String, displayTime: Long,
                           linkString: String, linkUrl: String) {
     // Create a Snackbar with empty text
-    val snackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE)
+    val snackbar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE) // NON-NLS
 
     // Get the Snackbar layout and remove padding
     val snackbarLayout = snackbar.view as ViewGroup
