@@ -6,20 +6,18 @@
  */
 package org.carstenf.wordfinder
 
-import android.widget.Button
-
-internal class LetterButton(val pos: Int, private val button: Button) {
+internal class LetterButton(val pos: Int, private val button: AppCompatLetterButton) {
     fun setText(string: String?) {
         button.text = string
     }
 
-    private var pressed = false
+    private var checked = false
 
-    var isEnabled: Boolean
-        get() = pressed
+    var isChecked: Boolean
+        get() = checked
         set(b) {
-            pressed = b
-            button.isPressed = !b
+            checked = b
+            button.isChecked = !b
         }
 
     fun setContentDescription(s: String?) {

@@ -278,7 +278,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     internal fun enableGuessing() {
         for (button in letterButtons) {
-            button.isEnabled = true
+            button.isChecked = true
             button.setContentDescription("Unavailable Letter Button")
         }
         setHintVisibility(true)
@@ -293,7 +293,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     internal fun disableGuessing() {
         clearGuess()
         for (button in letterButtons) {
-            button.isEnabled = false
+            button.isChecked = false
             button.setContentDescription("Unavailable Letter Button")
         }
         setHintVisibility(false)
@@ -448,13 +448,13 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private fun updateDiceState(move: Int) {
         if (move >= 0) {
             for (button in letterButtons) {
-                button.isEnabled = false
+                button.isChecked = false
                 button.setContentDescription("Unavailable Letter Button")
             }
 
             for (bid in MOVES[move]) {
                 val enabled = gameState.isAvailable(bid)
-                letterButtons[bid].isEnabled = enabled
+                letterButtons[bid].isChecked = enabled
                 if (!enabled) {
                     letterButtons[bid].setContentDescription("Disabled Letter " + gameState.getBoard(bid))
                 }
@@ -463,7 +463,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             for (c in 0..15) {
                 val l = gameState.getBoard(c)
                 val enabled = l != '\u0000' && gameState.isAvailable(c)
-                letterButtons[c].isEnabled = enabled
+                letterButtons[c].isChecked = enabled
                 if (!enabled) {
                     letterButtons[c].setContentDescription("Disabled Letter $l")
                 }
@@ -515,7 +515,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private val letterButtons by lazy {
         val res = ArrayList<LetterButton>(16)
         for (c in 0..15) {
-            val button = this.findViewById<Button>(letterButtonIds[c])
+            val button = this.findViewById<AppCompatLetterButton>(letterButtonIds[c])
             res+= LetterButton(c, button)
             idToLetterButton.put(letterButtonIds[c], res[c])
             button.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
@@ -538,7 +538,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         val pressedButton = checkNotNull(idToLetterButton[view.id])
         var move = pressedButton.pos
 
-        if (!pressedButton.isEnabled) {
+        if (!pressedButton.isChecked) {
             if(move !in gameState.moves) {
                 return
             }
