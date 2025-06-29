@@ -2,7 +2,6 @@ package org.carstenf.wordfinder.gui
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -18,7 +17,6 @@ import android.widget.TableRow
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.DialogFragment
 import org.carstenf.wordfinder.R
@@ -85,7 +83,6 @@ class TableDialogFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.table_snackbar, container, false)
-        dialog?.window?.setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
 
         val snackbarText = view.findViewById<TextView>(R.id.snackbar_text)
         val snackbarAction = view.findViewById<TextView>(R.id.snackbar_action)
@@ -122,7 +119,7 @@ class TableDialogFragment : DialogFragment() {
         val minWidth = (300 * density).toInt() // Convert dp to px. We want the dialog to be at least 300dp
 
         dialog?.window?.setLayout(
-            min(minWidth*1.0, screenWidth * 0.7).toInt(),
+            min(minWidth*1.0, screenWidth * 0.8).toInt(),
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
