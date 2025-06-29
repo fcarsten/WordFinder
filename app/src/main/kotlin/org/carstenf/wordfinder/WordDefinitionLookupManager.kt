@@ -1,13 +1,12 @@
 package org.carstenf.wordfinder
 
-import android.app.Activity
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicLong
 
-class WordDefinitionLookupManager(private val app: Activity, private val gameState: GameState)  {
+class WordDefinitionLookupManager(private val app: WordFinder, private val gameState: GameState)  {
     val wordLookupTaskMap by lazy { HashMap<Long, View>() }
     private val wordLookupTaskCounter = AtomicLong(0)
     val wordLookupResult: MutableLiveData<Pair<WordLookupTask, WordInfo?>> = MutableLiveData(null)
@@ -39,21 +38,16 @@ class WordDefinitionLookupManager(private val app: Activity, private val gameSta
 
         if (wordDef.isNullOrBlank()) {
             wordDef = app.getString(R.string.definition_not_found_for, wordInfo.word)
-            url = "https://www.google.com/search?q="+wordInfo.word+"+definition" // NON-NLS
+            url = "https://www.google.com/search?q=" + wordInfo.word + "+definition" // NON-NLS
         }
+
         app.runOnUiThread {
             val numWords = countWords(wordDef)
             val displayTime = 3 + (numWords * 60.0) / 200
 
-            val view = app.findViewById<View>(android.R.id.content)
-            if (url == null) {
-                showSnackbar(view, wordDef, displayTime.toLong())
-            } else {
-                showHyperlinkSnackbar(
-                    view, wordDef, displayTime.toLong(),
-                    wordInfo.word, url
-                )
-            }
+            showHyperlinkDialog(app.supportFragmentManager, wordDef, displayTime.toLong(),
+                wordInfo.word, url
+            )
         }
     }
 

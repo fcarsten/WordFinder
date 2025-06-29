@@ -21,11 +21,6 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.DialogFragment
 
-// Assuming columnWeights is defined globally or accessible here.
-// If not, you might need to pass it or define it within this scope.
-// Consider moving it here if it's only used by this dialog.
-// val columnWeights = floatArrayOf(0.5f, 0.5f) // Defined in SnackbarUtil.kt
-
 class TableDialogFragment : DialogFragment() {
     private val columnWeights = floatArrayOf(0.5f, 0.5f)
 
