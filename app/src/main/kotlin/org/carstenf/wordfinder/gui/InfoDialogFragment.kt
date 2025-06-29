@@ -6,7 +6,6 @@
  */
 package org.carstenf.wordfinder.gui
 
-import android.R
 import android.app.Dialog
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
@@ -51,7 +50,7 @@ class InfoDialogFragment : DialogFragment() {
     private var dialogView : View? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val builder = AlertDialog.Builder(requireContext(), R.style.Theme_Black_NoTitleBar_Fullscreen)
+        val builder = AlertDialog.Builder(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
         val lDialogView = requireActivity().layoutInflater.inflate(org.carstenf.wordfinder.R.layout.dialog_info, null)
         builder.setView(lDialogView)
 
