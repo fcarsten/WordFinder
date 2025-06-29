@@ -11,6 +11,7 @@ class AppCompatLetterButton @JvmOverloads constructor(
 ) : AppCompatButton(context, attrs, defStyleAttr) {
 
     private var _isChecked = false
+    var pos: Int = -1
     var isChecked: Boolean
         get() = _isChecked
         set(value) {
