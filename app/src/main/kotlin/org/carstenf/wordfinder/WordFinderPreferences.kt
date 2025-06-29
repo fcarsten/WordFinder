@@ -9,6 +9,7 @@ package org.carstenf.wordfinder
 import android.os.Bundle
 import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
+import org.carstenf.wordfinder.gui.WordFinderSettingsFragment
 
 class WordFinderPreferences : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {

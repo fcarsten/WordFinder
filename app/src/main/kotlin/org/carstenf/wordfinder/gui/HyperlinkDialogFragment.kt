@@ -1,4 +1,4 @@
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.gui
 
 import android.app.Dialog
 import android.content.Intent
@@ -19,6 +19,8 @@ import android.widget.TextView
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.net.toUri
 import androidx.fragment.app.DialogFragment
+import org.carstenf.wordfinder.R
+import org.carstenf.wordfinder.WordFinder
 
 class HyperlinkDialogFragment : DialogFragment() {
 
@@ -109,7 +111,7 @@ class HyperlinkDialogFragment : DialogFragment() {
                     try {
                         dismissAllowingStateLoss()
                     } catch (e: Exception) {
-                        Log.e(WordFinder.TAG, "Error dismissing dialog fragment on timer", e)  // NON-NLS
+                        Log.e(WordFinder.Companion.TAG, "Error dismissing dialog fragment on timer", e)  // NON-NLS
                     }
                 }
             }

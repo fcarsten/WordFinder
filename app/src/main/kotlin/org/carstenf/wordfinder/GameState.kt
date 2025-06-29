@@ -10,6 +10,8 @@ import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.carstenf.wordfinder.dictionary.Dictionary
+import org.carstenf.wordfinder.util.CountUpTimer
 import java.util.Arrays
 import java.util.Locale
 
@@ -294,7 +296,8 @@ class GameState : ViewModel() {
                 }
             }.start()
         } else {
-            countUpTimer =  CountUpTimer(time/1000){ seconds: Long -> timerCurrentValue.postValue(seconds)}
+            countUpTimer =
+                CountUpTimer(time / 1000) { seconds: Long -> timerCurrentValue.postValue(seconds) }
             countUpTimer?.start()
         }
 

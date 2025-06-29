@@ -1,4 +1,4 @@
-package org.carstenf.wordfinder // Make sure this matches your project's package name
+package org.carstenf.wordfinder.gui
 
 import android.app.Dialog
 import android.content.Context
@@ -20,6 +20,8 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.DialogFragment
+import org.carstenf.wordfinder.R
+import org.carstenf.wordfinder.WordFinder
 
 class TableDialogFragment : DialogFragment() {
     private val columnWeights = floatArrayOf(0.5f, 0.5f)
@@ -124,7 +126,7 @@ class TableDialogFragment : DialogFragment() {
                     try {
                         dismissAllowingStateLoss()
                     } catch (e: Exception) {
-                        Log.e(WordFinder.TAG, "Error dismissing dialog fragment on timer", e)  // NON-NLS
+                        Log.e(WordFinder.Companion.TAG, "Error dismissing dialog fragment on timer", e)  // NON-NLS
                     }
                 }
             }

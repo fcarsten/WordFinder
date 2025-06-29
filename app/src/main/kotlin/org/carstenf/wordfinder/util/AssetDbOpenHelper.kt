@@ -1,22 +1,17 @@
-/*
- * Copyright Carsten Friedrich (Carsten.Friedrich@gmail.com)
- *
- * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
- *
- */
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.util
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import androidx.core.content.edit
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import org.apache.commons.compress.archivers.sevenz.SevenZFile
+import org.carstenf.wordfinder.WordFinder
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import androidx.core.content.edit
 
 class AssetDbOpenHelper(
     val context: Context, val dbName: String,
@@ -26,14 +21,14 @@ class AssetDbOpenHelper(
     private val dbHelperDelegate: SQLiteOpenHelper =
         object : SQLiteOpenHelper(context, dbName, null, 1) {
             override fun onCreate(db: SQLiteDatabase) {
-                Log.i(WordFinder.TAG, "db onCreate for $dbName") //NON-NLS
+                Log.i(WordFinder.Companion.TAG, "db onCreate for $dbName") //NON-NLS
             }
 
             override fun onUpgrade(
                 db: SQLiteDatabase, oldVersion: Int,
                 newVersion: Int
             ) {
-                Log.i(WordFinder.TAG, "db onUpdate for $dbName") //NON-NLS
+                Log.i(WordFinder.Companion.TAG, "db onUpdate for $dbName") //NON-NLS
             }
         }
 
@@ -50,17 +45,17 @@ class AssetDbOpenHelper(
 
             var dbExist = checkDataBaseExists(context, dbName)
             if(dbExist && storedVersion < DATABASE_VERSION) {
-                Log.d(WordFinder.TAG, "Database update detected, recreating DB $dbName") //NON-NLS
+                Log.d(WordFinder.Companion.TAG, "Database update detected, recreating DB $dbName") //NON-NLS
                 context.deleteDatabase(dbName)  // Remove old DB if it exists
                 dbExist = false
             }
 
             if (!dbExist) {
-                Log.d(WordFinder.TAG, "Creating DB $dbName") //NON-NLS
+                Log.d(WordFinder.Companion.TAG, "Creating DB $dbName") //NON-NLS
                 dbHelperDelegate.readableDatabase
                 dbHelperDelegate.close()
                 copyDataBase(context, dbName, dbFileName)
-                Log.d(WordFinder.TAG, "Finished creating DB $dbName") //NON-NLS
+                Log.d(WordFinder.Companion.TAG, "Finished creating DB $dbName") //NON-NLS
                 // Update stored version
                 prefs.edit(commit = true) { putInt("db_version-$dbName", DATABASE_VERSION) } //NON-NLS
             }
@@ -91,7 +86,7 @@ class AssetDbOpenHelper(
     ) {
         val dbPath = context.getDatabasePath(dbName).path
 
-        Log.d(WordFinder.TAG, "Copying DB $dbName") //NON-NLS
+        Log.d(WordFinder.Companion.TAG, "Copying DB $dbName") //NON-NLS
 
         try {
             // Open the compressed database from the assets subfolder
@@ -109,7 +104,7 @@ class AssetDbOpenHelper(
             // Decompress the 7z file
             val sevenZFile = SevenZFile(tempFile)
             val entries = sevenZFile.entries
-            Log.d(WordFinder.TAG, "Number of entries in $dbName 7z file: ${entries.count()}") //NON-NLS
+            Log.d(WordFinder.Companion.TAG, "Number of entries in $dbName 7z file: ${entries.count()}") //NON-NLS
             var entry = sevenZFile.nextEntry
             while (entry != null) {
                 if (!entry.isDirectory) {
@@ -122,7 +117,7 @@ class AssetDbOpenHelper(
                     }
                     dbOutputStream.flush()
                     dbOutputStream.close()
-                    Log.d(WordFinder.TAG, "Database  $dbName decompressed and copied to internal storage") //NON-NLS
+                    Log.d(WordFinder.Companion.TAG, "Database  $dbName decompressed and copied to internal storage") //NON-NLS
                     break
                 }
                 entry = sevenZFile.nextEntry
@@ -130,9 +125,9 @@ class AssetDbOpenHelper(
 
             sevenZFile.close()
             tempFile.delete()
-            Log.d(WordFinder.TAG, "Finished copying DB $dbName") //NON-NLS
+            Log.d(WordFinder.Companion.TAG, "Finished copying DB $dbName") //NON-NLS
         } catch (e: IOException) {
-            Log.e(WordFinder.TAG, "Error copying and decompressing database $dbName", e) //NON-NLS
+            Log.e(WordFinder.Companion.TAG, "Error copying and decompressing database $dbName", e) //NON-NLS
         }
 
     }

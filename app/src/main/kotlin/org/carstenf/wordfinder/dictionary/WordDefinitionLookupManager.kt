@@ -1,8 +1,14 @@
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.dictionary
 
 import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import org.carstenf.wordfinder.GameState
+import org.carstenf.wordfinder.R
+import org.carstenf.wordfinder.Result
+import org.carstenf.wordfinder.WordFinder
+import org.carstenf.wordfinder.util.isNetworkAvailable
+import org.carstenf.wordfinder.util.showHyperlinkDialog
 import java.util.Locale
 import java.util.concurrent.atomic.AtomicLong
 
@@ -45,7 +51,8 @@ class WordDefinitionLookupManager(private val app: WordFinder, private val gameS
             val numWords = countWords(wordDef)
             val displayTime = 3 + (numWords * 60.0) / 200
 
-            showHyperlinkDialog(app.supportFragmentManager, wordDef, displayTime.toLong(),
+            showHyperlinkDialog(
+                app.supportFragmentManager, wordDef, displayTime.toLong(),
                 wordInfo.word, url
             )
         }

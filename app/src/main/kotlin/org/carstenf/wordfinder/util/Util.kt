@@ -4,7 +4,7 @@
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
  *
  */
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.util
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -28,7 +28,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import org.carstenf.wordfinder.GameState
+import org.carstenf.wordfinder.R
+import org.carstenf.wordfinder.WordFinder
 import org.carstenf.wordfinder.WordFinder.Companion.TAG
+import org.carstenf.wordfinder.gui.HyperlinkDialogFragment
+import org.carstenf.wordfinder.gui.TableDialogFragment
 
 // Consider renaming this function to reflect it shows a Dialog now
 fun showHyperlinkDialog(

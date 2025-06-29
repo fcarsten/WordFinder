@@ -1,15 +1,11 @@
-/*
- * Copyright Carsten Friedrich (Carsten.Friedrich@gmail.com)
- *
- * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
- *
- */
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.dictionary
 
 import android.database.sqlite.SQLiteQueryBuilder
 import android.util.Log
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import org.carstenf.wordfinder.util.AssetDbOpenHelper
+import org.carstenf.wordfinder.WordFinder
 import java.util.Locale
 
 class Dictionary internal constructor(wordFinder: WordFinder) {
@@ -20,7 +16,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
     suspend fun lookup(word: String, db: String?): WordInfoData? {
         return dbMutex.withLock {
             if (db == null) {
-                Log.e(WordFinder.TAG, "Dictionary name null") // NON-NLS
+                Log.e(WordFinder.Companion.TAG, "Dictionary name null") // NON-NLS
                 return null
             }
 

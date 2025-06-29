@@ -1,12 +1,14 @@
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.dictionary
+
+import org.carstenf.wordfinder.LANGUAGE
 
 //fun pickRandomLetter2DDistribution(letterCounts: IntArray, languageCode: LANGUAGE) : Char {
 //    return pickRandomLetter2DDistributionF(letterCounts, languageCode) { it }
 //}
 
 fun pickRandomLetter2DDistributionF(letterCounts: IntArray,
-                                   languageCode: LANGUAGE,
-                                   operation: (Int) -> Int): Char {
+                                    languageCode: LANGUAGE,
+                                    operation: (Int) -> Int): Char {
     var letterCountMatrix = letterCountsEnglish
 
     if (languageCode == LANGUAGE.DE) {

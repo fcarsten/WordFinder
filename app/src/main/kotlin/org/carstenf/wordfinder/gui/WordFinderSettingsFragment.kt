@@ -1,16 +1,11 @@
-/*
- * Copyright Carsten Friedrich (Carsten.Friedrich@gmail.com)
- *
- * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
- *
- */
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.gui
 
 import android.os.Bundle
 import android.text.InputFilter
 import android.text.SpannableStringBuilder
 import androidx.preference.PreferenceFragmentCompat
 import com.takisoft.preferencex.EditTextPreference
+import org.carstenf.wordfinder.R
 
 class WordFinderSettingsFragment : PreferenceFragmentCompat() {
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {

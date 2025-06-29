@@ -46,10 +46,29 @@ import kotlinx.coroutines.launch
 import org.carstenf.wordfinder.GameState.GameLifeCycleState.*
 import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.GameState.TIMER_MODE
-import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
+import org.carstenf.wordfinder.dictionary.Dictionary
+import org.carstenf.wordfinder.dictionary.WordDefinitionLookupManager
+import org.carstenf.wordfinder.dictionary.WordInfo
+import org.carstenf.wordfinder.dictionary.WordLookupTask
+import org.carstenf.wordfinder.gui.InfoDialogFragment.Companion.showInfo
 import org.carstenf.wordfinder.fireworks.FIREWORK_DISMISS
 import org.carstenf.wordfinder.fireworks.FIREWORK_DISMISSED
 import org.carstenf.wordfinder.fireworks.FireworksPlayer
+import org.carstenf.wordfinder.gui.AppCompatLetterButton
+import org.carstenf.wordfinder.gui.BackGestureBlockingTableLayout
+import org.carstenf.wordfinder.gui.ComputerResultListAdapter
+import org.carstenf.wordfinder.gui.drawConnectionsBetweenButtons
+import org.carstenf.wordfinder.util.addGestureHandler
+import org.carstenf.wordfinder.util.isGestureNavigationEnabled
+import org.carstenf.wordfinder.util.parseTime
+import org.carstenf.wordfinder.util.showConfirmShuffleDialog
+import org.carstenf.wordfinder.util.showConfirmStartGameDialog
+import org.carstenf.wordfinder.util.showGameWonDialog
+import org.carstenf.wordfinder.util.showRestartRequiredDialog
+import org.carstenf.wordfinder.util.showTableDialog
+import org.carstenf.wordfinder.util.showTimeIsUpDialog
+import org.carstenf.wordfinder.util.showUnsolvableDialog
+import org.carstenf.wordfinder.util.slideUpAndHide
 import java.io.IOException
 import kotlin.math.max
 
@@ -477,7 +496,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         for(m in gameState.moves) {
             buttons.add(this.findViewById<AppCompatButton>(letterButtonIds[m]))
         }
-        drawConnectionsBetweenButtons(this.findViewById<BackGestureBlockingTableLayout>(R.id.letterGridView), buttons)
+        drawConnectionsBetweenButtons(
+            this.findViewById<BackGestureBlockingTableLayout>(R.id.letterGridView),
+            buttons
+        )
     }
 
     private fun labelDices() {

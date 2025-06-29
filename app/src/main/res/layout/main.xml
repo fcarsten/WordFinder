@@ -27,7 +27,7 @@
         />
 
 
-    <org.carstenf.wordfinder.BackGestureBlockingTableLayout
+    <org.carstenf.wordfinder.gui.BackGestureBlockingTableLayout
         android:id="@+id/letterGridView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -49,19 +49,19 @@
             android:layout_weight="1"
             >
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button01"
                 style="@style/KeyBoardButtonStyle" />
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button02"
                 style="@style/KeyBoardButtonStyle" />
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button03"
                 style="@style/KeyBoardButtonStyle" />
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button04"
                 style="@style/KeyBoardButtonStyle" />
         </TableRow>
@@ -73,19 +73,19 @@
             android:layout_weight="1"
             >
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button11"
                 style="@style/KeyBoardButtonStyle" />
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button12"
                 style="@style/KeyBoardButtonStyle" />
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button13"
                 style="@style/KeyBoardButtonStyle" />
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button14"
                 style="@style/KeyBoardButtonStyle" />
         </TableRow>
@@ -97,19 +97,19 @@
             android:layout_weight="1"
             >
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button21"
                 style="@style/KeyBoardButtonStyle" />
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button22"
                 style="@style/KeyBoardButtonStyle" />
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button23"
                 style="@style/KeyBoardButtonStyle" />
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button24"
                 style="@style/KeyBoardButtonStyle" />
         </TableRow>
@@ -121,23 +121,23 @@
             android:layout_weight="1"
             >
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button31"
                 style="@style/KeyBoardButtonStyle" />
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button32"
                 style="@style/KeyBoardButtonStyle" />
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button33"
                 style="@style/KeyBoardButtonStyle" />
 
-            <org.carstenf.wordfinder.AppCompatLetterButton
+            <org.carstenf.wordfinder.gui.AppCompatLetterButton
                 android:id="@+id/button34"
                 style="@style/KeyBoardButtonStyle" />
         </TableRow>
-    </org.carstenf.wordfinder.BackGestureBlockingTableLayout>
+    </org.carstenf.wordfinder.gui.BackGestureBlockingTableLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/resultLists"

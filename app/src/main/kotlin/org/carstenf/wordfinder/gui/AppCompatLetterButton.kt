@@ -1,13 +1,14 @@
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.gui
 
 import android.content.Context
 import android.util.AttributeSet
+import androidx.appcompat.R
 import androidx.appcompat.widget.AppCompatButton
 
 class AppCompatLetterButton @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
-    defStyleAttr: Int = androidx.appcompat.R.attr.buttonStyle
+    defStyleAttr: Int = R.attr.buttonStyle
 ) : AppCompatButton(context, attrs, defStyleAttr) {
 
     private var _isChecked = false
