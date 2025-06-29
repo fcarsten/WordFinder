@@ -4,7 +4,7 @@
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
  *
  */
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.gui
 
 import android.app.Dialog
 import android.content.res.Resources
@@ -23,8 +23,11 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import org.carstenf.wordfinder.InfoDialogFragment.Companion.TAG
+import org.carstenf.wordfinder.BuildConfig
+import org.carstenf.wordfinder.GameState
+import org.carstenf.wordfinder.gui.InfoDialogFragment.Companion.TAG
 import java.io.InputStream
 import java.util.Locale
 
@@ -48,13 +51,13 @@ class InfoDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        val lDialogView = requireActivity().layoutInflater.inflate(R.layout.dialog_info, null)
+        val lDialogView = requireActivity().layoutInflater.inflate(org.carstenf.wordfinder.R.layout.dialog_info, null)
         builder.setView(lDialogView)
 
-        val viewPager: ViewPager2 = lDialogView.findViewById(R.id.view_pager)
-        val prevButton: Button = lDialogView.findViewById(R.id.prev_button)
-        val nextButton: Button = lDialogView.findViewById(R.id.next_button)
-        val closeButton: Button = lDialogView.findViewById(R.id.close_button)
+        val viewPager: ViewPager2 = lDialogView.findViewById(org.carstenf.wordfinder.R.id.view_pager)
+        val prevButton: Button = lDialogView.findViewById(org.carstenf.wordfinder.R.id.prev_button)
+        val nextButton: Button = lDialogView.findViewById(org.carstenf.wordfinder.R.id.next_button)
+        val closeButton: Button = lDialogView.findViewById(org.carstenf.wordfinder.R.id.close_button)
 
         dialogView = lDialogView
         val locale = Locale.getDefault().language
@@ -159,10 +162,10 @@ class InfoDialogFragment : DialogFragment() {
 data class PageData(val htmlText: String, val htmlAssetPath: String)
 
 class InfoPagerAdapter(private val pages: List<PageData>) :
-    androidx.recyclerview.widget.RecyclerView.Adapter<InfoPagerAdapter.PageViewHolder>() {
+    RecyclerView.Adapter<InfoPagerAdapter.PageViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_info_page, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(org.carstenf.wordfinder.R.layout.item_info_page, parent, false)
         return PageViewHolder(view)
     }
 
@@ -172,8 +175,8 @@ class InfoPagerAdapter(private val pages: List<PageData>) :
 
     override fun getItemCount(): Int = pages.size
 
-    class PageViewHolder(view: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
-        private val textView: TextView = view.findViewById(R.id.info_text)
+    class PageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val textView: TextView = view.findViewById(org.carstenf.wordfinder.R.id.info_text)
 
         fun bind(page: PageData) {
             // Use the newer Html.fromHtml method with FROM_HTML_MODE_LEGACY

@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- Disabled state -->
     <item android:state_enabled="false" android:color="#808080" />  <!-- Gray color for disabled state -->
-    <item android:state_pressed="true" android:color="#808080" />  <!-- Gray color for disabled state -->
+    <item android:state_checked="true" android:color="#808080" />  <!-- Gray color for checked state -->
     <!-- Enabled state -->
     <item android:color="#000000" /> <!-- Black color for default (enabled) state -->
 </selector>

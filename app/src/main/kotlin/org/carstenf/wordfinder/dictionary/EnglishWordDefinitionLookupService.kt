@@ -1,24 +1,17 @@
-/*
- * Copyright Carsten Friedrich (Carsten.Friedrich@gmail.com)
- *
- * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
- *
- */
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.dictionary
 
 import android.util.Log
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Request.Builder
 import okhttp3.Response
 import org.json.JSONArray
 import java.io.IOException
 
 class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
     override fun lookupWordDefinition(lookupManager: WordDefinitionLookupManager, task: WordLookupTask) {
-        val request: Request = Builder()
+        val request: Request = Request.Builder()
             .url(DICTIONARYAPI_URL + task.word.lemma)
             .build()
 

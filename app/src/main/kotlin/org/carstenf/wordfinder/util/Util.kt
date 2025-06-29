@@ -4,7 +4,7 @@
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
  *
  */
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.util
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -16,6 +16,7 @@ import android.graphics.Insets
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnTouchListener
@@ -24,9 +25,61 @@ import android.widget.Button
 import android.widget.TableLayout
 import android.widget.TableRow
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
+import org.carstenf.wordfinder.GameState
+import org.carstenf.wordfinder.R
+import org.carstenf.wordfinder.WordFinder
+import org.carstenf.wordfinder.WordFinder.Companion.TAG
+import org.carstenf.wordfinder.gui.HyperlinkDialogFragment
+import org.carstenf.wordfinder.gui.TableDialogFragment
 
+// Consider renaming this function to reflect it shows a Dialog now
+fun showHyperlinkDialog(
+    fragmentManager: FragmentManager,
+    definitionStr: String,
+    displayTime: Long,
+    linkString: String?,
+    linkUrl: String?
+) {
+    val dialogFragment = HyperlinkDialogFragment.newInstance(definitionStr, linkString, linkUrl, displayTime)
+    if (!fragmentManager.isStateSaved) {
+        dialogFragment.show(fragmentManager, TAG)
+    } else {
+        Log.w(TAG, "FragmentManager state saved, cannot show HyperlinkDialogFragment.") // NON-NLS
+    }
+}
+
+/**
+ * Shows a dialog with a table using DialogFragment for lifecycle safety.
+ *
+ * @param fragmentManager The FragmentManager to use for showing the dialog.
+ * @param description Text to display above the table.
+ * @param tableHeader List of strings for the table header (expects 2 items).
+ * @param tableData List of rows, where each row is a list of strings for table cells (expects 2 cells per row).
+ * @param displayTime How long the dialog should be displayed in seconds before auto-dismissing.
+ */
+fun showTableDialog(
+    fragmentManager: FragmentManager,
+    description: String,
+    tableHeader: List<String>,
+    tableData: List<List<String>>,
+    displayTime: Long
+) {
+    val dialogFragment = TableDialogFragment.newInstance(
+        description,
+        tableHeader,
+        tableData,
+        displayTime
+    )
+    // It's good practice to check if the fragment manager can still commit transactions
+    if (!fragmentManager.isStateSaved) {
+        dialogFragment.show(fragmentManager, TAG)
+    } else {
+        Log.w(TAG, "FragmentManager state saved, cannot show TableDialogFragment.") // NON-NLS
+    }
+}
 
 fun slideUpAndHide(toHide: View, toReveal: View) {
     val animator = ObjectAnimator.ofFloat(toHide, "translationY", 0f, -toHide.height.toFloat())

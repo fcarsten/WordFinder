@@ -1,4 +1,4 @@
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.util
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

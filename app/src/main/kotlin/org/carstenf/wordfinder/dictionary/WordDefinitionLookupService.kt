@@ -4,7 +4,7 @@
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
  *
  */
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.dictionary
 
 interface WordDefinitionLookupService {
     fun lookupWordDefinition(lookupManager: WordDefinitionLookupManager, task: WordLookupTask)

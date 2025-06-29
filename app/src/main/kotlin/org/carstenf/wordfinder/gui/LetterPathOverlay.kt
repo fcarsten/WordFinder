@@ -1,4 +1,4 @@
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.gui
 
 import android.graphics.Canvas
 import android.graphics.Color
@@ -57,8 +57,8 @@ fun drawConnectionsBetweenButtons(tableLayout: TableLayout, buttons: List<AppCom
         val angle = atan2(endY - startY, endX - startX)
 
         // Calculate arrow base point (where line should end)
-        val arrowBaseX = endX - arrowSize * cos(angle).toFloat()
-        val arrowBaseY = endY - arrowSize * sin(angle).toFloat()
+        val arrowBaseX = endX - arrowSize * cos(angle)
+        val arrowBaseY = endY - arrowSize * sin(angle)
 
         // Draw line ending exactly at arrow base
         val line = Path().apply {
@@ -71,12 +71,12 @@ fun drawConnectionsBetweenButtons(tableLayout: TableLayout, buttons: List<AppCom
         val arrowPath = Path().apply {
             moveTo(endX, endY)
             lineTo(
-                arrowBaseX - width * sin(angle).toFloat(), // Perpendicular offset
-                arrowBaseY + width * cos(angle).toFloat()
+                arrowBaseX - width * sin(angle), // Perpendicular offset
+                arrowBaseY + width * cos(angle)
             )
             lineTo(
-                arrowBaseX + width * sin(angle).toFloat(),
-                arrowBaseY - width * cos(angle).toFloat()
+                arrowBaseX + width * sin(angle),
+                arrowBaseY - width * cos(angle)
             )
             close()
         }

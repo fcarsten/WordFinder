@@ -12,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import org.carstenf.wordfinder.dictionary.Dictionary
 
 class SolveTask(private val gameState: GameState) {
     private val scope = CoroutineScope(Dispatchers.Default + Job())

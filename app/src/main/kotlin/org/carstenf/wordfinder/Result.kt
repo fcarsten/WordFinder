@@ -6,6 +6,8 @@
  */
 package org.carstenf.wordfinder
 
+import org.carstenf.wordfinder.dictionary.Dictionary
+
 
 /**
  * @author carsten.friedrich@gmail.com

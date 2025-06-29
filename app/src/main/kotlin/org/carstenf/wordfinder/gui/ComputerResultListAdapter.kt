@@ -1,4 +1,4 @@
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.gui
 
 import android.content.Context
 import android.graphics.Color
@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import org.carstenf.wordfinder.R
+import org.carstenf.wordfinder.Result
 
 open class ComputerResultListAdapter(context: Context) :
     ArrayAdapter<Result>(context, R.layout.list_item, R.id.resultText) {

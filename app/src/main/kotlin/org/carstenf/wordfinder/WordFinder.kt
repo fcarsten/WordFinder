@@ -46,10 +46,29 @@ import kotlinx.coroutines.launch
 import org.carstenf.wordfinder.GameState.GameLifeCycleState.*
 import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.GameState.TIMER_MODE
-import org.carstenf.wordfinder.InfoDialogFragment.Companion.showInfo
+import org.carstenf.wordfinder.dictionary.Dictionary
+import org.carstenf.wordfinder.dictionary.WordDefinitionLookupManager
+import org.carstenf.wordfinder.dictionary.WordInfo
+import org.carstenf.wordfinder.dictionary.WordLookupTask
+import org.carstenf.wordfinder.gui.InfoDialogFragment.Companion.showInfo
 import org.carstenf.wordfinder.fireworks.FIREWORK_DISMISS
 import org.carstenf.wordfinder.fireworks.FIREWORK_DISMISSED
 import org.carstenf.wordfinder.fireworks.FireworksPlayer
+import org.carstenf.wordfinder.gui.AppCompatLetterButton
+import org.carstenf.wordfinder.gui.BackGestureBlockingTableLayout
+import org.carstenf.wordfinder.gui.ComputerResultListAdapter
+import org.carstenf.wordfinder.gui.drawConnectionsBetweenButtons
+import org.carstenf.wordfinder.util.addGestureHandler
+import org.carstenf.wordfinder.util.isGestureNavigationEnabled
+import org.carstenf.wordfinder.util.parseTime
+import org.carstenf.wordfinder.util.showConfirmShuffleDialog
+import org.carstenf.wordfinder.util.showConfirmStartGameDialog
+import org.carstenf.wordfinder.util.showGameWonDialog
+import org.carstenf.wordfinder.util.showRestartRequiredDialog
+import org.carstenf.wordfinder.util.showTableDialog
+import org.carstenf.wordfinder.util.showTimeIsUpDialog
+import org.carstenf.wordfinder.util.showUnsolvableDialog
+import org.carstenf.wordfinder.util.slideUpAndHide
 import java.io.IOException
 import kotlin.math.max
 
@@ -278,8 +297,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     internal fun enableGuessing() {
         for (button in letterButtons) {
-            button.isEnabled = true
-            button.setContentDescription("Unavailable Letter Button")
+            button.isChecked = false
+            button.setContentDescription(getString(R.string.letter_button, button.text))
         }
         setHintVisibility(true)
     }
@@ -293,8 +312,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     internal fun disableGuessing() {
         clearGuess()
         for (button in letterButtons) {
-            button.isEnabled = false
-            button.setContentDescription("Unavailable Letter Button")
+            button.isChecked = true
+            button.setContentDescription(getString(R.string.unavailable_letter_button, button.text))
         }
         setHintVisibility(false)
     }
@@ -448,24 +467,24 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private fun updateDiceState(move: Int) {
         if (move >= 0) {
             for (button in letterButtons) {
-                button.isEnabled = false
-                button.setContentDescription("Unavailable Letter Button")
+                button.isChecked = true
+                button.setContentDescription(getString(R.string.unavailable_letter_button, button.text))
             }
 
             for (bid in MOVES[move]) {
                 val enabled = gameState.isAvailable(bid)
-                letterButtons[bid].isEnabled = enabled
+                letterButtons[bid].isChecked = !enabled
                 if (!enabled) {
-                    letterButtons[bid].setContentDescription("Disabled Letter " + gameState.getBoard(bid))
+                    letterButtons[bid].setContentDescription(getString(R.string.unavailable_letter_button, letterButtons[bid].text))
                 }
             }
         } else {
             for (c in 0..15) {
                 val l = gameState.getBoard(c)
                 val enabled = l != '\u0000' && gameState.isAvailable(c)
-                letterButtons[c].isEnabled = enabled
+                letterButtons[c].isChecked = !enabled
                 if (!enabled) {
-                    letterButtons[c].setContentDescription("Disabled Letter $l")
+                    letterButtons[c].setContentDescription(getString(R.string.unavailable_letter_button, letterButtons[c].text))
                 }
             }
         }
@@ -477,14 +496,17 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         for(m in gameState.moves) {
             buttons.add(this.findViewById<AppCompatButton>(letterButtonIds[m]))
         }
-        drawConnectionsBetweenButtons(this.findViewById<BackGestureBlockingTableLayout>(R.id.letterGridView), buttons)
+        drawConnectionsBetweenButtons(
+            this.findViewById<BackGestureBlockingTableLayout>(R.id.letterGridView),
+            buttons
+        )
     }
 
     private fun labelDices() {
         for (c in 0..15) {
             val l = gameState.getBoard(c)
-            letterButtons[c].setText(l.toString())
-            letterButtons[c].setContentDescription("Letter $l")
+            letterButtons[c].text = l.toString()
+            letterButtons[c].setContentDescription(getString(R.string.letter_button, letterButtons[c].text))
         }
     }
 
@@ -513,10 +535,11 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private val letterButtons by lazy {
-        val res = ArrayList<LetterButton>(16)
+        val res = ArrayList<AppCompatLetterButton>(16)
         for (c in 0..15) {
-            val button = this.findViewById<Button>(letterButtonIds[c])
-            res+= LetterButton(c, button)
+            val button = this.findViewById<AppCompatLetterButton>(letterButtonIds[c])
+            button.pos = c
+            res+= button
             idToLetterButton.put(letterButtonIds[c], res[c])
             button.viewTreeObserver.addOnGlobalLayoutListener(object : OnGlobalLayoutListener {
                 override fun onGlobalLayout() {
@@ -532,13 +555,13 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         return@lazy res
     }
 
-    private val idToLetterButton = SparseArray<LetterButton?>()
+    private val idToLetterButton = SparseArray<AppCompatLetterButton?>()
 
     fun onLetterClick(view: View) {
         val pressedButton = checkNotNull(idToLetterButton[view.id])
         var move = pressedButton.pos
 
-        if (!pressedButton.isEnabled) {
+        if (pressedButton.isChecked) {
             if(move !in gameState.moves) {
                 return
             }
@@ -662,8 +685,11 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             okButton.visibility = View.INVISIBLE
         } else {
             okButton.visibility = View.VISIBLE
-            okButton.contentDescription =
-                "Current guess: " + (gameState.currentGuess.ifBlank { "empty" })
+            if(gameState.currentGuess.isBlank()) {
+                okButton.contentDescription = getString(R.string.current_guess,  gameState.currentGuess)
+            } else {
+                okButton.contentDescription = getString(R.string.current_guess_empty)
+            }
             val minLength = if (gameState.isAllow3LetterWords) 3 else 4
             val enabled = gameState.currentGuess.length >= minLength
             if (enabled) {
@@ -758,9 +784,16 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun displayHint() {
-        val view = findViewById<View>(android.R.id.content)
-        showTableSnackbar(view, getString(R.string.number_of_words_still_to_be_found_by_word_length),
-            listOf(getString(R.string.word_length), getString(R.string.number_of_words)), getHintTableData(), 100)
+        showTableDialog(
+            supportFragmentManager,
+            getString(R.string.number_of_words_still_to_be_found_by_word_length),
+            listOf(
+                getString(R.string.word_length),
+                getString(R.string.number_of_words)
+            ),
+            getHintTableData(),
+            10
+        )
     }
 
     private fun getHintTableData(): List<List<String>> {

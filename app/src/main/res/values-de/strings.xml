@@ -52,4 +52,8 @@
     <string name="number_of_words_still_to_be_found_by_word_length">Noch zu findende Wörter nach Wortlänge:</string>
     <string name="word_length">Wortlänge</string>
     <string name="number_of_words">Anzahl von Wörtern</string>
+    <string name="unavailable_letter_button">Disabled Letter Button %1$s</string>
+    <string name="letter_button">Disabled Letter Button %1$s</string>
+    <string name="current_guess">Derzeitiges wort ist %1$s</string>
+    <string name="current_guess_empty">Derzeitiges Wort ist leer</string>
 </resources>
