@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.Gravity.CENTER_HORIZONTAL
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,7 @@ import androidx.core.graphics.toColorInt
 import androidx.fragment.app.DialogFragment
 import org.carstenf.wordfinder.R
 import org.carstenf.wordfinder.WordFinder
+import kotlin.math.min
 
 class TableDialogFragment : DialogFragment() {
     private val columnWeights = floatArrayOf(0.5f, 0.5f)
@@ -115,8 +117,12 @@ class TableDialogFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
+        val screenWidth = requireContext().resources.displayMetrics.widthPixels
+        val density = requireContext().resources.displayMetrics.density
+        val minWidth = (300 * density).toInt() // Convert dp to px. We want the dialog to be at least 300dp
+
         dialog?.window?.setLayout(
-            (requireContext().resources.displayMetrics.widthPixels * 0.7).toInt(),
+            min(minWidth*1.0, screenWidth * 0.7).toInt(),
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
 
@@ -156,9 +162,10 @@ class TableDialogFragment : DialogFragment() {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     setTextAppearance(R.style.TableHeaderText)
                 } else {
-                    setTextColor(ResourcesCompat.getColor(resources, R.color.md_theme_onPrimary, null)) // Adjusted to match original
+                    setTextColor(ResourcesCompat.getColor(resources, R.color.md_theme_onPrimaryContainer, null)) // Adjusted to match original
                 }
                 setBackgroundColor(headerBackground)
+                gravity = CENTER_HORIZONTAL
                 layoutParams = TableRow.LayoutParams(
                     0, // Will be weighted
                     TableRow.LayoutParams.WRAP_CONTENT,
@@ -191,6 +198,7 @@ class TableDialogFragment : DialogFragment() {
                     setTextColor(ResourcesCompat.getColor(resources, R.color.md_theme_onPrimary, null)) // Adjusted to match original
                 }
                 setBackgroundColor(rowColor)
+                gravity = CENTER_HORIZONTAL
                 layoutParams = TableRow.LayoutParams(
                     0, // Will be weighted
                     TableRow.LayoutParams.WRAP_CONTENT,
