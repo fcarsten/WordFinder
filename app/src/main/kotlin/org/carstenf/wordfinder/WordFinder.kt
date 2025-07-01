@@ -494,7 +494,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private fun updateLetterButtonOverlay() {
         val buttons = mutableListOf<AppCompatButton>()
         for(m in gameState.moves) {
-            buttons.add(this.findViewById<AppCompatButton>(letterButtonIds[m]))
+            buttons.add(this.findViewById(letterButtonIds[m]))
         }
         drawConnectionsBetweenButtons(
             this.findViewById<BackGestureBlockingTableLayout>(R.id.letterGridView),
