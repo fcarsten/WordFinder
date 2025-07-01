@@ -172,6 +172,12 @@ fun parseTime(timeStr: String): Long {
 
 
 fun showTimeIsUpDialog(app: WordFinder) {
+
+    val gameState = app.gameState
+    if(gameState.gameLifecycleState.value == GameState.GameLifeCycleState.GAME_OVER) {
+        return
+    }
+
     val builder = AlertDialog.Builder(app)
     builder.setMessage(R.string.time_up_dialog_msg)
         .setTitle(R.string.time_up_dialog_title)
@@ -179,8 +185,8 @@ fun showTimeIsUpDialog(app: WordFinder) {
             R.string.time_up_dialog_ok
         ) { _: DialogInterface?,
             _: Int ->
-            if(app.gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
-                app.gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+            if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
+                gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
             }
         }
 
