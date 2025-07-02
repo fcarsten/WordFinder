@@ -7,7 +7,6 @@
 package org.carstenf.wordfinder.gui
 
 import android.app.Dialog
-import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -30,6 +29,7 @@ import org.carstenf.wordfinder.GameState
 import org.carstenf.wordfinder.gui.InfoDialogFragment.Companion.TAG
 import java.io.InputStream
 import java.util.Locale
+import kotlin.math.min
 
 class InfoDialogFragment : DialogFragment() {
 
@@ -107,10 +107,6 @@ class InfoDialogFragment : DialogFragment() {
             override fun onPageSelected(position: Int) {
                 prevButton.isEnabled = position > 0
                 nextButton.isEnabled = position < pages.size - 1
-//                val scrollView = viewPager.findViewById<ScrollView>(R.id.info_scrollview)
-//                scrollView.post {
-//                    scrollView.smoothScrollBy(0, 50) // Subtle nudge down
-//                }
             }
         })
 
@@ -210,11 +206,12 @@ class DialogImageHandler(private val page: PageData, private val textView: TextV
             val originalWidth = drawable.intrinsicWidth
             val originalHeight = drawable.intrinsicHeight
 
-            val screenWidth = Resources.getSystem().displayMetrics.widthPixels // Get the width of the TextView
-            var desiredWidth = originalWidth * 4
+            val metrics = textView.resources.displayMetrics
+            val screenWidth = metrics.widthPixels // Get the width of the TextView
+            val density = metrics.density
+            val maxWidth = (500 * density).toInt() // Convert dp to px. We want the dialog to be at least 300dp
 
-            if(desiredWidth> screenWidth*0.8)
-                desiredWidth = (screenWidth*0.8).toInt()
+            val desiredWidth = min ((screenWidth*0.8).toInt(), maxWidth)
 
             // Calculate the height to maintain the aspect ratio
             val desiredHeight = originalHeight * ( desiredWidth*1.0 / originalWidth)
