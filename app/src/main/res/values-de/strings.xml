@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Word Finder</string>
-    <string name="info">Info</string>
+    <string name="info">Hilfe</string>
     <string name="prefs">Einstellungen</string>
     <string name="set_preferences">Einstellungen</string>
     <string name="shuffle">Würfeln</string>

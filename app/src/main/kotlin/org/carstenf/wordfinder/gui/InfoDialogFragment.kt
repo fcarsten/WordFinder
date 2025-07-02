@@ -132,29 +132,41 @@ class InfoDialogFragment : DialogFragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        val height = (resources.displayMetrics.heightPixels * 0.8).toInt()
-        val lDialogView = dialogView
-        if(lDialogView != null) {
-            lDialogView.layoutParams.height = height
-            lDialogView.requestLayout()
-            lDialogView.invalidate()
-            lDialogView.forceLayout()
-            lDialogView.bringToFront()
-        }
-    }
 
     override fun onStart() {
         super.onStart()
-        val height = (resources.displayMetrics.heightPixels * 0.8).toInt()
-        val lWindow = dialog?.window
-        if( lWindow !=null ){
-            lWindow.setLayout((resources.displayMetrics.widthPixels * 0.95).toInt(), height)
-            lWindow.setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        dialog?.window?.let { window ->
+            // It's best to get insets on the decorView
+            val decorView = window.decorView
+            androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(decorView) { v, insets ->
+                val systemBars = insets.getInsets(
+                    androidx.core.view.WindowInsetsCompat.Type.systemBars() or
+                            androidx.core.view.WindowInsetsCompat.Type.displayCutout()
+                )
+
+                val displayMetrics = resources.displayMetrics
+                val availableWidth = displayMetrics.widthPixels - systemBars.left - systemBars.right
+                val availableHeight = displayMetrics.heightPixels - systemBars.top - systemBars.bottom
+
+                val dialogWidth = (availableWidth * 0.90).toInt()
+                val dialogHeight = (availableHeight * 0.80).toInt()
+
+                window.setLayout(dialogWidth, dialogHeight)
+                window.setGravity(android.view.Gravity.CENTER)
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_DIM_BEHIND,
+                    WindowManager.LayoutParams.FLAG_DIM_BEHIND
+                )
+
+                // If you only need to apply once, you can remove the listener
+                // androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(v, null)
+
+                insets // Return the insets
+            }
+            // Request insets to trigger the listener
+            androidx.core.view.ViewCompat.requestApplyInsets(decorView)
         }
     }
-
     private var gameState: GameState? = null
 
     companion object {

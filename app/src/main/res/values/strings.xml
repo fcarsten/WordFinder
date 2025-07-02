@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Word Finder</string>
-    <string name="info">Info</string>
+    <string name="info">Help</string>
     <string name="prefs">Preferences</string>
     <string name="set_preferences">Preferences</string>
     <string name="_00_00" translatable="false">00:00</string>
