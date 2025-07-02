@@ -1,8 +1,6 @@
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.letters
 
-import org.carstenf.wordfinder.dictionary.pickRandomLetter2DDistributionF
-import org.carstenf.wordfinder.dictionary.pickRandomLetterDice
-import org.carstenf.wordfinder.dictionary.pickRandomLetterDictionary
+import org.carstenf.wordfinder.GameState
 import kotlin.math.pow
 
 

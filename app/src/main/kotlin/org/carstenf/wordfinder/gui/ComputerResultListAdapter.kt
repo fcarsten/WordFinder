@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import org.carstenf.wordfinder.R
-import org.carstenf.wordfinder.Result
+import org.carstenf.wordfinder.util.Result
 
 open class ComputerResultListAdapter(context: Context) :
     ArrayAdapter<Result>(context, R.layout.list_item, R.id.resultText) {

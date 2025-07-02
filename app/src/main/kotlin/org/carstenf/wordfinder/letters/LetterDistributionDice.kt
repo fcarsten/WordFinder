@@ -1,6 +1,4 @@
-package org.carstenf.wordfinder.dictionary
-
-import org.carstenf.wordfinder.LANGUAGE
+package org.carstenf.wordfinder.letters
 
 fun pickRandomLetterDice(fieldNumber: Int, countryCode: LANGUAGE): Char {
     val r = Math.random()

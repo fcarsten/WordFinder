@@ -6,7 +6,7 @@
     <string name="AmericanEnglish">English (US)</string>
     <string name="IntEnglish">English (Int.)</string>
     <string name="Deutsch">German (Superdic)</string>
-    <string name="info">Info</string>
+    <string name="info">Help</string>
     <string name="prefs">Preferences</string>
     <string name="set_preferences">Preferences</string>
     <string name="shuffle">Shuffle</string>
@@ -68,4 +68,5 @@
     <string name="letter_button">Disabled Letter Button %1$s</string>
     <string name="current_guess">Current guess is %1$s</string>
     <string name="current_guess_empty">Current guess is empty</string>
+    <string name="error_loading_html_content">Error loading HTML content: %1$s</string>
 </resources>

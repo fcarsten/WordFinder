@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Word Finder</string>
-    <string name="info">Info</string>
+    <string name="info">Help</string>
     <string name="prefs">Preferences</string>
     <string name="set_preferences">Preferences</string>
     <string name="_00_00" translatable="false">00:00</string>
@@ -57,4 +57,5 @@
     <string name="letter_button">Disabled Letter Button %1$s</string>
     <string name="current_guess">Current guess is %1$s</string>
     <string name="current_guess_empty">Current guess is empty</string>
+    <string name="error_loading_html_content">Error loading HTML content: %1$s</string>
 </resources>

@@ -7,7 +7,6 @@
 package org.carstenf.wordfinder.gui
 
 import android.app.Dialog
-import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -23,13 +22,17 @@ import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import org.carstenf.wordfinder.BuildConfig
 import org.carstenf.wordfinder.GameState
+import org.carstenf.wordfinder.R
 import org.carstenf.wordfinder.gui.InfoDialogFragment.Companion.TAG
 import java.io.InputStream
 import java.util.Locale
+import kotlin.math.min
+import android.content.res.Configuration
 
 class InfoDialogFragment : DialogFragment() {
 
@@ -44,20 +47,28 @@ class InfoDialogFragment : DialogFragment() {
             rawText.replace("X.X", BuildConfig.VERSION_NAME)
         } catch (e: Exception) {
             Log.e(TAG, e.message,e )
-            "Error loading HTML content: ${e.message}"
+            getString(R.string.error_loading_html_content, e.message)
         }
     }
     private var dialogView : View? = null
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        // Obtain the GameState ViewModel scoped to the hosting Activity
+        // This ensures the same instance is used across configuration changes
+        // and is shared with the Activity.
+        gameState = ViewModelProvider(requireActivity())[GameState::class.java]
+    }
+
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext(), android.R.style.Theme_Black_NoTitleBar_Fullscreen)
-        val lDialogView = requireActivity().layoutInflater.inflate(org.carstenf.wordfinder.R.layout.dialog_info, null)
+        val lDialogView = requireActivity().layoutInflater.inflate(R.layout.dialog_info, null)
         builder.setView(lDialogView)
 
-        val viewPager: ViewPager2 = lDialogView.findViewById(org.carstenf.wordfinder.R.id.view_pager)
-        val prevButton: Button = lDialogView.findViewById(org.carstenf.wordfinder.R.id.prev_button)
-        val nextButton: Button = lDialogView.findViewById(org.carstenf.wordfinder.R.id.next_button)
-        val closeButton: Button = lDialogView.findViewById(org.carstenf.wordfinder.R.id.close_button)
+        val viewPager: ViewPager2 = lDialogView.findViewById(R.id.view_pager)
+        val prevButton: Button = lDialogView.findViewById(R.id.prev_button)
+        val nextButton: Button = lDialogView.findViewById(R.id.next_button)
+        val closeButton: Button = lDialogView.findViewById(R.id.close_button)
 
         dialogView = lDialogView
         val locale = Locale.getDefault().language
@@ -107,10 +118,6 @@ class InfoDialogFragment : DialogFragment() {
             override fun onPageSelected(position: Int) {
                 prevButton.isEnabled = position > 0
                 nextButton.isEnabled = position < pages.size - 1
-//                val scrollView = viewPager.findViewById<ScrollView>(R.id.info_scrollview)
-//                scrollView.post {
-//                    scrollView.smoothScrollBy(0, 50) // Subtle nudge down
-//                }
             }
         })
 
@@ -120,39 +127,59 @@ class InfoDialogFragment : DialogFragment() {
 
     override fun onDetach() {
         super.onDetach()
-        gameState.onResume()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        val height = (resources.displayMetrics.heightPixels * 0.8).toInt()
-        val lDialogView = dialogView
-        if(lDialogView != null) {
-            lDialogView.layoutParams.height = height
-            lDialogView.requestLayout()
-            lDialogView.invalidate()
-            lDialogView.forceLayout()
-            lDialogView.bringToFront()
+        gameState?.onResume()
+        if(gameState==null) {
+            Log.e(TAG, "gameState is null in InfoDialogFragment#onDetach") // NON-NLS
         }
     }
+
 
     override fun onStart() {
         super.onStart()
-        val height = (resources.displayMetrics.heightPixels * 0.8).toInt()
-        val lWindow = dialog?.window
-        if( lWindow !=null ){
-            lWindow.setLayout((resources.displayMetrics.widthPixels * 0.95).toInt(), height)
-            lWindow.setFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND, WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+        dialog?.window?.let { window ->
+            // It's best to get insets on the decorView
+            val decorView = window.decorView
+            androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(decorView) { v, insets ->
+                val systemBars = insets.getInsets(
+                    androidx.core.view.WindowInsetsCompat.Type.systemBars() or
+                            androidx.core.view.WindowInsetsCompat.Type.displayCutout()
+                )
+
+                val displayMetrics = resources.displayMetrics
+                val availableWidth = displayMetrics.widthPixels - systemBars.left - systemBars.right
+                val availableHeight = displayMetrics.heightPixels - systemBars.top - systemBars.bottom
+
+                val currentOrientation = resources.configuration.orientation
+                var dialogWidth = (availableWidth * 0.95).toInt()
+
+                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                     dialogWidth = (availableWidth * 0.90).toInt()
+                }
+                val dialogHeight = (availableHeight * 0.80).toInt()
+
+                window.setLayout(dialogWidth, dialogHeight)
+                window.setGravity(android.view.Gravity.CENTER)
+                window.setFlags(
+                    WindowManager.LayoutParams.FLAG_DIM_BEHIND,
+                    WindowManager.LayoutParams.FLAG_DIM_BEHIND
+                )
+
+                // If you only need to apply once, you can remove the listener
+                // androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(v, null)
+
+                insets // Return the insets
+            }
+            // Request insets to trigger the listener
+            androidx.core.view.ViewCompat.requestApplyInsets(decorView)
         }
     }
-    private lateinit var gameState: GameState
+    private var gameState: GameState? = null
 
     companion object {
         const val TAG = "WordFinder InfoDialog" // NON-NLS
 
         fun showInfo(fragmentManager: FragmentManager, state: GameState) {
             val dialogFragment = InfoDialogFragment()
-            dialogFragment.gameState = state
             state.onPause()
             dialogFragment.show(fragmentManager, TAG)
         }
@@ -165,7 +192,7 @@ class InfoPagerAdapter(private val pages: List<PageData>) :
     RecyclerView.Adapter<InfoPagerAdapter.PageViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PageViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(org.carstenf.wordfinder.R.layout.item_info_page, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_info_page, parent, false)
         return PageViewHolder(view)
     }
 
@@ -176,7 +203,7 @@ class InfoPagerAdapter(private val pages: List<PageData>) :
     override fun getItemCount(): Int = pages.size
 
     class PageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val textView: TextView = view.findViewById(org.carstenf.wordfinder.R.id.info_text)
+        private val textView: TextView = view.findViewById(R.id.info_text)
 
         fun bind(page: PageData) {
             // Use the newer Html.fromHtml method with FROM_HTML_MODE_LEGACY
@@ -210,11 +237,12 @@ class DialogImageHandler(private val page: PageData, private val textView: TextV
             val originalWidth = drawable.intrinsicWidth
             val originalHeight = drawable.intrinsicHeight
 
-            val screenWidth = Resources.getSystem().displayMetrics.widthPixels // Get the width of the TextView
-            var desiredWidth = originalWidth * 4
+            val metrics = textView.resources.displayMetrics
+            val screenWidth = metrics.widthPixels // Get the width of the TextView
+            val density = metrics.density
+            val maxWidth = (500 * density).toInt() // Convert dp to px. We want the dialog to be at least 300dp
 
-            if(desiredWidth> screenWidth*0.8)
-                desiredWidth = (screenWidth*0.8).toInt()
+            val desiredWidth = min ((screenWidth*0.8).toInt(), maxWidth)
 
             // Calculate the height to maintain the aspect ratio
             val desiredHeight = originalHeight * ( desiredWidth*1.0 / originalWidth)

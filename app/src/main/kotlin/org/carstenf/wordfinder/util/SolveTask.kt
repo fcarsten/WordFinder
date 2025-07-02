@@ -4,7 +4,7 @@
  * License: GNU GENERAL PUBLIC LICENSE 3.0 (https://www.gnu.org/copyleft/gpl.html)
  *
  */
-package org.carstenf.wordfinder
+package org.carstenf.wordfinder.util
 
 import android.util.Log
 import kotlinx.coroutines.CoroutineScope
@@ -12,6 +12,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import org.carstenf.wordfinder.GameState
+import org.carstenf.wordfinder.WordFinder
 import org.carstenf.wordfinder.dictionary.Dictionary
 
 class SolveTask(private val gameState: GameState) {
@@ -54,7 +56,7 @@ class SolveTask(private val gameState: GameState) {
                 prefixes.add(""+prefix[0]+prefix[1]+'U')
             }
         } else {
-            for (next in WordFinder.MOVES[move]) {
+            for (next in WordFinder.Companion.MOVES[move]) {
                 if (!taken[next]) {
                     findAnyWord(next, taken, depth - 1, res + gameState.getBoard(move), prefixes)
                 }
@@ -69,7 +71,7 @@ class SolveTask(private val gameState: GameState) {
         for (result in resultList) {
             val minLength = if (gameState.isAllow3LetterWords) 3 else 4
             if (result.text.length >= minLength && gameState.findWord(result.text)) {
-                Log.d(WordFinder.TAG, "Found: $result") // NON-NLS
+                Log.d(WordFinder.Companion.TAG, "Found: $result") // NON-NLS
                 publishProgress(result)
             }
         }
