@@ -56,4 +56,5 @@
     <string name="letter_button">Disabled Letter Button %1$s</string>
     <string name="current_guess">Derzeitiges wort ist %1$s</string>
     <string name="current_guess_empty">Derzeitiges Wort ist leer</string>
+    <string name="error_loading_html_content">Bild konnte nicht geladen werden: %1$s</string>
 </resources>
