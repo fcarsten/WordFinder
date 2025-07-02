@@ -11,7 +11,11 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.carstenf.wordfinder.dictionary.Dictionary
+import org.carstenf.wordfinder.letters.LANGUAGE
+import org.carstenf.wordfinder.letters.pickRandomLetter
 import org.carstenf.wordfinder.util.CountUpTimer
+import org.carstenf.wordfinder.util.Result
+import org.carstenf.wordfinder.util.SolveTask
 import java.util.Arrays
 import java.util.Locale
 
@@ -55,7 +59,12 @@ class GameState : ViewModel() {
         Log.d(WordFinder.TAG, "Letter selector: ${letterRandomDistCur.name}") // NON-NLS
 
         for (i in 0..15) {
-            board[i] = pickRandomLetter(letterRandomDistCur, letterCounts, dictionaryCountryCode(), i).uppercaseChar()
+            board[i] = pickRandomLetter(
+                letterRandomDistCur,
+                letterCounts,
+                dictionaryCountryCode(),
+                i
+            ).uppercaseChar()
         }
 
         board.shuffle()

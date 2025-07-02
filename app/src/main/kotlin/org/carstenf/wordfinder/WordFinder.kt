@@ -58,6 +58,7 @@ import org.carstenf.wordfinder.gui.AppCompatLetterButton
 import org.carstenf.wordfinder.gui.BackGestureBlockingTableLayout
 import org.carstenf.wordfinder.gui.ComputerResultListAdapter
 import org.carstenf.wordfinder.gui.drawConnectionsBetweenButtons
+import org.carstenf.wordfinder.util.Result
 import org.carstenf.wordfinder.util.addGestureHandler
 import org.carstenf.wordfinder.util.isGestureNavigationEnabled
 import org.carstenf.wordfinder.util.parseTime
@@ -654,7 +655,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     private fun insertPlayerResult(guess: Dictionary.WordInfoData) {
         playerResultList.insert(Result(guess), 0)
         playerResultList.sort {
-            object1: Result, object2: Result ->
+                object1: Result, object2: Result ->
             val s1 = object1.toString()
             val s2 = object2.toString()
             s1.compareTo(s2)

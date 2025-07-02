@@ -1,6 +1,4 @@
-package org.carstenf.wordfinder.dictionary
-
-import org.carstenf.wordfinder.LANGUAGE
+package org.carstenf.wordfinder.letters
 
 //fun pickRandomLetter2DDistribution(letterCounts: IntArray, languageCode: LANGUAGE) : Char {
 //    return pickRandomLetter2DDistributionF(letterCounts, languageCode) { it }

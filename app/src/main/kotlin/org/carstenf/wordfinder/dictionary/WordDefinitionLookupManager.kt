@@ -5,7 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import org.carstenf.wordfinder.GameState
 import org.carstenf.wordfinder.R
-import org.carstenf.wordfinder.Result
+import org.carstenf.wordfinder.util.Result
 import org.carstenf.wordfinder.WordFinder
 import org.carstenf.wordfinder.util.isNetworkAvailable
 import org.carstenf.wordfinder.util.showHyperlinkDialog
