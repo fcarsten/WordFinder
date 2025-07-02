@@ -32,6 +32,7 @@ import org.carstenf.wordfinder.gui.InfoDialogFragment.Companion.TAG
 import java.io.InputStream
 import java.util.Locale
 import kotlin.math.min
+import android.content.res.Configuration
 
 class InfoDialogFragment : DialogFragment() {
 
@@ -148,7 +149,12 @@ class InfoDialogFragment : DialogFragment() {
                 val availableWidth = displayMetrics.widthPixels - systemBars.left - systemBars.right
                 val availableHeight = displayMetrics.heightPixels - systemBars.top - systemBars.bottom
 
-                val dialogWidth = (availableWidth * 0.90).toInt()
+                val currentOrientation = resources.configuration.orientation
+                var dialogWidth = (availableWidth * 0.95).toInt()
+
+                if (currentOrientation == Configuration.ORIENTATION_LANDSCAPE) {
+                     dialogWidth = (availableWidth * 0.90).toInt()
+                }
                 val dialogHeight = (availableHeight * 0.80).toInt()
 
                 window.setLayout(dialogWidth, dialogHeight)
