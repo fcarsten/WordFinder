@@ -347,7 +347,7 @@ class GameState : ViewModel() {
     }
 
     fun onSolveFinished() {
-        if (computerResultList.value?.size == 0) {
+        if (computerResultList.value?.isEmpty() ?: true) {
             cancelTimer()
             gameLifecycleState.postValue(GameLifeCycleState.UNSOLVABLE)
         }

@@ -1,1 +1,1 @@
-include ':app' // NON-NLS
+include(":app") // NON-NLS
