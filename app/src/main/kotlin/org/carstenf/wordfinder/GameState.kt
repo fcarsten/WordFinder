@@ -110,7 +110,7 @@ class GameState : ViewModel() {
                 val s1 = object1.toString().length
                 val s2 = object2.toString().length
                 var res = -s1.toDouble().compareTo(s2.toDouble())
-                if (res == 0) res = object1.toString().compareTo(object2.toString())
+                if (res == 0) res = object1.toString().uppercase().compareTo(object2.toString().uppercase())
                 res
             })
 
