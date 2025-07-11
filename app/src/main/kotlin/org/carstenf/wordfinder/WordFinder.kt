@@ -656,8 +656,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         playerResultList.insert(Result(guess), 0)
         playerResultList.sort {
                 object1: Result, object2: Result ->
-            val s1 = object1.toString()
-            val s2 = object2.toString()
+            val s1 = object1.toString().uppercase()
+            val s2 = object2.toString().uppercase()
             s1.compareTo(s2)
         }
         playerResultList.notifyDataSetChanged()
