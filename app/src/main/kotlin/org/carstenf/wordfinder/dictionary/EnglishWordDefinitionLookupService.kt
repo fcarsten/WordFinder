@@ -29,13 +29,6 @@ class EnglishWordDefinitionLookupService : WordDefinitionLookupService {
             override fun onResponse(call: Call, response: Response) {
                 if (response.isSuccessful) {
                     val responseBody = response.body
-                    if (responseBody == null) {
-                        lookupManager.processWordLookupError(
-                            task, language,
-                            "Definition lookup for ${task.word.displayText} failed with empty response."
-                        )
-                        return
-                    }
 
                     val responseBodyStr = responseBody.string()
                     Log.d("API Response", responseBodyStr) // NON-NLS
