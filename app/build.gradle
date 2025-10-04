@@ -20,9 +20,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt' // NON-NLS
         }
     }
-    namespace 'org.carstenf.wordfinder'
+    namespace ='org.carstenf.wordfinder'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
@@ -46,10 +46,7 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2" // NON-NLS
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2" // NON-NLS
     implementation 'androidx.core:core-ktx:1.17.0' // NON-NLS
-    implementation "androidx.preference:preference-ktx:1.2.1" // NON-NLS
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4" // For Kotlin // NON-NLS
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4"     // For Java // NON-NLS
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"    // Optional, if using Lifecycle Extensions // NON-NLS
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4" // NON-NLS
     implementation "androidx.activity:activity-ktx:1.11.0"             // For Activity scope // NON-NLS
     implementation "androidx.fragment:fragment-ktx:1.8.9"             // For Fragment scope // NON-NLS
     //noinspection GradleDependency
