@@ -46,25 +46,25 @@ class WiktionaryLookup {
 
         while (shouldContinue) {
             val url = buildUrl(word, continueParams)
-            val request = Request.Builder().url(url).build()
+            val request = Request.Builder().url(url)
+                .header("User-Agent", "WordFinderApp/1.0 (https://github.com/fcarsten/WordFinder)") // NON-NLS
+                .build()
             try {
                 client.newCall(request).execute().use { response ->
                     if (!response.isSuccessful) {
                         throw IOException("Unexpected response code: ${response.code}")
                     }
 
-                    val jsonResponse = response.body?.string()
-                    if (jsonResponse != null) {
-                        val (meaning, newContinueParams) = parseResponse(jsonResponse)
-                        if (meaning != null) {
-                            fullMeaning.append(meaning)
-                        }
+                    val jsonResponse = response.body.string()
+                    val (meaning, newContinueParams) = parseResponse(jsonResponse)
+                    if (meaning != null) {
+                        fullMeaning.append(meaning)
+                    }
 
-                        if (newContinueParams.isEmpty()) {
-                            shouldContinue = false // Stop the loop
-                        } else {
-                            continueParams = newContinueParams
-                        }
+                    if (newContinueParams.isEmpty()) {
+                        shouldContinue = false // Stop the loop
+                    } else {
+                        continueParams = newContinueParams
                     }
                 }
             } catch (e: IOException) {
