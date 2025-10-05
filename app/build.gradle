@@ -1,51 +1,54 @@
-apply plugin: 'com.android.application'
-apply plugin: 'org.jetbrains.kotlin.android'
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
+plugins {
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+}
 
 android {
     compileSdk 36
 
     defaultConfig {
         applicationId "org.carstenf.wordfinder"
-        minSdkVersion 22
+        minSdk 22
         targetSdk 36
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt' // NON-NLS
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt' // NON-NLS
         }
     }
-    namespace 'org.carstenf.wordfinder'
+    namespace ='org.carstenf.wordfinder'
     buildFeatures {
-        buildConfig true
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = '11'
+    kotlin {
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_11
+        }
     }
 }
 
 dependencies {
     implementation 'androidx.appcompat:appcompat:1.7.1' // NON-NLS
-    implementation 'androidx.preference:preference:1.2.1' // NON-NLS
+    implementation 'androidx.preference:preference-ktx:1.2.1' // NON-NLS
     implementation 'com.takisoft.preferencex:preferencex:1.1.0' // NON-NLS
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1' // NON-NLS
     implementation 'com.squareup.okhttp3:okhttp:5.1.0' // NON-NLS
-    implementation 'com.google.android.material:material:1.12.0' // NON-NLS
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.1' // NON-NLS
+    implementation 'com.google.android.material:material:1.13.0' // NON-NLS
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.0' // NON-NLS
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2" // NON-NLS
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2" // NON-NLS
-    implementation 'androidx.core:core-ktx:1.16.0' // NON-NLS
-    implementation "androidx.preference:preference-ktx:1.2.1" // NON-NLS
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.1" // For Kotlin // NON-NLS
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.9.1"     // For Java // NON-NLS
-    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"    // Optional, if using Lifecycle Extensions // NON-NLS
-    implementation "androidx.activity:activity-ktx:1.10.1"             // For Activity scope // NON-NLS
-    implementation "androidx.fragment:fragment-ktx:1.8.8"             // For Fragment scope // NON-NLS
+    implementation 'androidx.core:core-ktx:1.17.0' // NON-NLS
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.9.4" // NON-NLS
+    implementation "androidx.activity:activity-ktx:1.11.0"             // For Activity scope // NON-NLS
+    implementation "androidx.fragment:fragment-ktx:1.8.9"             // For Fragment scope // NON-NLS
     //noinspection GradleDependency
     implementation 'org.apache.commons:commons-compress:1.12' // Old version of library required // NON-NLS
                                                                 // newer ones don't work on Android Lollipop (Java 6)

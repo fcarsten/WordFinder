@@ -69,6 +69,7 @@ class GameState : ViewModel() {
 
         board.shuffle()
 
+        playerResultList.clear() // Player's list in GameState is cleared
         computerResultList.value?.clear()
         computerResultList.postValue(computerResultList.value)
     }
