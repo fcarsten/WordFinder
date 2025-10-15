@@ -281,12 +281,12 @@ class GameState : ViewModel() {
             )
 
         for (result in playerResultList) {
-            if (result.toString()
-                    .equals(lookupResult.displayText, ignoreCase = true)
-            ) return PlayerGuessResult(
-                Dictionary.WordInfoData(guess),
-                PlayerGuessState.ALREADY_FOUND
-            )
+            if (result.result == lookupResult) {
+                return PlayerGuessResult(
+                    lookupResult,
+                    PlayerGuessState.ALREADY_FOUND
+                )
+            }
         }
 
         return PlayerGuessResult(lookupResult, PlayerGuessState.GUESS_VALID)
