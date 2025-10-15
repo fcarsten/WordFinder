@@ -7,6 +7,7 @@ import kotlinx.coroutines.sync.withLock
 import org.carstenf.wordfinder.util.AssetDbOpenHelper
 import org.carstenf.wordfinder.WordFinder
 import java.util.Locale
+import kotlin.text.equals
 
 class Dictionary internal constructor(wordFinder: WordFinder) {
     private val mDatabaseOpenHelperMap = HashMap<String, AssetDbOpenHelper>()
@@ -94,11 +95,11 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
             other as WordInfoData
 
-            return displayText == other.displayText
+            return displayText.equals(other.displayText, ignoreCase = true)
         }
 
         override fun hashCode(): Int {
-            return displayText.hashCode()
+            return displayText.lowercase().hashCode()
         }
     }
 
