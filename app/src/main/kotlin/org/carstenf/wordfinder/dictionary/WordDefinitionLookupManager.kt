@@ -106,7 +106,7 @@ class WordDefinitionLookupManager(private val app: WordFinder, private val gameS
 
     private fun getWordDefinitionLookupService(dictionaryName: String): WordDefinitionLookupService? {
         return when (dictionaryName.lowercase(Locale.getDefault())) {
-            "int_english", "2of12inf" -> EnglishWordDefinitionLookupService() // NON-NLS
+            "int_english", "2of12inf" -> EnglishWordDefinitionLookupServiceFreeApi() // NON-NLS
             "german", "german_simple", "german_wiki" -> GermanWordDefinitionLookupService() // NON-NLS
             else -> null
         }
