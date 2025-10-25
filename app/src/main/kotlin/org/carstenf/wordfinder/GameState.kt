@@ -10,6 +10,8 @@ import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.carstenf.wordfinder.dictionary.Dictionary
 import org.carstenf.wordfinder.letters.LANGUAGE
 import org.carstenf.wordfinder.letters.pickRandomLetter
@@ -103,19 +105,41 @@ class GameState : ViewModel() {
         return false
     }
 
-    fun addComputerResult(result: Result) {
-        val list = computerResultList.value
-        if (list != null) {
-            list.add(result)
-            list.sortWith(Comparator { object1: Result, object2: Result ->
-                val s1 = object1.toString().length
-                val s2 = object2.toString().length
-                var res = -s1.toDouble().compareTo(s2.toDouble())
-                if (res == 0) res = object1.toString().uppercase().compareTo(object2.toString().uppercase())
-                res
-            })
+    suspend fun onSolveFinished(results: List<Result>) {
+        withContext(Dispatchers.Main) {
+            if (results.isEmpty()) {
+                cancelTimer()
+                gameLifecycleState.value = GameLifeCycleState.UNSOLVABLE
+            } else {
+                val currentList = computerResultList.value
+                if (currentList != null) {
+                    val diff = results.filterNot { it in currentList }
+                    if(! diff.isEmpty()) {
+                        Log.e(WordFinder.TAG, "Found ${diff.size} new words in final results that should have been added before") // NON-NLS
+                        addComputerResults(diff)
+                    }
+                }
+            }
+            solveFinished = true
+        }
+    }
 
-            computerResultList.postValue(list)
+    suspend fun addComputerResults(result: List<Result>) {
+        withContext(Dispatchers.Main) {
+            val list = computerResultList.value
+            if (list != null) {
+                list.addAll(result)
+                list.sortWith(Comparator { object1: Result, object2: Result ->
+                    val s1 = object1.toString().length
+                    val s2 = object2.toString().length
+                    var res = -s1.toDouble().compareTo(s2.toDouble())
+                    if (res == 0) res =
+                        object1.toString().uppercase().compareTo(object2.toString().uppercase())
+                    res
+                })
+
+                computerResultList.value = list
+            }
         }
     }
 
@@ -257,12 +281,12 @@ class GameState : ViewModel() {
             )
 
         for (result in playerResultList) {
-            if (result.toString()
-                    .equals(lookupResult.displayText, ignoreCase = true)
-            ) return PlayerGuessResult(
-                Dictionary.WordInfoData(guess),
-                PlayerGuessState.ALREADY_FOUND
-            )
+            if (result.result == lookupResult) {
+                return PlayerGuessResult(
+                    lookupResult,
+                    PlayerGuessState.ALREADY_FOUND
+                )
+            }
         }
 
         return PlayerGuessResult(lookupResult, PlayerGuessState.GUESS_VALID)
@@ -354,14 +378,6 @@ class GameState : ViewModel() {
     fun cancelTimer() {
         countDownTimer?.cancel()
         countUpTimer?.cancel()
-    }
-
-    fun onSolveFinished() {
-        if (computerResultList.value?.isEmpty() ?: true) {
-            cancelTimer()
-            gameLifecycleState.postValue(GameLifeCycleState.UNSOLVABLE)
-        }
-        solveFinished = true
     }
 
     fun dictionaryCountryCode(): LANGUAGE {

@@ -37,7 +37,7 @@ App Icon design by Tobias Friedrich
 
 Curtain Graphic by Gen AI
 
-English word definition lookup using https://dictionaryapi.dev/
+English word definition lookup using https://freedictionaryapi.com/
 
 German word definition lookup using https://de.wiktionary.org/
 

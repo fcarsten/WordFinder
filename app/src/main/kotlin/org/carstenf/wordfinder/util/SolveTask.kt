@@ -21,9 +21,10 @@ class SolveTask(private val gameState: GameState) {
 
     fun execute() {
         scope.launch {
+            val foundWords = mutableListOf<Result>()
             Thread.currentThread().priority = Thread.MIN_PRIORITY
-            solve2()
-            gameState.onSolveFinished()
+            solveBoard(foundWords)
+            gameState.onSolveFinished(foundWords)
         }
     }
 
@@ -31,7 +32,7 @@ class SolveTask(private val gameState: GameState) {
         scope.cancel()
     }
 
-    private suspend fun solve2() {
+    private suspend fun solveBoard(foundWords: MutableList<Result>) {
         val prefixes = HashSet<String>()
         val taken = BooleanArray(16)
         for (i in 0 until 16) {
@@ -39,7 +40,7 @@ class SolveTask(private val gameState: GameState) {
         }
 
         for (prefix in prefixes) {
-            solve1(prefix)
+            findAllWordsForPrefix(prefix, foundWords)
         }
     }
 
@@ -56,7 +57,7 @@ class SolveTask(private val gameState: GameState) {
                 prefixes.add(""+prefix[0]+prefix[1]+'U')
             }
         } else {
-            for (next in WordFinder.Companion.MOVES[move]) {
+            for (next in WordFinder.MOVES[move]) {
                 if (!taken[next]) {
                     findAnyWord(next, taken, depth - 1, res + gameState.getBoard(move), prefixes)
                 }
@@ -65,21 +66,24 @@ class SolveTask(private val gameState: GameState) {
         taken[move] = false
     }
 
-    private suspend fun solve1(prefix: String) {
+    private suspend fun findAllWordsForPrefix(prefix: String, foundWords: MutableList<Result>) {
         val resultList = gameState.dictionary.getAllWords(prefix, gameState.dictionaryName) ?: return
-
+        val foundWordsForPrefix = mutableListOf<Dictionary.WordInfoData>()
         for (result in resultList) {
             val minLength = if (gameState.isAllow3LetterWords) 3 else 4
             if (result.text.length >= minLength && gameState.findWord(result.text)) {
-                Log.d(WordFinder.Companion.TAG, "Found: $result") // NON-NLS
-                publishProgress(result)
+                Log.d(WordFinder.TAG, "Found: $result") // NON-NLS
+                foundWordsForPrefix.add(result)
+                foundWords.add(Result(result))
             }
+        }
+        if (foundWordsForPrefix.isNotEmpty()) {
+            publishProgress(foundWordsForPrefix)
         }
     }
 
-    private fun publishProgress(word: Dictionary.WordInfoData) {
-        CoroutineScope(Dispatchers.Main).launch {
-            gameState.addComputerResult(Result(word))
-        }
+    private suspend fun publishProgress(words: List<Dictionary.WordInfoData>) {
+       val results = words.map { Result(it) }
+       gameState.addComputerResults(results)
     }
 }

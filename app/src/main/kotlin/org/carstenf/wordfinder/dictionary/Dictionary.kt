@@ -7,6 +7,7 @@ import kotlinx.coroutines.sync.withLock
 import org.carstenf.wordfinder.util.AssetDbOpenHelper
 import org.carstenf.wordfinder.WordFinder
 import java.util.Locale
+import kotlin.text.equals
 
 class Dictionary internal constructor(wordFinder: WordFinder) {
     private val mDatabaseOpenHelperMap = HashMap<String, AssetDbOpenHelper>()
@@ -16,7 +17,7 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
     suspend fun lookup(word: String, db: String?): WordInfoData? {
         return dbMutex.withLock {
             if (db == null) {
-                Log.e(WordFinder.Companion.TAG, "Dictionary name null") // NON-NLS
+                Log.e(WordFinder.TAG, "Dictionary name null") // NON-NLS
                 return null
             }
 
@@ -87,6 +88,19 @@ class Dictionary internal constructor(wordFinder: WordFinder) {
 
     data class WordInfoData(val text: String, val displayText: String , val lemma: String) {
         constructor(text: String): this(text, text, text)
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as WordInfoData
+
+            return displayText.equals(other.displayText, ignoreCase = true)
+        }
+
+        override fun hashCode(): Int {
+            return displayText.lowercase().hashCode()
+        }
     }
 
     suspend fun getAllWords(prefix: String, db: String?): Collection<WordInfoData>? {
