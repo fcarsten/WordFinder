@@ -71,12 +71,10 @@ import org.carstenf.wordfinder.util.showTimeIsUpDialog
 import org.carstenf.wordfinder.util.showUnsolvableDialog
 import org.carstenf.wordfinder.util.slideUpAndHide
 import java.io.IOException
+import kotlin.collections.arrayListOf
 import kotlin.math.max
 
 class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
-    private val playerResultList by lazy {
-        ArrayAdapter(this, R.layout.list_item, R.id.resultText, gameState.playerResultList)
-    }
 
     private val computerResultListView by lazy<ListView> { findViewById(R.id.computerResultsList) }
 
@@ -200,8 +198,19 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
                 wordDefinitionLookupManager.displayWordDefinition(wordInfo)
             }
         })
+        // Initialize with an empty list
+        val playerResultAdapter = ArrayAdapter<Result>(this, R.layout.list_item, R.id.resultText, arrayListOf())
+        playerResultListView.adapter = playerResultAdapter
 
-        playerResultListView.adapter = playerResultList
+        // Observe the LiveData for updates
+        gameState.playerResultList.observe(this) { playerResults ->
+            playerResultAdapter.clear()
+            if (playerResults != null) {
+                playerResultAdapter.addAll(playerResults)
+            }
+            playerResultAdapter.notifyDataSetChanged()
+            updateScore()
+        }
 
         playerResultListView.onItemClickListener =
             OnItemClickListener { parent: AdapterView<*>, view: View?, position: Int, _: Long ->
@@ -516,7 +525,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
         gameState.stopSolving()
 
-        playerResultList.clear()
+//        playerResultAdapter.clear()
 
         gameState.shuffle()
 
@@ -653,14 +662,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun insertPlayerResult(guess: Dictionary.WordInfoData) {
-        playerResultList.insert(Result(guess), 0)
-        playerResultList.sort {
-                object1: Result, object2: Result ->
-            val s1 = object1.toString().uppercase()
-            val s2 = object2.toString().uppercase()
-            s1.compareTo(s2)
-        }
-        playerResultList.notifyDataSetChanged()
+        gameState.insertPlayerResult(guess)
         highlightFirstMatchingItem(guess.displayText)
     }
 
@@ -798,13 +800,13 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun getHintTableData(): List<List<String>> {
-        val currentGuesses = gameState.playerResultList
+        val currentGuesses = gameState.playerResultList.value
         val solution = gameState.computerResultList
 
         val solutionList = solution.value ?: return emptyList()
         val missingResults = solutionList.filter { solutionResult ->
             // Check if no item in currentGuesses has the same text
-            currentGuesses.none { guess -> guess.result.text == solutionResult.result.text }
+            currentGuesses?.none { guess -> guess.result.text == solutionResult.result.text } == true
         }
 
         val result = missingResults

@@ -34,7 +34,7 @@ class GameState : ViewModel() {
     private val board = CharArray(16)
 
     val computerResultList: MutableLiveData<ArrayList<Result>?> = MutableLiveData(ArrayList())
-    val playerResultList: ArrayList<Result> = ArrayList()
+    val playerResultList: MutableLiveData<ArrayList<Result>?> = MutableLiveData(ArrayList())
 
     val timerCurrentValue: MutableLiveData<Long> = MutableLiveData(0L)
 
@@ -71,7 +71,9 @@ class GameState : ViewModel() {
 
         board.shuffle()
 
-        playerResultList.clear() // Player's list in GameState is cleared
+        playerResultList.value?.clear() // Player's list in GameState is cleared
+        playerResultList.postValue(playerResultList.value)
+
         computerResultList.value?.clear()
         computerResultList.postValue(computerResultList.value)
     }
@@ -174,13 +176,17 @@ class GameState : ViewModel() {
         set(flag) {
             field = flag
             if (!isAllow3LetterWords) {
-                val iter =
-                    playerResultList.iterator()
-                while (iter
-                        .hasNext()
-                ) {
-                    val next = iter.next()
-                    if (next.toString().length < 4) iter.remove()
+                val plr = playerResultList.value
+                if(plr != null) {
+                    val iter =
+                        plr.iterator()
+                    while (iter
+                            .hasNext()
+                    ) {
+                        val next = iter.next()
+                        if (next.toString().length < 4) iter.remove()
+                    }
+                    playerResultList.postValue(plr)
                 }
 
                 val crl =
@@ -280,7 +286,7 @@ class GameState : ViewModel() {
                 PlayerGuessState.NOT_IN_DICTIONARY
             )
 
-        for (result in playerResultList) {
+        for (result in playerResultList.value!!) {
             if (result.result == lookupResult) {
                 return PlayerGuessResult(
                     lookupResult,
@@ -410,8 +416,21 @@ class GameState : ViewModel() {
         return -1
     }
 
+    fun insertPlayerResult(guess: Dictionary.WordInfoData) {
+        val plr = playerResultList.value
+        if(plr != null) {
+            plr.add(Result(guess))
+            plr.sortWith(Comparator<Result> { object1: Result, object2: Result ->
+                val s1 = object1.toString().uppercase()
+                val s2 = object2.toString().uppercase()
+                s1.compareTo(s2)
+            })
+            playerResultList.postValue(plr)
+        }
+    }
+
     val playerScore: Int
-        get() = getScore(playerResultList)
+        get() = getScore(playerResultList.value)
 
     internal enum class ScoreAlgorithm {
         COUNT, VALUE
