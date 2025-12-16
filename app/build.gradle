@@ -16,8 +16,16 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt' // NON-NLS
+            // Enables code-related app optimization.
+            minifyEnabled true
+
+            // Enables resource shrinking.
+            shrinkResources = true
+
+            proguardFiles(
+                    // Default file with automatically generated optimization rules.
+                    getDefaultProguardFile("proguard-android-optimize.txt")
+            )
         }
     }
     namespace ='org.carstenf.wordfinder'
