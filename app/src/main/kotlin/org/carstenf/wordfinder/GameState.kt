@@ -128,20 +128,18 @@ class GameState : ViewModel() {
 
     suspend fun addComputerResults(result: List<Result>) {
         withContext(Dispatchers.Main) {
-            val list = computerResultList.value
-            if (list != null) {
-                list.addAll(result)
-                list.sortWith(Comparator { object1: Result, object2: Result ->
-                    val s1 = object1.toString().length
-                    val s2 = object2.toString().length
-                    var res = -s1.toDouble().compareTo(s2.toDouble())
-                    if (res == 0) res =
-                        object1.toString().uppercase().compareTo(object2.toString().uppercase())
-                    res
-                })
-
-                computerResultList.value = list
-            }
+            val current = computerResultList.value ?: ArrayList()
+            val updated = ArrayList(current)   // copy to avoid race
+            updated.addAll(result)
+            updated.sortWith(Comparator { object1: Result, object2: Result ->
+                val s1 = object1.toString().length
+                val s2 = object2.toString().length
+                var res = -s1.toDouble().compareTo(s2.toDouble())
+                if (res == 0) res =
+                    object1.toString().uppercase().compareTo(object2.toString().uppercase())
+                res
+            })
+            computerResultList.value = updated
         }
     }
 
@@ -152,6 +150,8 @@ class GameState : ViewModel() {
     }
 
     fun startSolving() {
+        // Cancel any currently running SolveTask to avoid overlapping solver instances
+        stopSolving()
         solver = SolveTask(this)
         solveFinished = false
         solver?.execute()
