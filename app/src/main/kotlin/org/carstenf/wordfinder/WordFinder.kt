@@ -71,6 +71,7 @@ import org.carstenf.wordfinder.util.showTimeIsUpDialog
 import org.carstenf.wordfinder.util.showUnsolvableDialog
 import org.carstenf.wordfinder.util.slideUpAndHide
 import java.io.IOException
+import java.util.Locale
 import kotlin.collections.arrayListOf
 import kotlin.math.max
 
@@ -829,6 +830,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     private fun displayToast(text: String?) {
         runOnUiThread { Toast.makeText(this, text, Toast.LENGTH_SHORT).show() }
+    }
+
+    private fun displayToast(resId: Int) {
+        runOnUiThread { Toast.makeText(this, resId, Toast.LENGTH_SHORT).show() }
     }
 
     companion object {

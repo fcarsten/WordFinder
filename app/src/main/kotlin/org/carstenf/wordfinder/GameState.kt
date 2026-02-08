@@ -7,6 +7,7 @@
 package org.carstenf.wordfinder
 
 import android.os.CountDownTimer
+import android.os.Looper
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -186,7 +187,11 @@ class GameState : ViewModel() {
                         val next = iter.next()
                         if (next.toString().length < 4) iter.remove()
                     }
-                    playerResultList.postValue(plr)
+                    if (Looper.myLooper() == Looper.getMainLooper()) {
+                        playerResultList.value = plr
+                    } else {
+                        playerResultList.postValue(plr)
+                    }
                 }
 
                 val crl =
@@ -425,7 +430,11 @@ class GameState : ViewModel() {
                 val s2 = object2.toString().uppercase()
                 s1.compareTo(s2)
             })
-            playerResultList.postValue(plr)
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                playerResultList.value = plr
+            } else {
+                playerResultList.postValue(plr)
+            }
         }
     }
 
