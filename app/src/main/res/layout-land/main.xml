@@ -257,8 +257,7 @@
         android:background="@drawable/listview_border"
         android:divider="@android:color/darker_gray"
         android:dividerHeight="1dp"
-        android:minHeight="48dp"
-        >
+        android:minHeight="48dp">
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/okButton"
@@ -296,6 +295,17 @@
             android:gravity="center_vertical|right"
             android:minHeight="48dp"
             android:textSize="32sp" />
+
+        <TextView
+            android:id="@+id/senderTimeView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:gravity="center_vertical|right"
+            android:minHeight="48dp"
+            android:textSize="14sp"
+            android:visibility="gone" />
 
         <Space
             android:layout_width="wrap_content"

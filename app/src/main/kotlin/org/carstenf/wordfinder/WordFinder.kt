@@ -670,7 +670,7 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
     }
 
     private fun updateSenderTimeDisplay() {
-        val senderView = findViewById<TextView>(R.id.senderTimeView)
+        val senderView = findViewById<TextView>(R.id.senderTimeView) ?: return
         val seconds = gameState.senderTimeSeconds
         if (seconds != null && seconds > 0 && gameState.timerMode == TIMER_MODE.STOP_WATCH) {
             senderView.text = getString(R.string.sender_time_label, formatTimeForDisplay(seconds))
