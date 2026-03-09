@@ -10,21 +10,32 @@
     android:splitMotionEvents="false"
     android:windowEnableSplitTouch="false">
 
-    <!-- Chronometer -->
-    <TextView
-        android:id="@+id/chronometer1"
+    <!-- Chronometer and sender time (for challenges) -->
+    <LinearLayout
+        android:id="@+id/chronometerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0"
+        android:orientation="vertical"
         android:background="@drawable/listview_border"
-        android:gravity="center"
-        android:text="@string/_00_00"
-        android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@id/letterGridView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:id="@+id/chronometer1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/_00_00"
+            android:textSize="24sp" />
+        <TextView
+            android:id="@+id/senderTimeView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:visibility="gone" />
+    </LinearLayout>
 
 
     <org.carstenf.wordfinder.gui.BackGestureBlockingTableLayout
@@ -38,7 +49,7 @@
         app:layout_constraintBottom_toTopOf="@id/resultLists"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chronometer1"
+        app:layout_constraintTop_toBottomOf="@id/chronometerContainer"
         >
 
         <TableRow

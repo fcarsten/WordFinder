@@ -170,6 +170,19 @@ fun parseTime(timeStr: String): Long {
     }
 }
 
+/** Formats seconds as MM:SS or HH:MM:SS for display (e.g. timer, sender time). */
+fun formatTimeForDisplay(seconds: Long): String {
+    var m = seconds / 60
+    val s = seconds % 60
+    return if (m < 60) {
+        "%02d:%02d".format(m, s)
+    } else {
+        val h = m / 60
+        m %= 60
+        "%02d:%02d:%02d".format(h, m, s)
+    }
+}
+
 
 fun showTimeIsUpDialog(app: WordFinder) {
 
@@ -188,6 +201,12 @@ fun showTimeIsUpDialog(app: WordFinder) {
             if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
                 gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
             }
+        }
+        .setNeutralButton(R.string.share_challenge) { _: DialogInterface?, _: Int ->
+            if(gameState.gameLifecycleState.value != GameState.GameLifeCycleState.GAME_OVER) {
+                gameState.gameLifecycleState.postValue(GameState.GameLifeCycleState.GAME_OVER)
+            }
+            app.shareChallenge()
         }
 
     val dialog = builder.create()

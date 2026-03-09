@@ -7,8 +7,10 @@
 package org.carstenf.wordfinder
 
 import android.annotation.SuppressLint
+import android.content.ClipData
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
 import android.os.Build
 import android.os.Bundle
@@ -43,9 +45,12 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import kotlinx.coroutines.launch
+import androidx.core.content.FileProvider
+import androidx.core.content.IntentCompat
 import org.carstenf.wordfinder.GameState.GameLifeCycleState.*
 import org.carstenf.wordfinder.GameState.PlayerGuessState
 import org.carstenf.wordfinder.GameState.TIMER_MODE
+import org.carstenf.wordfinder.challenge.ChallengeData
 import org.carstenf.wordfinder.dictionary.Dictionary
 import org.carstenf.wordfinder.dictionary.WordDefinitionLookupManager
 import org.carstenf.wordfinder.dictionary.WordInfo
@@ -61,6 +66,7 @@ import org.carstenf.wordfinder.gui.drawConnectionsBetweenButtons
 import org.carstenf.wordfinder.util.Result
 import org.carstenf.wordfinder.util.addGestureHandler
 import org.carstenf.wordfinder.util.isGestureNavigationEnabled
+import org.carstenf.wordfinder.util.formatTimeForDisplay
 import org.carstenf.wordfinder.util.parseTime
 import org.carstenf.wordfinder.util.showConfirmShuffleDialog
 import org.carstenf.wordfinder.util.showConfirmStartGameDialog
@@ -70,6 +76,7 @@ import org.carstenf.wordfinder.util.showTableDialog
 import org.carstenf.wordfinder.util.showTimeIsUpDialog
 import org.carstenf.wordfinder.util.showUnsolvableDialog
 import org.carstenf.wordfinder.util.slideUpAndHide
+import java.io.File
 import java.io.IOException
 import java.util.Locale
 import kotlin.collections.arrayListOf
@@ -278,6 +285,8 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         updateOkButton()
 
         updateScore()
+
+        handleChallengeIntent(intent)
     }
 
     private fun onGameStateChanged(state: GameState.GameLifeCycleState) {
@@ -333,7 +342,16 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         menu.findItem(R.id.menu_item_hint)?.isVisible = showHint
+        val shareItem = menu.findItem(R.id.menu_item_share_challenge)
+        val state = gameState.gameLifecycleState.value
+        shareItem?.isVisible = state == GAME_OVER || state == TIMER_FINISHED
         return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handleChallengeIntent(intent)
     }
 
     fun setHintVisibility(visible: Boolean) {
@@ -538,11 +556,128 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
         updateOkButton()
         gameState.startTimer()
         updateScore()
+        updateSenderTimeDisplay()
     }
 
     private fun shuffleClick() {
         clearGuess()
         showConfirmShuffleDialog(this)
+    }
+
+    private fun buildChallengeData(): ChallengeData? {
+        val boardStr = StringBuilder(16)
+        for (i in 0..15) {
+            boardStr.append(gameState.getBoard(i))
+        }
+        val senderHashes = gameState.playerResultList.value?.map { ChallengeData.hashWord(it.toString()) } ?: emptyList()
+        val timerModeStr = if (gameState.timerMode == TIMER_MODE.COUNT_DOWN) "count_down" else "stop_watch"
+        val countDownMs = if (gameState.timerMode == TIMER_MODE.COUNT_DOWN) gameState.gameTime else 0L
+        val senderTime = if (gameState.timerMode == TIMER_MODE.STOP_WATCH) (gameState.timerCurrentValue.value ?: 0L) else 0L
+        return ChallengeData(
+            board = boardStr.toString(),
+            dictionaryName = gameState.dictionaryName ?: defaultDict,
+            isAllow3LetterWords = gameState.isAllow3LetterWords,
+            scoring = gameState.getScoringPrefString(),
+            letterSelector = gameState.getLetterSelectorPrefString(),
+            autoAddPrefixalWords = gameState.autoAddPrefixalWords(),
+            timerMode = timerModeStr,
+            countDownStartTimeMs = countDownMs,
+            senderTimeSeconds = senderTime,
+            senderFoundWordHashes = senderHashes
+        )
+    }
+
+    fun shareChallenge() {
+        val challenge = buildChallengeData() ?: return
+        try {
+            val json = ChallengeData.toJson(challenge)
+            val fileName = "${ChallengeData.getFileNamePrefix()}-${System.currentTimeMillis()}${ChallengeData.getFileExtension()}"
+            val cacheDir = cacheDir
+            val file = File(cacheDir, fileName)
+            file.writeText(json)
+            val uri = FileProvider.getUriForFile(this, "$packageName.fileprovider", file)
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = ChallengeData.getMimeType()
+                putExtra(Intent.EXTRA_STREAM, uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                clipData = ClipData.newRawUri("", uri)
+            }
+            startActivity(Intent.createChooser(shareIntent, getString(R.string.share_challenge)))
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to share challenge", e)
+            displayToast(getString(R.string.share_challenge_error))
+        }
+    }
+
+    private fun handleChallengeIntent(intent: Intent?) {
+        if (intent == null || isFinishing) return
+        val uri = when (intent.action) {
+            Intent.ACTION_SEND -> IntentCompat.getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri::class.java)
+            Intent.ACTION_VIEW -> intent.data
+            else -> null
+        } ?: return
+        try {
+            val stream = contentResolver.openInputStream(uri) ?: return
+            stream.use {
+                val json = it.bufferedReader().readText()
+                val challenge = ChallengeData.fromJson(json)
+                showAcceptChallengeDialog(challenge)
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to parse challenge", e)
+        }
+    }
+
+    private fun showAcceptChallengeDialog(challenge: ChallengeData) {
+        if (supportFragmentManager.isStateSaved) return
+        val senderTimeStr = if (challenge.timerMode == "stop_watch" && challenge.senderTimeSeconds > 0) {
+            "\n\n${getString(R.string.sender_time_label, formatTimeForDisplay(challenge.senderTimeSeconds))}"
+        } else ""
+        val message = getString(R.string.challenge_summary) + senderTimeStr
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.challenge_received_title)
+            .setMessage(message)
+            .setPositiveButton(R.string.challenge_accept) { _, _ -> startFromChallenge(challenge) }
+            .setNegativeButton(R.string.challenge_decline) { _, _ -> }
+            .setCancelable(true)
+            .show()
+    }
+
+    private fun startFromChallenge(challenge: ChallengeData) {
+        val prefs = sharedPreferences.edit()
+        prefs.putString("dict_pref", challenge.dictionaryName)
+        prefs.putString("scoring_pref", challenge.scoring)
+        prefs.putString("rand_dist_pref", challenge.letterSelector)
+        prefs.putBoolean("threeLetterPref", challenge.isAllow3LetterWords)
+        prefs.putBoolean("autoAddPrefixPref", challenge.autoAddPrefixalWords)
+        prefs.putBoolean("countdown_pref", challenge.timerMode == "count_down")
+        val timeStr = if (challenge.timerMode == "count_down") {
+            formatTimeForDisplay(challenge.countDownStartTimeMs / 1000)
+        } else "03:00"
+        prefs.putString("countdown_time_pref", timeStr)
+        prefs.apply()
+        reloadPreferences()
+        showComputerResults(show = false, animate = false)
+        gameState.stopSolving()
+        gameState.loadChallenge(challenge)
+        labelDices()
+        gameState.startSolving()
+        updateDiceState(-1)
+        updateOkButton()
+        gameState.startTimer()
+        updateScore()
+        updateSenderTimeDisplay()
+    }
+
+    private fun updateSenderTimeDisplay() {
+        val senderView = findViewById<TextView>(R.id.senderTimeView)
+        val seconds = gameState.senderTimeSeconds
+        if (seconds != null && seconds > 0 && gameState.timerMode == TIMER_MODE.STOP_WATCH) {
+            senderView.text = getString(R.string.sender_time_label, formatTimeForDisplay(seconds))
+            senderView.visibility = View.VISIBLE
+        } else {
+            senderView.visibility = View.GONE
+        }
     }
 
     private val letterButtons by lazy {
@@ -779,6 +914,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             }
             R.id.menu_item_hint -> {
                 displayHint()
+                return true
+            }
+            R.id.menu_item_share_challenge -> {
+                shareChallenge()
                 return true
             }
             else -> {

@@ -69,4 +69,11 @@
     <string name="current_guess">Current guess is %1$s</string>
     <string name="current_guess_empty">Current guess is empty</string>
     <string name="error_loading_html_content">Error loading HTML content: %1$s</string>
+    <string name="share_challenge">Share challenge</string>
+    <string name="challenge_received_title">Challenge received</string>
+    <string name="challenge_accept">Accept</string>
+    <string name="challenge_decline">Decline</string>
+    <string name="challenge_summary">Same board and rules. Can you find more words?</string>
+    <string name="sender_time_label">Sender\'s time: %1$s</string>
+    <string name="share_challenge_error">Could not create challenge file</string>
 </resources>

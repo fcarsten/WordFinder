@@ -57,4 +57,11 @@
     <string name="current_guess">Derzeitiges wort ist %1$s</string>
     <string name="current_guess_empty">Derzeitiges Wort ist leer</string>
     <string name="error_loading_html_content">Bild konnte nicht geladen werden: %1$s</string>
+    <string name="share_challenge">Herausforderung teilen</string>
+    <string name="challenge_received_title">Herausforderung empfangen</string>
+    <string name="challenge_accept">Annehmen</string>
+    <string name="challenge_decline">Ablehnen</string>
+    <string name="challenge_summary">Gleiches Spielfeld und Regeln. Findest du mehr Wörter?</string>
+    <string name="sender_time_label">Zeit des Absenders: %1$s</string>
+    <string name="share_challenge_error">Herausforderungsdatei konnte nicht erstellt werden</string>
 </resources>

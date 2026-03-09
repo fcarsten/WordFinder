@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.carstenf.wordfinder.challenge.ChallengeData
 import org.carstenf.wordfinder.dictionary.Dictionary
 import org.carstenf.wordfinder.letters.LANGUAGE
 import org.carstenf.wordfinder.letters.pickRandomLetter
@@ -43,12 +44,48 @@ class GameState : ViewModel() {
         return board[move]
     }
 
+    /**
+     * Loads a challenge: sets board from chars, clears lists, applies timer settings,
+     * and stores metadata for marking sender-found words. Does not shuffle.
+     */
+    fun loadChallenge(challenge: ChallengeData) {
+        clearGuess()
+        require(challenge.board.length == 16) { "Board must have 16 letters" }
+        for (i in 0..15) {
+            board[i] = challenge.board[i].uppercaseChar()
+        }
+        playerResultList.value?.clear()
+        playerResultList.postValue(playerResultList.value)
+        computerResultList.value?.clear()
+        computerResultList.postValue(computerResultList.value)
+        dictionaryName = challenge.dictionaryName
+        isAllow3LetterWords = challenge.isAllow3LetterWords
+        setScoringAlgorithm(challenge.scoring)
+        setLetterSelector(challenge.letterSelector)
+        setAutoAddPrefixalWords(challenge.autoAddPrefixalWords)
+        timerMode = if (challenge.timerMode == "count_down") TIMER_MODE.COUNT_DOWN else TIMER_MODE.STOP_WATCH
+        gameTime = if (timerMode == TIMER_MODE.COUNT_DOWN) challenge.countDownStartTimeMs else 0L
+        senderTimeSeconds = if (challenge.timerMode == "stop_watch") challenge.senderTimeSeconds else null
+        senderFoundWordHashes = if (challenge.senderFoundWordHashes.isEmpty()) null else challenge.senderFoundWordHashes.toSet()
+        gameLifecycleState.postValue(GameLifeCycleState.STARTED)
+    }
+
+    private fun applySenderFoundHighlights(list: ArrayList<Result>?) {
+        val hashes = senderFoundWordHashes ?: return
+        if (list == null) return
+        for (result in list) {
+            result.isHighlighted = ChallengeData.hashWord(result.toString()) in hashes
+        }
+    }
+
     private val playerTaken = BooleanArray(16)
 
     private var solver: SolveTask? = null
 
     fun shuffle() {
         clearGuess()
+        senderTimeSeconds = null
+        senderFoundWordHashes = null
         gameLifecycleState.postValue(GameLifeCycleState.STARTED)
 
         val letterCounts = IntArray(26)
@@ -120,6 +157,9 @@ class GameState : ViewModel() {
                     if(! diff.isEmpty()) {
                         Log.e(WordFinder.TAG, "Found ${diff.size} new words in final results that should have been added before") // NON-NLS
                         addComputerResults(diff)
+                    } else {
+                        applySenderFoundHighlights(currentList)
+                        computerResultList.value = currentList
                     }
                 }
             }
@@ -140,6 +180,7 @@ class GameState : ViewModel() {
                     object1.toString().uppercase().compareTo(object2.toString().uppercase())
                 res
             })
+            applySenderFoundHighlights(updated)
             computerResultList.value = updated
         }
     }
@@ -316,6 +357,12 @@ class GameState : ViewModel() {
 
     var gameTime: Long = -1
 
+    /** Sender's time in seconds (for display when accepting a stopwatch challenge). Null if not a challenge. */
+    var senderTimeSeconds: Long? = null
+
+    /** Hashes of words the sender found; used to mark them in computer results. Null if not a challenge. */
+    var senderFoundWordHashes: Set<String>? = null
+
     fun startTimer() {
         startTimer(gameTime)
     }
@@ -413,6 +460,18 @@ class GameState : ViewModel() {
             letterSelector = null
         }
     }
+
+    /** Returns the preference string for the current letter selector (for challenge serialization). */
+    fun getLetterSelectorPrefString(): String = when (letterSelector) {
+        LETTER_RANDOM_DIST.UNIFORM -> "uniformRandom"
+        LETTER_RANDOM_DIST.LETTER_FREQUENCY -> "letterFrequency"
+        LETTER_RANDOM_DIST.MULTI_LETTER_FREQUENCY -> "multiLetterFrequence"
+        LETTER_RANDOM_DIST.LETTER_DICE -> "letterDice"
+        null -> "whateverRandom"
+    }
+
+    /** Returns the preference string for the current scoring algorithm (for challenge serialization). */
+    fun getScoringPrefString(): String = if (scoreAlg == ScoreAlgorithm.COUNT) "count" else "value"
 
     fun lastMove(): Int {
         if (moves.isNotEmpty()) {
