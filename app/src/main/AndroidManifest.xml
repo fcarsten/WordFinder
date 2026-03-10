@@ -29,7 +29,8 @@
 				android:resource="@xml/file_paths" />
 		</provider>
 		<activity android:name="org.carstenf.wordfinder.WordFinder" android:exported="true"
-			android:launchMode="singleTop">
+			android:launchMode="singleTask"
+			android:taskAffinity="org.carstenf.wordfinder.challenge">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
