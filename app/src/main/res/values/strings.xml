@@ -65,4 +65,6 @@
     <string name="challenge_summary">Same board and rules. Can you find more words?</string>
     <string name="sender_time_label">Sender\'s time: %1$s</string>
     <string name="share_challenge_error">Could not create challenge file</string>
+    <string name="challenge_parse_error">Failed to parse challenge. The file may be corrupt or from an incompatible version.</string>
+    <string name="challenge_parse_error_title">Challenge Error</string>
 </resources>

@@ -81,6 +81,7 @@ import java.io.IOException
 import java.util.Locale
 import kotlin.collections.arrayListOf
 import kotlin.math.max
+import androidx.core.content.edit
 
 class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
@@ -629,13 +630,24 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to parse challenge", e)
+            showChallengeErrorDialog()
         }
+    }
+
+    private fun showChallengeErrorDialog() {
+        if (supportFragmentManager.isStateSaved) return
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle(R.string.challenge_parse_error_title)
+            .setMessage(R.string.challenge_parse_error)
+            .setPositiveButton(R.string.OK, null)
+            .show()
     }
 
     private fun showAcceptChallengeDialog(challenge: ChallengeData) {
         if (supportFragmentManager.isStateSaved) return
         if (challenge.board.length != 16) {
             Log.e(TAG, "Invalid challenge board: ${challenge.board}")
+            showChallengeErrorDialog()
             return
         }
         pendingChallengeDialogShowing = true
@@ -669,18 +681,18 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     private fun startFromChallenge(challenge: ChallengeData) {
         setIntent(Intent(Intent.ACTION_MAIN))
-        val prefs = sharedPreferences.edit()
-        prefs.putString("dict_pref", challenge.dictionaryName)
-        prefs.putString("scoring_pref", challenge.scoring)
-        prefs.putString("rand_dist_pref", challenge.letterSelector)
-        prefs.putBoolean("threeLetterPref", challenge.isAllow3LetterWords)
-        prefs.putBoolean("autoAddPrefixPref", challenge.autoAddPrefixalWords)
-        prefs.putBoolean("countdown_pref", challenge.timerMode == "count_down")
-        val timeStr = if (challenge.timerMode == "count_down") {
-            formatTimeForDisplay(challenge.countDownStartTimeMs / 1000)
-        } else "03:00"
-        prefs.putString("countdown_time_pref", timeStr)
-        prefs.apply()
+        sharedPreferences.edit {
+            putString("dict_pref", challenge.dictionaryName)
+            putString("scoring_pref", challenge.scoring)
+            putString("rand_dist_pref", challenge.letterSelector)
+            putBoolean("threeLetterPref", challenge.isAllow3LetterWords)
+            putBoolean("autoAddPrefixPref", challenge.autoAddPrefixalWords)
+            putBoolean("countdown_pref", challenge.timerMode == "count_down")
+            val timeStr = if (challenge.timerMode == "count_down") {
+                formatTimeForDisplay(challenge.countDownStartTimeMs / 1000)
+            } else "03:00"
+            putString("countdown_time_pref", timeStr)
+        }
         reloadPreferences()
         showComputerResults(show = false, animate = false)
         gameState.stopSolving()

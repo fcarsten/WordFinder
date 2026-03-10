@@ -64,4 +64,6 @@
     <string name="challenge_summary">Gleiches Spielfeld und Regeln. Findest du mehr Wörter?</string>
     <string name="sender_time_label">Zeit des Absenders: %1$s</string>
     <string name="share_challenge_error">Herausforderungsdatei konnte nicht erstellt werden</string>
+    <string name="challenge_parse_error">Herausforderung konnte nicht verarbeitet werden. Die Datei ist möglicherweise beschädigt oder stammt aus einer inkompatiblen Version.</string>
+    <string name="challenge_parse_error_title">Herausforderungsfehler</string>
 </resources>
