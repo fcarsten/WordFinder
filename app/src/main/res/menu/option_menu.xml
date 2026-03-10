@@ -2,6 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_item_share_challenge"
+        android:enabled="true"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share_challenge"
+        android:visible="false"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/menu_item_hint"
         android:enabled="true"
         android:icon="@drawable/lightbulb_2"
@@ -30,10 +37,4 @@
         android:title="@string/prefs"
         android:visible="true"
         app:showAsAction="ifRoom"/>
-    <item
-        android:id="@+id/menu_item_share_challenge"
-        android:enabled="true"
-        android:title="@string/share_challenge"
-        android:visible="false"
-        app:showAsAction="never"/>
 </menu>
