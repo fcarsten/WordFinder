@@ -50,7 +50,8 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.2.1' // NON-NLS
     implementation 'com.squareup.okhttp3:okhttp:5.2.1' // NON-NLS
     implementation 'com.google.android.material:material:1.13.0' // NON-NLS
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.20.0' // NON-NLS
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.3' // NON-NLS
+    implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.17.3' // NON-NLS
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2" // NON-NLS
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2" // NON-NLS
     implementation 'androidx.core:core-ktx:1.17.0' // NON-NLS

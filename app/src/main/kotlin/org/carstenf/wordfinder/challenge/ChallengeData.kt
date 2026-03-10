@@ -8,7 +8,7 @@ package org.carstenf.wordfinder.challenge
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
-import org.carstenf.wordfinder.GameState
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import java.security.MessageDigest
 import java.util.Locale
 
@@ -18,23 +18,23 @@ import java.util.Locale
  */
 data class ChallengeData(
     @JsonProperty("v") val version: Int = 1,
-    @JsonProperty("b") val board: String,
-    @JsonProperty("d") val dictionaryName: String,
-    @JsonProperty("t3") val isAllow3LetterWords: Boolean,
-    @JsonProperty("s") val scoring: String,
-    @JsonProperty("r") val letterSelector: String,
-    @JsonProperty("a") val autoAddPrefixalWords: Boolean,
-    @JsonProperty("m") val timerMode: String,
-    @JsonProperty("cd") val countDownStartTimeMs: Long,
-    @JsonProperty("st") val senderTimeSeconds: Long,
-    @JsonProperty("h") val senderFoundWordHashes: List<String>
+    @JsonProperty("b") val board: String = "",
+    @JsonProperty("d") val dictionaryName: String = "",
+    @JsonProperty("t3") val isAllow3LetterWords: Boolean = false,
+    @JsonProperty("s") val scoring: String = "",
+    @JsonProperty("r") val letterSelector: String = "",
+    @JsonProperty("a") val autoAddPrefixalWords: Boolean = false,
+    @JsonProperty("m") val timerMode: String = "",
+    @JsonProperty("cd") val countDownStartTimeMs: Long = 0,
+    @JsonProperty("st") val senderTimeSeconds: Long = 0,
+    @JsonProperty("h") val senderFoundWordHashes: List<String> = emptyList()
 ) {
     companion object {
         private const val CHALLENGE_MIME_TYPE = "application/vnd.wordfinder.challenge+json"
         private const val FILE_EXTENSION = ".wfchallenge"
         private const val FILE_NAME_PREFIX = "WordFinder-Challenge"
 
-        private val objectMapper = ObjectMapper()
+        private val objectMapper = ObjectMapper().registerKotlinModule()
         private val sha256 = MessageDigest.getInstance("SHA-256")
 
         /**

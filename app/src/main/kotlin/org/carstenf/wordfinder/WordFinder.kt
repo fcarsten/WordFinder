@@ -378,6 +378,9 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     var showConfirmStartGameDialogVisible= false
 
+    /** True while the Accept challenge dialog is shown; prevents Start Game dialog from overwriting challenge. */
+    var pendingChallengeDialogShowing = false
+
     public override fun onPostResume() {
         super.onPostResume()
 
@@ -390,9 +393,10 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
             preferencesChanged = false
         }
 
-        if (gameState.gameLifecycleState.value == NOT_STARTED) {
-            if(!showConfirmStartGameDialogVisible)
-                showConfirmStartGameDialog(this)
+        if (gameState.gameLifecycleState.value == NOT_STARTED &&
+            !showConfirmStartGameDialogVisible &&
+            !pendingChallengeDialogShowing) {
+            showConfirmStartGameDialog(this)
         }
 
         updateButtonEnabledStatus()
@@ -630,20 +634,41 @@ class WordFinder : AppCompatActivity(), OnSharedPreferenceChangeListener {
 
     private fun showAcceptChallengeDialog(challenge: ChallengeData) {
         if (supportFragmentManager.isStateSaved) return
+        if (challenge.board.length != 16) {
+            Log.e(TAG, "Invalid challenge board: ${challenge.board}")
+            return
+        }
+        pendingChallengeDialogShowing = true
         val senderTimeStr = if (challenge.timerMode == "stop_watch" && challenge.senderTimeSeconds > 0) {
             "\n\n${getString(R.string.sender_time_label, formatTimeForDisplay(challenge.senderTimeSeconds))}"
         } else ""
         val message = getString(R.string.challenge_summary) + senderTimeStr
-        androidx.appcompat.app.AlertDialog.Builder(this)
+        val dialog = androidx.appcompat.app.AlertDialog.Builder(this)
             .setTitle(R.string.challenge_received_title)
             .setMessage(message)
-            .setPositiveButton(R.string.challenge_accept) { _, _ -> startFromChallenge(challenge) }
-            .setNegativeButton(R.string.challenge_decline) { _, _ -> }
+            .setPositiveButton(R.string.challenge_accept) { _, _ ->
+                pendingChallengeDialogShowing = false
+                startFromChallenge(challenge)
+            }
+            .setNegativeButton(R.string.challenge_decline) { _, _ ->
+                pendingChallengeDialogShowing = false
+                if (gameState.gameLifecycleState.value == NOT_STARTED) {
+                    showConfirmStartGameDialog(this)
+                }
+            }
             .setCancelable(true)
-            .show()
+            .setOnCancelListener {
+                pendingChallengeDialogShowing = false
+                if (gameState.gameLifecycleState.value == NOT_STARTED) {
+                    showConfirmStartGameDialog(this)
+                }
+            }
+            .create()
+        dialog.show()
     }
 
     private fun startFromChallenge(challenge: ChallengeData) {
+        setIntent(Intent(Intent.ACTION_MAIN))
         val prefs = sharedPreferences.edit()
         prefs.putString("dict_pref", challenge.dictionaryName)
         prefs.putString("scoring_pref", challenge.scoring)
